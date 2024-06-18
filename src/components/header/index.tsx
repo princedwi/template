@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Head from "next/head";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getRoutes } from "@/utilities/routes/getRoute";
@@ -17,7 +18,8 @@ export default function Header() {
   return (
     <header className="header" id="header">
       <div className="header_toggle">
-        <h2>Jacobs</h2>
+        {/* <h2>Jacobs</h2> */}
+        <img src="/symbol.png" className=""></img>
       </div>
       <div className="nav-menu">
         {pages.map((e: Path, index) => (

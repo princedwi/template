@@ -1,7 +1,7 @@
 export const getRoutes = () => {
   return [
     { url: "/", name: "Home" },
-    { url: "/guarantee", name: "Guarantee" },
-    { url: "/approvals", name: "Approvals" },
+    { url: "/CreateQA", name: "CreateQA" },
+    { url: "/login", name: "LogOut" },
   ];
 };
