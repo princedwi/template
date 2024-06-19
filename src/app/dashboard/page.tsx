@@ -19,25 +19,24 @@ export default function Dashboard() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-     
- 
+
       <div className="row stats my-5">
-      <div className="col-2">
-      <div className="card">
-      <div className="card-body text-center text-success">
-       
-      <Link href="/CreateQA" passHref={true} >
-      <div className="card-title">
-        <h4 className="text-dark">CreateQA</h4>
+        <div className="col-3 ms-2">
+          <Link href="/CreateQA" passHref={true}>
+            <button className="btn btn-light btn-lg">Create QA</button>
+          </Link>
+          {/* <div className="card">
+            <div className="card-body text-center text-success">
+              <Link href="/CreateQA" passHref={true}>
+                <div className="card-title">
+                  <h4 className="text-dark">CreateQA</h4>
+                </div>
+                <button className="btn">CreateQA</button>
+              </Link>
+            </div>
+          </div> */}
         </div>
-     
-      </Link>
       </div>
-      </div>
-      </div>
-    
-      </div>
- 
     </>
   );
 }

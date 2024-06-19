@@ -17,10 +17,10 @@ export default function Header() {
 
   return (
     <header className="header" id="header">
-      <div className="header_toggle">
-        {/* <h2>Jacobs</h2> */}
+      {/* <div className="header_toggle">
+       
         <img src="/symbol.png" className=""></img>
-      </div>
+      </div> */}
       <div className="nav-menu">
         {pages.map((e: Path, index) => (
           <Link
