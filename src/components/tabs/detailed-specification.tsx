@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { TabsProps } from './project-info'
 import ProjectInfo from "@/components/tabs/project-info";
-import D1RiverModel from '../ds-tabs/1D-river-build-model';
+import BuildModel from '../ds-tabs/build-model';
 
 
 export default function DetailedSpecification({ step }: TabsProps) {
@@ -32,12 +32,12 @@ export default function DetailedSpecification({ step }: TabsProps) {
         <form action="" method="post" id="registration" className="stepForm ">
 
           <div className='d-flex'>
-            <div className=" nav-pills w-25 my-4 nav-fill " id="nav-tab" role="tablist">
+            <div className=" nav-pills w-25 my-4 nav-fill " id="nav-tab" role="tablist" style={{backgroundColor:'lightgrey',borderRadius:"20px"}}>
 
 
               {values.map((value, i) => (
                 <a
-                  className={`nav-link py-2 my-2 ${steptwo === value.id ? "active" : ""}`}
+                  className={`nav-link py-2 my-2  ${steptwo === value.id ? "active" : ""}`}
                   id={`steptwo${value.id}-tab`}
                   key={i}
                   data-bs-toggle="tab"
@@ -50,8 +50,8 @@ export default function DetailedSpecification({ step }: TabsProps) {
 
 
             </div>
-            <div className="tab-content ml-4 p-4 m-2">
-              <D1RiverModel step={step} />
+            <div className="tab-content  p-4 m-2" style={{backgroundColor:'lightgrey',borderRadius:"20px",width:"100%"}}>
+              <BuildModel step={steptwo} />
 
             </div>
           </div>

@@ -32,6 +32,7 @@ export default function Header() {
           </Link>
         ))}
       </div>
+      <div><h2>WebApp</h2></div>
 
       <div className="dropdown">
         <div

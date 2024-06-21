@@ -23,14 +23,12 @@ export default function Navbar() {
 
       <ul className="list-unstyled components">
         <li className="active">
-          <a
-            href="#homeSubmenu"
-            data-toggle="collapse"
-            aria-expanded="false"
-            className="dropdown-toggle"
-          >
+        <Link href="/dashboard" passHref={true}>
+            <h5 className="">Home</h5>
+          </Link>
+          {/* <a href="/dashboard" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">
             Home
-          </a>
+          </a> */}
           <ul className="collapse list-unstyled" id="homeSubmenu">
             <li>
               <a href="#">Home 1</a>
@@ -47,12 +45,7 @@ export default function Navbar() {
           <a href="#">About</a>
         </li>
         <li>
-          <a
-            href="#pageSubmenu"
-            data-toggle="collapse"
-            aria-expanded="false"
-            className="dropdown-toggle"
-          >
+          <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">
             Pages
           </a>
           <ul className="collapse list-unstyled" id="pageSubmenu">
