@@ -35,6 +35,7 @@ export default function Form() {
 {values.map((value)=>(
    <a
    className={`nav-link  ${step === value.id ? "active" : ""}`}
+   style={{backgroundColor:'#6d7fcc',color:'White',margin:'0 5px'}}
    id={`step${value.id}-tab`}
    data-bs-toggle="tab"
    onClick={() => handleStep(value.id)}
@@ -44,28 +45,13 @@ export default function Form() {
 ))}
 
 
-            {/* <a
-              className={`nav-link  ${step == 1 ? "active" : ""}`}
-              id="step1-tab"
-              data-bs-toggle="tab"
-              onClick={() => handleStep(1)}
-            >
+            {/* <a className={`nav-link  ${step == 1 ? "active" : ""}`} id="step1-tab" data-bs-toggle="tab" onClick={() => handleStep(1)}>
               Project Info
             </a>
-            <a
-              className={`nav-link  ${step == 2 ? "active" : ""}`}
-              id="step2-tab"
-              data-bs-toggle="tab"
-              onClick={() => handleStep(2)}
-            >
+            <a className={`nav-link  ${step == 2 ? "active" : ""}`} id="step2-tab" data-bs-toggle="tab" onClick={() => handleStep(2)} >
               Concept Review
             </a>
-            <a
-              className={`nav-link  ${step == 3 ? "active" : ""}`}
-              id="step3-tab"
-              data-bs-toggle="tab"
-              onClick={() => handleStep(3)}
-            >
+            <a className={`nav-link  ${step == 3 ? "active" : ""}`} id="step3-tab" data-bs-toggle="tab" onClick={() => handleStep(3)} >
               Model Approach
             </a> */}
           </div>
