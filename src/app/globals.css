@@ -172,7 +172,7 @@ a:focus {
 #sidebar ul li.active > a,
 a[aria-expanded="true"] {
   color: #fff;
-  background: #6d7fcc;
+  background: #263c9c;
 }
 
 a[data-toggle="collapse"] {
@@ -241,4 +241,19 @@ a.article:hover {
   #sidebarCollapse span {
     display: none;
   }
+}
+
+/* ---------------------------------------------------
+    NAVLINKS
+----------------------------------------------------- */
+.nav-link{
+  background-color:#263c9c;
+  color: #fff;
+  margin: 0 5px;
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+  background-color:#4e67d4;
+}
+.nav{
+  --bs-nav-link-hover-color: #b0b9c2;
 }

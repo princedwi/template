@@ -32,13 +32,13 @@ export default function DetailedSpecification({ step }: TabsProps) {
         <form action="" method="post" id="registration" className="stepForm ">
 
           <div className='d-flex'>
-            <div className=" nav-pills w-25 p-4 m-2 nav-fill " id="nav-tab" role="tablist" style={{backgroundColor:'white',borderRadius:"10px"}}>
+            <div className="nav-pills w-25 p-4 m-2 nav-fill " id="nav-tab" role="tablist" style={{ backgroundColor: 'white', borderRadius: "10px" }}>
 
 
               {values.map((value, i) => (
                 <a
                   className={`nav-link py-2 my-2  ${steptwo === value.id ? "active" : ""}`}
-                  style={{backgroundColor:'#6d7fcc',color:'white'}}
+                  //style={{backgroundColor:'#6d7fcc',color:'white'}}
                   id={`steptwo${value.id}-tab`}
                   key={i}
                   data-bs-toggle="tab"
@@ -51,9 +51,9 @@ export default function DetailedSpecification({ step }: TabsProps) {
 
 
             </div>
-            <div className="tab-content  p-4 m-2" style={{backgroundColor:'white',borderRadius:"10px",width:"100%"}}>
+            <div className="tab-content  p-4 m-2" style={{ backgroundColor: 'white', borderRadius: "10px", width: "100%" }}>
               <BuildModel step={steptwo} />
-              
+
             </div>
           </div>
         </form>

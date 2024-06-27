@@ -19,7 +19,7 @@ const columns = [
 
 export default function App() {
   return (
-    <Table aria-label="Example table with dynamic content" className=" w-100 bg-light border border-4" style={{ width: '100%',borderRadius: "20%" }}>
+    <Table aria-label="Example table with dynamic content" className=" w-100 border border-4" style={{ backgroundColor:'White', width: '100%',borderRadius: "3%" }}>
       <TableHeader columns={columns} className="w-100 fs-3">
         {(column) => <TableColumn key={column.key} >{column.label}</TableColumn>}
       </TableHeader>

@@ -1,4 +1,8 @@
+"use client";
+
 import React, { useState } from 'react';
+import ApproachDefinition from './approach-definition';
+import ModelChecks from './model-checks';
 export interface TabsProps2 {
   step: number;
 }
@@ -21,7 +25,7 @@ export default function BuildModel({ step }: TabsProps2) {
     <>
 
       <div
-      // className={`tab-pane fade ${step ==  ? "show active" : ""}`}
+      // className={`tab-pane fade ${step == 1 ? "show active" : ""}`}
       // id="step2"
       >
         <form action="" method="post" id="registration" className="stepForm">
@@ -31,7 +35,7 @@ export default function BuildModel({ step }: TabsProps2) {
               {values.map((value) => (
                 <a
                   className={`nav-link  ${steptwo === value.id ? "active" : ""}`}
-                  style={{ backgroundColor: '#6d7fcc', color: 'white', margin: '0 5px' }}
+                  //style={{ backgroundColor: '#6d7fcc', color: 'white', margin: '0 5px' }}
                   id={`steptwo${value.id}-tab`}
                   data-bs-toggle="tab"
                   onClick={() => handleStep(value.id)}
@@ -40,6 +44,10 @@ export default function BuildModel({ step }: TabsProps2) {
                 </a>
               ))}
 
+              <div className="tab-content p-4 " style={{width:'100%'}}>
+                <ApproachDefinition step={steptwo} />
+                <ModelChecks step={steptwo} />
+              </div>
             </div>
           </nav>
 
