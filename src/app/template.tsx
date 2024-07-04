@@ -6,11 +6,12 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-
+import React from "react";
 export default function Template({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const router = useRouter();
   const { user } = useSelector((state: any) => state.user);
+  const [nav, setNav] = React.useState<Boolean>(false);
   useEffect(() => {
     if (!path.includes("/login") && !user.islogin) {
       router.push("/login");
@@ -22,11 +23,11 @@ export default function Template({ children }: { children: React.ReactNode }) {
   ) : (
     <div>
       {user.islogin && (
-        <div className="row">
-          <div className="col-2">
-            <Navbar />
+        <div className={nav?`row`:''}>
+          <div className={ nav? " col-2 ":" col-1 "}>
+            <Navbar changeNav={setNav}/>
           </div>
-          <div className="col-10">
+          <div className={ nav? " col-10 ":" col-11 Header-template-main"}>
             <div className="row">
               <div className="col-12">
                 <Header />

@@ -30,7 +30,7 @@ export default function Form() {
     <>
       <form action="" method="post" id="registration" className="stepForm m-4">
         <nav>
-          <div className="nav nav-pills nav-fill" id="nav-tab" role="tablist">
+          <div className="nav nav-pills nav-fill gap-2 mx-2" id="nav-tab" role="tablist">
 
             {values.map((value) => (
               <a

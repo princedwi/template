@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getRoutes } from "@/utilities/routes/getRoute";
@@ -12,9 +13,19 @@ type User = {
 };
 
 export default function Header() {
+  const router = useRouter();
   const [pages, setPages] = useState<Path[]>(getRoutes());
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleLogout = () => {
+    // Handle logout logic here
+    router.push("/login");
+  };
   return (
     <header className="header" id="header">
       {/* <div className="header_toggle">
@@ -32,19 +43,34 @@ export default function Header() {
           </Link>
         ))}
       </div>
+      <img src="/symbol.png" className="" style={{ position: "absolute", left: "0px", height: "85%", marginLeft: "6px" }} />
       <div><h2>WebApp</h2></div>
 
       <div className="dropdown">
         <div
-          className="header_img float-end dropdown-toggle"
+          className="header_img container-P"
           id="dropdownMenuButton"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
         >
           {" "}
-          <img src="https://i.imgur.com/hczKIze.jpg" alt="" />{" "}
+          <img
+            src="https://www.pngall.com/wp-content/uploads/5/Profile-PNG-Free-Download.png" // Replace with your profile picture source
+            alt="Profile"
+            className='profilePic-P'
+            onClick={toggleMenu}
+            style={{ zIndex: "10" }}
+          />
+
         </div>
+        {isOpen && (
+          <div className='menu-P'>
+            <ul>
+              <li className='logout-P' onClick={handleLogout}>Log Out</li>
+            </ul>
+          </div>
+        )}
         {/* <button
           className="btn btn-secondary dropdown-toggle"
           type="button"

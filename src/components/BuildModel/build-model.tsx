@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import ApproachDefinition from './approach-definition';
 import ModelChecks from './model-checks';
+import ModelLeadSignOff from './model-lead-sign-off';
+import Signoff from './sign-off-boxes';
 export interface TabsProps2 {
   step: number;
 }
@@ -12,7 +14,7 @@ export default function BuildModel({ step }: TabsProps2) {
   const [steptwo, setStep] = useState<number>(1);
 
   const values = [
-    { name: "Aproach Definition", id: 1, },
+    { name: "Approach Definition", id: 1, },
     { name: "Automated Checks", id: 2 },
     { name: "Model Checks", id: 3 },
     { name: "Model lead sign off", id: 4 },
@@ -30,7 +32,7 @@ export default function BuildModel({ step }: TabsProps2) {
       >
         <form action="" method="post" id="registration" className="stepForm">
           <nav>
-            <div className="nav nav-pills nav-fill " id="nav-tab" role="tablist">
+            <div className="nav nav-pills nav-fill gap-2" id="nav-tab" role="tablist">
 
               {values.map((value) => (
                 <a
@@ -47,6 +49,8 @@ export default function BuildModel({ step }: TabsProps2) {
               <div className="tab-content p-4 " style={{width:'100%'}}>
                 <ApproachDefinition step={steptwo} />
                 <ModelChecks step={steptwo} />
+                <ModelLeadSignOff step={steptwo} />
+                <Signoff />
               </div>
             </div>
           </nav>
