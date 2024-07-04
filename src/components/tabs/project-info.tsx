@@ -8,6 +8,7 @@ export default function ProjectInfo({step}: TabsProps) {
     
       <div
             className={`tab-pane fade ${step == 1 ? "show active" : ""}`}
+            style={{backgroundColor: 'white',padding: '3rem'}}
             id="step1"
           >
             <link href='tabs/style.css'></link>

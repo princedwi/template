@@ -8,6 +8,7 @@ export default function ModelApproach({step}: TabsProps) {
     
       <div
             className={`tab-pane fade ${step == 3 ? "show active" : ""}`}
+            style={{backgroundColor: 'white',padding: '3rem'}}
             id="step3"
           >
             <link href='tabs/style.css'></link>

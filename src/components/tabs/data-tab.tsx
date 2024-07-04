@@ -8,6 +8,7 @@ export default function DataTab({step}: TabsProps) {
     
       <div
             className={`tab-pane fade ${step == 5 ? "show active" : ""}`}
+            style={{backgroundColor: 'white',padding: '3rem'}}
             id="step5"
           >
             <link href='tabs/style.css'></link>

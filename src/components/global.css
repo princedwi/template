@@ -13,3 +13,11 @@
 .nav{
   --bs-nav-link-hover-color: #b0b9c2;
 }
+
+.form-control {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+:root, [data-bs-theme=light] {
+  --bs-border-color: #b8b8b8;
+}

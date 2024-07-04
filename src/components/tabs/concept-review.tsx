@@ -7,6 +7,7 @@ import { TabsProps } from './project-info'
     
       <div
             className={`tab-pane fade ${step == 2 ? "show active" : ""}`}
+            style={{backgroundColor: 'white',padding: '3rem'}}
             id="step2"
           >
             <div className="mb-3 d-flex flex-row">
