@@ -12,7 +12,7 @@ type User = {
   name: string;
 };
 
-export default function Header() {
+export default function Header({ changeNav, posNav }: { changeNav: any, posNav:any }) {
   const router = useRouter();
   const [pages, setPages] = useState<Path[]>(getRoutes());
   const pathname = usePathname();
@@ -27,7 +27,10 @@ export default function Header() {
     router.push("/login");
   };
   return (
-    <header className="header" id="header">
+    <header className="header" id="header" style={{
+      width: "100vw",
+      // position:"absolute"
+    }}>
       {/* <div className="header_toggle">
        
         <img src="/symbol.png" className=""></img>
@@ -43,8 +46,10 @@ export default function Header() {
           </Link>
         ))}
       </div>
-      <img src="/symbol.png" className="" style={{ position: "absolute", left: "0px", height: "85%", marginLeft: "6px" }} />
-      <div><h2>WebApp</h2></div>
+      <img src="/symbol.png" className="" style={{ position: "absolute", left: "0px", height: "85%", marginLeft: "6px" }} onClick={()=>{if(posNav===true)changeNav(false)}} />
+      <div><h2 style={{
+        color: "white"
+      }}>WebApp</h2></div>
 
       <div className="dropdown">
         <div

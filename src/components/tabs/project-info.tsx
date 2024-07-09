@@ -8,6 +8,7 @@ export default function ProjectInfo({step}: TabsProps) {
     
       <div
             className={`tab-pane fade ${step == 1 ? "show active" : ""}`}
+            style={{backgroundColor: 'white',padding: '3rem'}}
             id="step1"
           >
             <link href='tabs/style.css'></link>
@@ -41,42 +42,42 @@ export default function ProjectInfo({step}: TabsProps) {
               <label htmlFor="field3" className='w-25'>Lead</label>
               <label htmlFor="field3" className='w-25'>Advisor</label>
               </div>
-              <div className="mb-3 d-flex flex-row">
-              <input type="text" name="field7" className="form-control w-25" id="field7" />
-              <input type="text" name="field7" className="form-control w-25" id="field7" />
-              <input type="text" name="field7" className="form-control w-25" id="field7" />
-              <input type="text" name="field7" className="form-control w-25" id="field7" />
+              <div className="mb-3 d-flex flex-row justify-left items-left" style={{gap:"4rem"}}>
+              <input type="text" name="field7" className="form-control" id="field7" style={{width:"20%"}} />
+              <input type="text" name="field7" className="form-control" id="field7" style={{width:"20%"}}/>
+              <input type="text" name="field7" className="form-control" id="field7" style={{width:"20%"}} />
+              <input type="text" name="field7" className="form-control" id="field7" style={{width:"20%"}}/>
             </div>
             <div className="mb-3 d-flex flex-row">
               <label htmlFor="field3" className='w-25'>Type of Study</label>
             </div>
             <div>
               <input type="radio" name="field3" id="field3"/>
-                <label htmlFor="field3" className='w-25'>SOB</label>
+                <label htmlFor="field3" className='w-25' style={{marginLeft:"8px"}}>SOB</label>
+                <input type="radio" name="field3" id="field3" className=''/>
+                <label htmlFor="field3" className='w-25' style={{marginLeft:"8px"}}>Surface Water Flood Mapping</label>
                 <input type="radio" name="field3" id="field3"/>
-                <label htmlFor="field3" className='w-25'>Surface Water Flood Mapping</label>
-                <input type="radio" name="field3" id="field3"/>
-                <label htmlFor="field3">Flood Risk Assessment</label>
+                <label htmlFor="field3" style={{marginLeft:"8px"}}>Flood Risk Assessment</label>
             </div>
             <div>
               <input type="radio" name="field3" id="field3"/>
-                <label htmlFor="field3" className='w-25'>OBC</label>
+                <label htmlFor="field3" className='w-25' style={{marginLeft:"8px"}}>OBC</label>
                 <input type="radio" name="field3" id="field3"/>
-                <label htmlFor="field3" className='w-25'>Reservoir Inundation Flood Mapping</label>
-                <label htmlFor="field3">Other</label>
-                <input type="input" name="field3" id="field3"/>
+                <label htmlFor="field3" className='w-25' style={{marginLeft:"8px"}}>Reservoir Inundation Flood Mapping</label>
+                <label htmlFor="field3" style={{marginLeft:"21px"}}>Other: </label>
+                <input type="input" name="field3" id="field3" style={{marginLeft:"8rem"}}/>
             </div>
             <div>
               <input type="radio" name="field3" id="field3"/>
-                <label htmlFor="field3" className='w-25'>Detailed Desgin</label>
+                <label htmlFor="field3" className='w-25' style={{marginLeft:"8px"}}>Detailed Desgin</label>
                 <input type="radio" name="field3" id="field3"/>
-                <label htmlFor="field3">Reservoir Flood Safety</label>
+                <label htmlFor="field3" style={{marginLeft:"8px"}}>Reservoir Flood Safety</label>
             </div>
             <div>
               <input type="radio" name="field3" id="field3"/>
-                <label htmlFor="field3" className='w-25'>Fluvial Flood Mapping</label>
+                <label htmlFor="field3" className='w-25' style={{marginLeft:"8px"}}>Fluvial Flood Mapping</label>
                 <input type="radio" name="field3" id="field3"/>
-                <label htmlFor="field3">Initial Assessment</label>
+                <label htmlFor="field3" style={{marginLeft:"8px"}}>Initial Assessment</label>
             </div>
                 
                 

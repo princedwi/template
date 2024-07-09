@@ -74,6 +74,14 @@
   padding:6px 12px;
   border-radius:4px;
 }
+.bg-black{
+  background-color: black;
+  color:white;
+}
+.bg-red{
+  background-color: red;
+  color:white;
+}
 .login-profile-pic{
   width:100%;
   display:flex;
@@ -135,24 +143,28 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 0rem;
-  background-color: var(--white-color) !important;
+  background-color: var(--first-color) !important;
   z-index: var(--z-fixed);
   transition: 0.5s;
   height: calc(var(--header-height) + 1rem);
 
-  .nav-menu {
+  .nav-menu{
     color: var(--first-color);
 
     position: relative;
     left: 20rem;
 
+  }
     .nav-item {
       padding: 10px;
       font-size: var(--normal-font-size);
       color: var(--first-color);
       text-decoration: none;
     }
-  }
+}
+.tabs-grid-main{
+  display: grid;
+  grid-template-columns: auto auto auto auto;
 }
 .header_toggle {
   color: var(--first-color);
@@ -273,7 +285,11 @@ a:focus {
   outline: none !important;
   border: none;
 }
-
+.navbar-li{
+  border-color: grey;
+  border-width:0px 0px 1px 0px;
+  border-style: solid;
+}
 .line {
   width: 100%;
   height: 1px;
@@ -298,11 +314,11 @@ a:focus {
   position: fixed;
   top: 0;
   background: #fff;
-  /* background-color: red; */
+  background-color: rgb(0, 2, 16);
   /* color: #000; */
   transition: all 0.3s;
   /* width: 4rem; */
-  border-right:solid 1px rgb(182, 182, 182);
+  /* border-right:solid 1px rgb(182, 182, 182); */
 }
 .sidebar-logo{
   padding:0px;
@@ -360,7 +376,7 @@ a:focus {
 
 #sidebar ul li a:hover {
   color: #7386d5;
-  background: #fff;
+  /* background: #fff; */
 }
 
 #sidebar ul li.active > a,
@@ -427,7 +443,7 @@ a.article:hover {
 .line-H {
   width: 100%;
   height: 3px;
-  background-color: black;
+  background-color: white;
   margin: 5px 0;
   transition: all 0.3s ease;
 }
@@ -438,11 +454,12 @@ a.article:hover {
   left: -250px; /* Hidden off-screen */
   width: 100%;
   height: 100vh;
-  background-color: white;
-  color: black;
+  background-color: black;
+  color: white;
   transition: left 0.3s ease;
   display: flex;
   flex-direction: column;
+
 }
 
 .menu-H ul {
@@ -455,8 +472,8 @@ a.article:hover {
 }
 
 .menu-H ul li a {
-  color: black;
   text-decoration: none;
+  color:white;
 }
 
 .open-H {
@@ -536,4 +553,12 @@ a.article:hover {
 }
 .nav{
   --bs-nav-link-hover-color: #b0b9c2;
+}
+
+.form-control {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+:root, [data-bs-theme=light] {
+  --bs-border-color: #c6c5c5;
 }

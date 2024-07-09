@@ -22,7 +22,7 @@ const ModelLeadSignOff = ({ step }: TabsProps) => {
                     if (i === num) {
                         return reader.result as string;
                     } else {
-                        return c;
+                        return c; 
                     }
                 });
                 setImagePreview(nextCounters);

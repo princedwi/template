@@ -7,7 +7,7 @@ const rows = [
   { key: "3", name: "Digital", createddate: "2024-01-04 19:14:45", bycreated: "Mary Thomos", updatedby: "Adrien K", updateddate: "2024-06-10 10:34:17", },
   { key: "4", name: "Hydraulic Modeller", createddate: "2018-02-18 20:55:12", bycreated: "David Jhon", updatedby: "Justin Tan", updateddate: "2020-09-07 21:10:03", },
   { key: "5", name: "HR", createddate: "2022-12-08 18:03:48", bycreated: "Adelina", updatedby: "Mark Davies", updateddate: "2024-02-28 11:30:29", },
-];
+]; 
 
 const columns = [
   { key: "name", label: "PROJECT NAME", },
@@ -21,6 +21,7 @@ export default function App() {
   return (
     <>
       <Table
+        isStriped={true}
         color="primary"
         className=" w-100 border border-4"
         style={{ backgroundColor: 'White', width: '100%', borderRadius: "3%" , borderColor:"black"}}
@@ -30,7 +31,7 @@ export default function App() {
         </TableHeader>
         <TableBody items={rows} style={{ padding: "3rem" }}>
           {(item) => (
-            <TableRow key={item.key} className="dash-table-row">
+            <TableRow key={item.key} className="">
               {(columnKey) =>
                 <TableCell className="">
                   <div className="dash-table-row-item">

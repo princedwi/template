@@ -7,6 +7,7 @@ import ProjectInfo from "@/components/tabs/project-info";
 import DataTab from "@/components/tabs/data-tab";
 import { useState } from "react";
 import DetailedSpecification from "@/components/tabs/detailed-specification";
+import ModelLogs  from "@/components/tabs/model-logs";
 
 export default function Form() {
   const [step, setStep] = useState<number>(1);
@@ -56,13 +57,14 @@ export default function Form() {
             </a> */}
           </div>
         </nav>
-        <div className="tab-content p-4 ">
+        <div className="tab-content" style={{paddingLeft:"0.5rem", paddingRight:"0.5rem", paddingTop:"1.5rem"}}>
           <ProjectInfo step={step} />
           <ConceptReview step={step} />
           <ModelApproach step={step} />
           <OutputsTab step={step} />
           <DataTab step={step} />
           <DetailedSpecification step={step} />
+          <ModelLogs step={step} />
         </div>
         {/* <div className="row justify-content-between">
           <div className="col-auto">

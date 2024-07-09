@@ -43,6 +43,7 @@ export default function DetailedSpecification({ step }: TabsProps) {
                   key={i}
                   data-bs-toggle="tab"
                   onClick={() => handleStep(value.id)}
+                  style={{fontSize:"smaller"}}
                 >
                   {value.name}
                 </a>

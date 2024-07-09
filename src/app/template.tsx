@@ -23,19 +23,21 @@ export default function Template({ children }: { children: React.ReactNode }) {
   ) : (
     <div>
       {user.islogin && (
+        <>
+          <Header changeNav={setNav} posNav={nav}/>
         <div className={nav?`row`:''}>
           <div className={ nav? " col-2 ":" col-1 "}>
-            <Navbar changeNav={setNav}/>
+            <Navbar changeNav={setNav} posNav={nav}/>
           </div>
           <div className={ nav? " col-10 ":" col-11 Header-template-main"}>
             <div className="row">
               <div className="col-12">
-                <Header />
               </div>
               <div className="col-12">{children}</div>
             </div>
           </div>
         </div>
+        </>
       )}
 
       {/* {children} */}
