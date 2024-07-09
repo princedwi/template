@@ -4,7 +4,7 @@ import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import StoreProvider from "@/storeProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Webapp",
@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <StoreProvider>
-        <body className={inter.className}>{children}</body>
+        <body className={""}>{children}</body>
       </StoreProvider>
     </html>
   );
