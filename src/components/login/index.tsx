@@ -51,7 +51,7 @@ export default function Login() {
         </div>
           <form className="p-2">
             <div className="form-group required">
-              <p>{user.name}</p>
+              <div>{user.name}</div>
               <label htmlFor="username" className=" mb-2">Username / Email</label>
               <input
                 type="text"

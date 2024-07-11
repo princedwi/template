@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { NextUIProvider } from '@nextui-org/react'
 export default function Template({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const router = useRouter();
@@ -19,29 +20,35 @@ export default function Template({ children }: { children: React.ReactNode }) {
   });
   // console.log(user, "SDdsd");
   return path.includes("/login") ? (
-    <div>{children}</div>
-  ) : (
-    <div>
-      {user.islogin && (
-        <>
-          <Header changeNav={setNav} posNav={nav}/>
-        <div className={nav?`row`:''}>
-          <div className={ nav? " col-2 ":" col-1 "}>
-            <Navbar changeNav={setNav} posNav={nav}/>
-          </div>
-          <div className={ nav? " col-10 ":" col-11 Header-template-main"}>
-            <div className="row">
-              <div className="col-12">
-              </div>
-              <div className="col-12">{children}</div>
-            </div>
-          </div>
-        </div>
-        </>
-      )}
+    <NextUIProvider>
 
-      {/* {children} */}
-    </div>
+      <div>{children}</div>
+    </NextUIProvider>
+  ) : (
+    <NextUIProvider>
+
+      <div>
+        {user.islogin && (
+          <>
+            <Header changeNav={setNav} posNav={nav} />
+            <div className={nav ? `row` : ''}>
+              <div className={nav ? " col-2 " : " col-1 "}>
+                <Navbar changeNav={setNav} posNav={nav} />
+              </div>
+              <div className={nav ? " col-10 " : " col-11 Header-template-main"}>
+                <div className="row">
+                  <div className="col-12">
+                  </div>
+                  <div className="col-12">{children}</div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* {children} */}
+      </div>
+    </NextUIProvider>
   );
 
   // <div>

@@ -1,6 +1,9 @@
 /* ---------------------------------------------------
     NAVLINKS
 ----------------------------------------------------- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .nav-link{
   background-color:#263c9c;

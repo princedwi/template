@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 const Signoff = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -19,23 +19,29 @@ const Signoff = () => {
     };
     return (
         <>
-            <div className='w-[90px] gap-4 ' >
-                <form style={{ backgroundColor: "", width: "100%", display: "flex", justifyContent: "space-between", height: "130px" }}>
-                    <div style={{ width: "30%", textAlign: "center", fontSize: "14px" }}>Model Advisor Review Comment
-                        <input className='w-[30%]' style={{ height: "90px" }} />
+            <div className=' gap-4 w-full ' >
+                <form className=' w-full' style={{ backgroundColor: "", width: "100%", display: "flex", justifyContent: "space-between", height: "130px" }}>
+                    <div className='flex flex-col items-center justify-center' style={{ width: "30%", textAlign: "center", fontSize: "14px", justifyContent:"center" }}>
+                        <div className=''>
+                            Model Advisor Review Comment
+                        </div>
+                        <input className='w-[70%] form-control' style={{ height: "90px" }} />
                     </div>
-                    <div style={{ width: "30%", textAlign: "center", fontSize: "14px" }}>Modeller response to comments
-                        <input className='w-[30%]' style={{ height: "90px" }} />
+                    <div className='flex flex-col items-center justify-center' style={{ width: "30%", textAlign: "center", fontSize: "14px", justifyContent:"center"  }}>
+                        <div>
+                            Modeller response to comments
+                        </div>
+                        <input className='w-[70%] form-control' style={{ height: "90px" }} />
                     </div>
-                    <div style={{ width: "30%", textAlign: "center", fontSize: "13px", justifyContent: "center" }}>Model Adviser Sign off Confirmation
+                    <div style={{ width: "30%", display:"flex", flexDirection:"column", textAlign: "center", fontSize: "13px", justifyContent: "center", justifyItems:"center" }}>Model Adviser Sign off Confirmation
                         {imagePreview && (
-                            <div >
-                                <div >
+                            <div className='flex justify-center  items-center' >
+                                <div className='' >
                                     <img src={imagePreview} alt="Uploaded" className='' style={{ height: "90px" }} />
                                 </div>
                             </div>
                         )}
-                        <input type="file" onChange={handleFileChange} style={{ textAlign: "center", display: "flex", justifyContent: "center", width: "90px", overflow: "hidden", marginLeft: "29%" }} />
+                        <input type="file" onChange={handleFileChange} style={{ textAlign: "center", display: "flex", justifyContent: "center", width: "87px", overflow: "hidden", marginLeft: "40%" }} />
                         {/* <button type="submit" >Upload</button> */}
                     </div>
                 </form>

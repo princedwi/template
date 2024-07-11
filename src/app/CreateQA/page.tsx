@@ -8,7 +8,6 @@ import DataTab from "@/components/tabs/data-tab";
 import { useState } from "react";
 import DetailedSpecification from "@/components/tabs/detailed-specification";
 import ModelLogs  from "@/components/tabs/model-logs";
-
 export default function Form() {
   const [step, setStep] = useState<number>(1);
 

@@ -48,7 +48,8 @@ export default function Header({ changeNav, posNav }: { changeNav: any, posNav:a
       </div>
       <img src="/symbol.png" className="" style={{ position: "absolute", left: "0px", height: "85%", marginLeft: "6px" }} onClick={()=>{if(posNav===true)changeNav(false)}} />
       <div><h2 style={{
-        color: "white"
+        color: "white",
+        fontSize:"2rem"
       }}>WebApp</h2></div>
 
       <div className="dropdown">

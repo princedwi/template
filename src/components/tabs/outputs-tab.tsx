@@ -12,8 +12,8 @@ import { TabsProps } from './project-info'
           >
             <div className="mb-3 d-flex flex-row">
               <label htmlFor="field1" className='w-25'><h5>Output Name</h5></label>
-              <label htmlFor="field1" className='w-25 me-4'><h5>Recipient</h5></label>
-              <label htmlFor="field1" className='w-25'><h5>Notes</h5></label>
+              <label htmlFor="field1" className='w-25 me-4 ml-7'><h5>Recipient</h5></label>
+              <label htmlFor="field1" className='w-25 ml-[-12px]'><h5>Notes</h5></label>
             </div>
             <div className="mb-3 d-flex flex-row">
               <input type="Checkbox" name="field3" id="field3" className='mx-2 mb-3'/>
@@ -65,7 +65,7 @@ import { TabsProps } from './project-info'
             </div>
             <div className="mb-3 d-flex flex-row">
                 <input type="Checkbox" name="field3" id="field3" className='mx-2 mb-3'/>
-                <input type="text" name="field2" className="form-control w-25 me-2" id="field2" required />
+                <input type="text" name="field2" className="form-control w-[18.3rem] me-2" id="field2" required />
                <input type="text" name="field2" className="form-control w-25 me-2" id="field2" required />
                <input type="text" name="field2" className="form-control w-25" id="field2" required />
             </div>

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import "~bootstrap/dist/css/bootstrap.min.css";
 :root {
   --header-height: 3rem;
@@ -10,6 +14,10 @@
   --z-fixed: 100;
   --footer-height: 8rem;
 }
+@font-face {
+  font-family: "jacobs_font";
+  src: url("../assests/fonts/JacobsChronos_Rg.ttf") format("truetype");
+}
 
 *,
 ::before,
@@ -17,58 +25,61 @@
   box-sizing: border-box;
 }
 
-.Header-template-main{
-  margin-left:4rem;
-  width:95.6vw;
+.Header-template-main {
+  margin-left: 4rem;
+  width: 95.6vw;
 }
 
+input{
+  /* border:solid 1px black; */
+}
 
 /* ---------------------------------------------------
     LOGIN STYLE
 ----------------------------------------------------- */
 
-.login-main{
-  width:100%;
+.login-main {
+  width: 100%;
   background-color: white;
-  color:white;
+  color: white;
   position: relative;
   background: url("https://c4.wallpaperflare.com/wallpaper/123/906/381/anime-landscape-city-buildings-realistic-wallpaper-preview.jpg");
 }
-.login-img{
-  width:100%;
-  height:100%;
+.login-img {
+  width: 100%;
+  height: 100%;
   background-color: rgba(255, 255, 255, 0.9);
   position: absolute;
 }
-.login-box:hover{
-  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.2);
+.login-box:hover {
+  box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
 }
-.login-box:active{
-  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.2);
+.login-box:active {
+  box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
 }
-.login-checkbox{
+.login-checkbox {
   display: flex;
   justify-content: left;
   align-items: left;
   justify-items: center;
 }
-.login-checkbox > input:hover{
+.login-checkbox > input:hover {
   cursor: pointer;
 }
-.login-heading{
+.login-heading {
   /* background-color: red; */
   text-align: center;
   font-size: 20px;
   font-weight: 600;
-  width:100%;
+  width: 100%;
   position: relative;
   display: flex;
   justify-content: center;
-  margin-bottom:-20px;
+  margin-bottom: -20px;
   z-index: 100;
   background-color: transparent;
 }
-.login-heading > div{
+.login-heading > div {
   background-color: transparent;
   width:fit-content;
   padding:6px 12px;
@@ -87,51 +98,56 @@
   display:flex;
   justify-content: center;
 }
-.login-profile-pic > img{
-  height:100px;
+.login-profile-pic > img {
+  height: 100px;
   filter: grayscale(1);
 }
-.login-main-sub{
-  background: linear-gradient(-205deg,  rgb(67, 214, 255), rgb(41, 191, 255), rgb(48, 148, 255), rgb(52, 52, 255));
+.login-main-sub {
+  background: linear-gradient(
+    -205deg,
+    rgb(67, 214, 255),
+    rgb(41, 191, 255),
+    rgb(48, 148, 255),
+    rgb(52, 52, 255)
+  );
 }
-.login-input{
+.login-input {
   background-color: transparent;
   border-color: black;
   border-style: solid;
   border-width: 0px 0px 1px 0px;
-  color:white;
+  color: white;
 }
-.login-input:focus{
+.login-input:focus {
   background-color: transparent;
   border-color: white;
   border-style: solid;
   border-width: 0px 0px 1px 0px;
-  color:white;
+  color: white;
 }
-.login-button{
+.login-button {
   display: flex;
   justify-content: center;
-  padding:10px;
+  padding: 10px;
 }
-.login-button > button{
+.login-button > button {
   background-color: white;
-  color:black;
+  color: black;
   border-radius: 30px;
-  font-size:17px;
+  font-size: 17px;
   transition: 400ms;
-  padding:7px 20px;
+  padding: 7px 20px;
 }
-.login-button > button:hover{
+.login-button > button:hover {
   background-color: white;
-  color:black;
+  color: black;
   border-radius: 30px;
-  font-size:17px;
-  padding:7px 20px;
+  font-size: 17px;
+  padding: 7px 20px;
   cursor: pointer;
   transform: scale(1.05);
   transition: 400ms;
 }
-
 
 .header {
   width: 100%;
@@ -198,9 +214,9 @@
   border: 1px solid #ccc;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1;
-  margin-right:2px;
-  width:100px;
-  border:solid 1px rgb(215, 215, 215);
+  margin-right: 2px;
+  width: 100px;
+  border: solid 1px rgb(215, 215, 215);
   border-radius: 10px;
 }
 
@@ -229,7 +245,6 @@
   color: red;
 }
 
-
 .header_img {
   width: 35px;
   height: 35px;
@@ -237,9 +252,9 @@
   justify-content: center;
   border-radius: 50%;
   overflow: hidden;
-  margin-right:18px;
+  margin-right: 18px;
 }
-.header_img:hover{
+.header_img:hover {
   cursor: pointer;
 }
 .header_img img {
@@ -249,14 +264,14 @@
     DEMO STYLE
 */
 
-/* @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"; */
+/* @import "https://fonts.googleapis.com/css?family=jacobs_font:300,400,500,600,700"; */
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "jacobs_font";
   background: #eee;
 }
 
 p {
-  font-family: "Poppins", sans-serif;
+  font-family: "jacobs_font";
   font-size: 1.1em;
   font-weight: 300;
   line-height: 1.7em;
@@ -286,9 +301,9 @@ a:focus {
   border: none;
 }
 .navbar-li{
-  border-color: grey;
-  border-width:0px 0px 1px 0px;
-  border-style: solid;
+  /* border-color: grey; */
+  /* border-width:0px 0px 1px 0px; */
+  /* border-style: solid; */
 }
 .line {
   width: 100%;
@@ -320,29 +335,29 @@ a:focus {
   /* width: 4rem; */
   /* border-right:solid 1px rgb(182, 182, 182); */
 }
-.sidebar-logo{
-  padding:0px;
+.sidebar-logo {
+  padding: 0px;
 }
-.sidebar-logo-ui{
+.sidebar-logo-ui {
   display: flex;
   flex-direction: column;
   justify-content: center;
   justify-items: center;
-  width:100%;
+  width: 100%;
   text-align: center;
-  padding-top:1.1rem;
+  padding-top: 1.1rem;
 }
-.sidebar-logo-li{
-  border:solid 1px rgb(185, 185, 185);
-  padding:0.75rem;
-  border-top:none;
+.sidebar-logo-li {
+  /* border: solid 1px rgb(185, 185, 185); */
+  padding: 0.75rem;
+  border-top: none;
   border-right: none;
   border-left: none;
 }
-.sidebar-logo-li:hover{
+.sidebar-logo-li:hover {
   cursor: pointer;
 }
-.sidebar-logo-li-active{
+.sidebar-logo-li-active {
   background-color: #263c9c;
 }
 #sidebar.active {
@@ -353,8 +368,8 @@ a:focus {
   display: flex;
   justify-content: left;
   justify-items: center;
-  height:63px;
-  margin-left:10px;
+  height: 63px;
+  margin-left: 10px;
   /* padding: 20px;
   background: #6d7fcc; */
 }
@@ -433,11 +448,11 @@ a.article:hover {
 .hamburger-H {
   width: 30px;
   cursor: pointer;
-  height:100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap:0xp;
+  gap: 0xp;
 }
 
 .line-H {
@@ -491,27 +506,25 @@ a.article:hover {
   cursor: pointer;
 }
 
-
-.dash-table-row{
-  border:solid 1px rgb(185, 185, 185);
-  margin:0px;
-  gap:0px;
-  padding:10px;
+.dash-table-row {
+  border: solid 1px rgb(185, 185, 185);
+  margin: 0px;
+  gap: 0px;
+  padding: 10px;
 }
 
-.dash-table-row:nth-child(even){
-  margin:0px;
-  gap:0px;
-  padding:10px;
+.dash-table-row:nth-child(even) {
+  margin: 0px;
+  gap: 0px;
+  padding: 10px;
   background-color: #def2ff;
 }
-.dash-table-row:hover{
-  margin:0px;
-  gap:0px;
-  padding:10px;
+.dash-table-row:hover {
+  margin: 0px;
+  gap: 0px;
+  padding: 10px;
   background-color: #f6fbff;
 }
-
 
 /* ---------------------------------------------------
     CONTENT STYLE
@@ -536,23 +549,32 @@ a.article:hover {
     margin-left: 0;
   }
   #sidebarCollapse span {
-    display: none;     
+    display: none;
   }
 }
 
 /* ---------------------------------------------------
     NAVLINKS
 ----------------------------------------------------- */
-.nav-link{
-  background-color:#263c9c;
+.nav-link {
+  background-color: #263c9c;
   color: #fff;
   margin: 0 5px;
 }
-.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-  background-color:#4e67d4;
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: #4e67d4;
 }
-.nav{
+.nav {
   --bs-nav-link-hover-color: #b0b9c2;
+}
+.form-control {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+:root,
+[data-bs-theme="light"] {
+  --bs-border-color: #c6c5c5;
 }
 
 .form-control {

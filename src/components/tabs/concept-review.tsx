@@ -47,29 +47,28 @@ export default function ConceptReview({ step }: TabsProps) {
         <label htmlFor="field3" className='w-25'>Modelling Tasks</label>
       </div>
       <div>
-        <input type="radio" name="field3" id="field3" />
+        <input type="radio" name="field3" id="field3" onClick={()=>{setshowOther(false)}} />
         <label htmlFor="field3" className='w-25' style={{ marginLeft: "8px" }}>Model Build</label>
         <div>
-          <input type="radio" name="field3" id="field3" />
+          <input type="radio" name="field3" id="field3" onClick={()=>{setshowOther(false)}} />
           <label htmlFor="field3" className='w-25' style={{ marginLeft: "8px" }}>Model Calibration/Verification</label>
         </div>
         <div>
-          <input type="radio" name="field3" id="field3" />
+          <input type="radio" name="field3" id="field3" onClick={()=>{setshowOther(false)}} />
           <label htmlFor="field3" className='w-25' style={{ marginLeft: "8px" }}>Sensitivity Testing</label>
         </div>
         <div>
-          <input type="radio" name="field3" id="field3" />
+          <input type="radio" name="field3" id="field3" onClick={()=>{setshowOther(false)}} />
           <label htmlFor="field3" className='w-25' style={{ marginLeft: "8px" }}>RUA</label>
         </div>
         <div>
-          <input type="radio" name="field3" id="field3" />
+          <input type="radio" name="field3" id="field3" onClick={()=>{setshowOther(false)}} />
           <label htmlFor="field3" className='w-25' style={{ marginLeft: "8px" }}>Scenario Modelling</label>
         </div>
-        <div className='mb-4 d-flex flex-row' style={{ justifyItems: "center", justifySelf: "center" }}>
-          <input type='radio' onClick={()=>{setshowOther(true)}}></input>
+        <div className='mb-4 d-flex flex-row' style={{  }}>
+          <input type='radio' name="field3" id="field3" onClick={()=>{setshowOther(true)}}></input>
           <label htmlFor="field3" style={{ marginLeft: "8px", marginRight: "19.9%" , paddingTop:"7px"}}>Other</label>
-          {showOther && <input type="text" name="field3" className="form-control w-25" id="field3" />}
-          {/* <input type="input" name="field3" id="field3"/> */}
+          {showOther && <input type="text" name="field3" className="form-control w-25 ml-[rem]" id="field3" />}
         </div>
       </div>
       <div className="mb-3 d-flex flex-row">

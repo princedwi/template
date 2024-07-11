@@ -4,7 +4,8 @@ import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import StoreProvider from "@/storeProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+import {NextUIProvider} from "@nextui-org/react";
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Webapp",
@@ -17,10 +18,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+      // <NextUIProvider>
     <html lang="en">
-      <StoreProvider>
-        <body className={inter.className}>{children}</body>
-      </StoreProvider>
-    </html>
+        <StoreProvider>
+          <body className={""}>{children}</body>
+
+        </StoreProvider>
+      </html>
+          // {/* </NextUIProvider> */}
   );
 }

@@ -26,7 +26,7 @@ export default function Dashboard() {
           <Link href="/CreateQA" passHref={true}>
             <button className="btn btn-light btn-lg float-end m-4 me-5 px-5 bg-#6d7fcc" style={{backgroundColor:'#263c9c',color:'white'}}>Create QA</button>
           </Link>
-          <h2 className="m-4">Project Details</h2>
+          <h2 className="m-4 text-[2rem]">Project Details</h2>
           {/* <div className="card">
             <div className="card-body text-center text-success">
               <Link href="/CreateQA" passHref={true}>
@@ -41,7 +41,7 @@ export default function Dashboard() {
         <div className="" style={{borderRadius: "2%", 
           backgroundColor:"white",width:"92%", marginLeft:"35px", marginRight:"9"
           }}>
-        <Table/>
+        <Table />
         </div>
       </div>
     </>
