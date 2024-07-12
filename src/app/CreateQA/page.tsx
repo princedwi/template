@@ -3,11 +3,29 @@
 import ConceptReview from "@/components/tabs/concept-review";
 import ModelApproach from "@/components/tabs/model-approach";
 import OutputsTab from "@/components/tabs/outputs-tab";
-import ProjectInfo from "@/components/tabs/project-info";
 import DataTab from "@/components/tabs/data-tab";
-import { useState } from "react";
+import React, { useState } from "react";
 import DetailedSpecification from "@/components/tabs/detailed-specification";
-import ModelLogs  from "@/components/tabs/model-logs";
+import ModelLogs from "@/components/tabs/model-logs";
+import { ProjectInfoContext } from "@/context/context";
+import ProjectInfo from "@/components/tabs/project-info";
+export type mpdata2 = {
+  projectname: string;
+  projectcode: string;
+  projectmanager: string;
+  projectverifier: string;
+  clientscope: string;
+  budget: string;
+  originator: string;
+  lead: string;
+  advisor: string;
+  typeofstudy: string;
+}
+export type ProjectInfoInterface = {
+  mpdata: mpdata2,
+  setdatam: React.Dispatch<React.SetStateAction<mpdata2>>
+}
+
 export default function Form() {
   const [step, setStep] = useState<number>(1);
 
@@ -23,9 +41,40 @@ export default function Form() {
   ];
 
 
+
   const handleStep = (stepNumber: number) => {
     setStep(stepNumber);
   };
+  const [datam, setdatam] = React.useState<mpdata2>({
+    projectname: "",
+    projectcode: "",
+    projectmanager: "",
+    projectverifier: "",
+    clientscope: "",
+    budget: "",
+    originator: "",
+    lead: "",
+    advisor: "",
+    typeofstudy: "",
+  });
+  const [clr,setclr]=React.useState(false);
+  const check = () => {
+    if (
+      datam["projectname"] === "" ||
+      datam["projectcode"] === "" ||
+      datam["projectmanager"] === "" ||
+      datam["projectverifier"] === "" ||
+      datam["clientscope"] === "" ||
+      datam["budget"] === "" ||
+      datam["originator"] === "" ||
+      datam["lead"] === "" ||
+      datam["advisor"] === "") return 0;
+      setclr(true);
+    return 1;
+  }
+  React.useEffect((
+    
+  )=>{var g=check();},[datam])
   return (
     <>
       <form action="" method="post" id="registration" className="stepForm m-4">
@@ -34,13 +83,15 @@ export default function Form() {
 
             {values.map((value) => (
               <a
-                className={`nav-link  ${step === value.id ? "active" : ""}`} 
+                className={`${clr?'bg-grey':'bg-theme-clr'} nav-link  ${step === value.id ? "active" : ""} `}
                 //style={{ backgroundColor: '#6d7fcc', color: 'White', margin: '0 5px'}}
                 id={`step${value.id}-tab`}
                 data-bs-toggle="tab"
-                onClick={() => handleStep(value.id)}
+                onClick={() => { if (check()) { handleStep(value.id) } else { } }}
               >
-                {value.name}
+                <div className="">
+                  {value.name}
+                  </div>
               </a>
             ))}
 
@@ -56,14 +107,16 @@ export default function Form() {
             </a> */}
           </div>
         </nav>
-        <div className="tab-content" style={{paddingLeft:"0.5rem", paddingRight:"0.5rem", paddingTop:"1.5rem"}}>
-          <ProjectInfo step={step} />
-          <ConceptReview step={step} />
-          <ModelApproach step={step} />
-          <OutputsTab step={step} />
-          <DataTab step={step} />
-          <DetailedSpecification step={step} />
-          <ModelLogs step={step} />
+        <div className="tab-content" style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "1.5rem" }}>
+          <ProjectInfoContext.Provider value={{ mpdata: datam, setdatam: setdatam }}>
+            <ProjectInfo step={step} />
+            <ConceptReview step={step} />
+            <ModelApproach step={step} />
+            <OutputsTab step={step} />
+            <DataTab step={step} />
+            <DetailedSpecification step={step} />
+            <ModelLogs step={step} />
+          </ProjectInfoContext.Provider>
         </div>
         {/* <div className="row justify-content-between">
           <div className="col-auto">

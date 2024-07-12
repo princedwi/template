@@ -30,10 +30,9 @@
   width: 95.6vw;
 }
 
-input{
-  /* border:solid 1px black; */
+.bg-grey{
+  background-color: grey;
 }
-
 /* ---------------------------------------------------
     LOGIN STYLE
 ----------------------------------------------------- */
@@ -565,8 +564,18 @@ a.article:hover {
 .nav-pills .show > .nav-link {
   background-color: #4e67d4;
 }
+.nav-pills .nav-link.active,
+.nav-pills .show > .bg-theme-clr {
+  background-color: #4e67d4;
+}
 .nav {
   --bs-nav-link-hover-color: #b0b9c2;
+}
+.bg-theme-clr{
+  background-color: grey;
+  color: #fff;
+  margin: 0 5px;
+  padding: 0.5rem 1px
 }
 .form-control {
   border: var(--bs-border-width) solid var(--bs-border-color);
