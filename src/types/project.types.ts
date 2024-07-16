@@ -5,7 +5,14 @@ export interface Project_Info{
     ProjectVerifier:string
     ClientScope:string;
     Budget:string;
-    ModellingTeam:string;
+    Originator: string,
+    Lead: string,
+    Advisor: string,
     StudyOther:string;
     master_type_study: number;
+}
+
+export type ProjectInfoInterface = {
+    ProjectContextData: Project_Info,
+    setProjectContextData: React.Dispatch<React.SetStateAction<Project_Info>>
 }

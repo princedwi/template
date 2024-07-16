@@ -9,22 +9,7 @@ import DetailedSpecification from "@/components/tabs/detailed-specification";
 import ModelLogs from "@/components/tabs/model-logs";
 import { ProjectInfoContext } from "@/context/context";
 import ProjectInfo from "@/components/tabs/project-info";
-export type mpdata2 = {
-  projectname: string;
-  projectcode: string;
-  projectmanager: string;
-  projectverifier: string;
-  clientscope: string;
-  budget: string;
-  originator: string;
-  lead: string;
-  advisor: string;
-  typeofstudy: string;
-}
-export type ProjectInfoInterface = {
-  mpdata: mpdata2,
-  setdatam: React.Dispatch<React.SetStateAction<mpdata2>>
-}
+import { Project_Info } from "@/types/project.types";
 
 export default function Form() {
   const [step, setStep] = useState<number>(1);
@@ -45,36 +30,36 @@ export default function Form() {
   const handleStep = (stepNumber: number) => {
     setStep(stepNumber);
   };
-  const [datam, setdatam] = React.useState<mpdata2>({
-    projectname: "",
-    projectcode: "",
-    projectmanager: "",
-    projectverifier: "",
-    clientscope: "",
-    budget: "",
-    originator: "",
-    lead: "",
-    advisor: "",
-    typeofstudy: "",
+  const [ProjectContextData, setProjectContextData] = React.useState<Project_Info>({
+    ProjectName: "",
+    ProjectCode: "",
+    ProjectManager: "",
+    ProjectVerifier: "",
+    ClientScope: "",
+    Budget: "",
+    Originator: "",
+    Lead: "",
+    Advisor: "",
+    StudyOther:"",
+    master_type_study: 0,
   });
   const [clr,setclr]=React.useState(false);
   const check = () => {
     if (
-      datam["projectname"] === "" ||
-      datam["projectcode"] === "" ||
-      datam["projectmanager"] === "" ||
-      datam["projectverifier"] === "" ||
-      datam["clientscope"] === "" ||
-      datam["budget"] === "" ||
-      datam["originator"] === "" ||
-      datam["lead"] === "" ||
-      datam["advisor"] === "") return 0;
+      ProjectContextData["ProjectName"] === "" ||
+      ProjectContextData["ProjectCode"] === "" ||
+      ProjectContextData["ProjectManager"] === "" ||
+      ProjectContextData["ProjectVerifier"] === "" ||
+      ProjectContextData["ClientScope"] === "" ||
+      ProjectContextData["Budget"] === "" ||
+      ProjectContextData["Originator"] === "" ||
+      ProjectContextData["Lead"] === "" ||
+      ProjectContextData["Advisor"] === "") return 0;
       setclr(true);
     return 1;
   }
   React.useEffect((
-    
-  )=>{var g=check();},[datam])
+  )=>{var g=check();},[ProjectContextData])
   return (
     <>
       <form action="" method="post" id="registration" className="stepForm m-4">
@@ -108,7 +93,7 @@ export default function Form() {
           </div>
         </nav>
         <div className="tab-content" style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "1.5rem" }}>
-          <ProjectInfoContext.Provider value={{ mpdata: datam, setdatam: setdatam }}>
+          <ProjectInfoContext.Provider value={{ ProjectContextData: ProjectContextData, setProjectContextData: setProjectContextData }}>
             <ProjectInfo step={step} />
             <ConceptReview step={step} />
             <ModelApproach step={step} />

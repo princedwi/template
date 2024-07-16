@@ -593,3 +593,6 @@ a.article:hover {
 :root, [data-bs-theme=light] {
   --bs-border-color: #c6c5c5;
 }
+select {
+  -webkit-appearance: listbox !important;
+  }

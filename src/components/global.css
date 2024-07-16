@@ -24,3 +24,7 @@
 :root, [data-bs-theme=light] {
   --bs-border-color: #b8b8b8;
 }
+
+select {
+  -webkit-appearance: listbox !important;
+  }
