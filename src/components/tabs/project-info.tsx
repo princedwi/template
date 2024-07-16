@@ -5,7 +5,8 @@ export interface TabsProps {
 }
 import { useProjectInfoContext } from '@/context/context';
 import { mpdata2 } from '@/app/CreateQA/page';
-import { createProject } from '@/utilities/axios/createProject';
+import { createProject } from '@/utilities/axios/project/createProject';
+import { Project_Info } from '@/types/project.types';
 // import { createProject } from '@/utilities/axios/createproject';
 export default function ProjectInfo({ step }: TabsProps) {
   const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ export default function ProjectInfo({ step }: TabsProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let u = { ProjectName: "DDS" };
-    console.log("Formdata", formData)
+    console.log("Formdata submit", formData)
     try {
       console.log("Formdata", formData)
       await createProject(formData);
@@ -67,7 +68,21 @@ export default function ProjectInfo({ step }: TabsProps) {
       data["typeofstudy"] === "") {
       return;
     }
+    const formDetails:Project_Info = {
+      ProjectName: data.projectname,
+      ProjectCode: data.projectcode,
+      ProjectManager: data.projectmanager,
+      ProjectVerifier: data.projectverifier,
+      ClientScope: data.clientscope,
+      Budget: data.budget,
+      ModellingTeam: data.lead,
+      StudyOther: "",
+      master_type_study: 0
+    }
     setdatam(data);
+    createProject(formDetails)
+    .then(e=>console.log("successfully created"))
+    .catch(err => console.log(err.message))
   }
   return (
     <>
