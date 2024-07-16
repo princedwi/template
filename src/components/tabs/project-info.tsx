@@ -79,9 +79,12 @@ export default function ProjectInfo({ step }: TabsProps) {
       StudyOther: "",
       master_type_study: 0
     }
-    setdatam(data);
+    
     createProject(formDetails)
-    .then(e=>console.log("successfully created"))
+    .then(e=>{
+      console.log("successfully created")
+      setdatam(data);
+    })
     .catch(err => console.log(err.message))
   }
   return (
