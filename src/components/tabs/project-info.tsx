@@ -30,6 +30,7 @@ export default function ProjectInfo({ step }: TabsProps) {
     setData({ ...data, [tname === "" ? name : tname]: value })
   };
 
+
   const handleradiobutton = (e: HTMLTextAreaElement) => {
     setData({ ...data, [e.name]: Number(e.value) })
   }
@@ -160,31 +161,20 @@ export default function ProjectInfo({ step }: TabsProps) {
             <label htmlFor="master_type_study" className='w-25'>Type of Study</label>
           </div>
           <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="0" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-              setshowOther(false)
-            }} />
+            <input type="radio" name="master_type_study" id="master_type_study" value="1" onClick={(e) => {handleradiobutton(e.target as HTMLTextAreaElement);setshowOther(false)}} />
             <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>SOB</label>
-            <input type="radio" name="master_type_study" id="master_type_study" value="1" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-
-              setshowOther(false)
-            }} className='' />
+            <input type="radio" name="master_type_study" id="master_type_study" value="5" onClick={(e) => {handleradiobutton(e.target as HTMLTextAreaElement); setshowOther(false) }} className='' />
             <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>Surface Water Flood Mapping</label>
-            <input type="radio" name="master_type_study" value="2" id="master_type_study" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-
-              setshowOther(false)
-            }} />
+            <input type="radio" name="master_type_study" value="9" id="master_type_study" onClick={(e) => {handleradiobutton(e.target as HTMLTextAreaElement); setshowOther(false) }} />
             <label htmlFor="master_type_study" style={{ marginLeft: "8px" }}>Flood Risk Assessment</label>
           </div>
           <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="3" onClick={(e) => {
+            <input type="radio" name="master_type_study" id="master_type_study" value="2" onClick={(e) => {
               handleradiobutton(e.target as HTMLTextAreaElement);
               setshowOther(false)
             }} />
             <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>OBC</label>
-            <input type="radio" name="master_type_study" id="master_type_study" value="4" onClick={(e) => {
+            <input type="radio" name="master_type_study" id="master_type_study" value="6" onClick={(e) => {
               handleradiobutton(e.target as HTMLTextAreaElement);
               setshowOther(false)
             }} />
@@ -199,19 +189,19 @@ export default function ProjectInfo({ step }: TabsProps) {
             {/* </div> */}
           </div>
           <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="5" onClick={(e) => {
+            <input type="radio" name="master_type_study" id="master_type_study" value="3" onClick={(e) => {
               handleradiobutton(e.target as HTMLTextAreaElement);
               setshowOther(false)
             }} />
             <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>Detailed Desgin</label>
-            <input type="radio" name="master_type_study" id="master_type_study" value="6" onClick={(e) => {
+            <input type="radio" name="master_type_study" id="master_type_study" value="7" onClick={(e) => {
               handleradiobutton(e.target as HTMLTextAreaElement);
               setshowOther(false)
             }} />
             <label htmlFor="master_type_study" style={{ marginLeft: "8px" }}>Reservoir Flood Safety</label>
           </div>
           <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="7" onClick={(e) => {
+            <input type="radio" name="master_type_study" id="master_type_study" value="4" onClick={(e) => {
               handleradiobutton(e.target as HTMLTextAreaElement);
               setshowOther(false)
             }} />
