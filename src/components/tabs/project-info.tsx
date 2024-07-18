@@ -16,7 +16,7 @@ export default function ProjectInfo({ step }: TabsProps) {
     ProjectCode: "",
     ProjectManager: "",
     ProjectVerifier: "",
-    ClientScope: "", 
+    ClientScope: "",
     Budget: "",
     Originator: "",
     Lead: "",
@@ -29,6 +29,7 @@ export default function ProjectInfo({ step }: TabsProps) {
     const { name, value } = e.target;
     setData({ ...data, [tname === "" ? name : tname]: value })
   };
+
 
   const handleradiobutton = (e: HTMLTextAreaElement) => {
     setData({ ...data, [e.name]: Number(e.value) })
@@ -63,7 +64,7 @@ export default function ProjectInfo({ step }: TabsProps) {
           <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
             <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }}>Submit</div>
           </div>
-            {/* <button type="submit" className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }} style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px' }}>Submit</button> */}
+          {/* <button type="submit" className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }} style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px' }}>Submit</button> */}
           <div className="mb-3 d-flex flex-row w-[65%]">
             <label htmlFor="ProjectName" className='w-25'>Project Name</label>
             <input type="text" name="ProjectName" className="form-control w-[20rem]" id="ProjectName" required value={data.ProjectName}
@@ -122,70 +123,65 @@ export default function ProjectInfo({ step }: TabsProps) {
               justifyItems: "start",
             }}>
               <label htmlFor="ModellingTeam" className='w-[12rem]'>Modelling Team</label>
-              <label htmlFor="ModellingTeam" className='w-[21rem]'>Originator</label>
-              <label htmlFor="ModellingTeam" className='w-[21rem]'>Lead</label>
-              <label htmlFor="ModellingTeam" className='w-[21rem]'>Advisor</label>
+              <div className=''>
+                <label htmlFor="ModellingTeam" className='w-[21rem]'>Originator</label>
+                <select className='form-control w-[95%] mt-[10px]'
+                  onChange={(e => {
+                    handleInputChange(e, "Originator");
+                  })}>
+                  <option value="" className=''>Select Originator</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                </select>
+              </div>
+              <div className=''>
+                <label htmlFor="ModellingTeam" className='w-[21rem]'>Lead</label>
+                <select className='form-control w-[95%] mt-[10px]'
+                  onChange={(e => {
+                    handleInputChange(e, "Lead");
+
+                  })}
+                >
+                  <option value="" className=''>Select Lead</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                </select>
+              </div>
+              <div className=''>
+                <label htmlFor="ModellingTeam" className='w-[21rem]'>Advisor</label>
+                <select className='form-control w-[95%] mt-[10px]'
+                  onChange={(e => {
+                    handleInputChange(e, "Advisor");
+
+                  })}>
+                  <option value="" className=''>Select Advisor</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                </select>
+              </div>
             </div>
           </div>
-          <div className="mb-3 grid grid-cols-4 items-right ml-[-9rem]" style={{ gap: "0rem" }}>
+          {/* <div className="mb-3 grid grid-cols-4 items-right ml-[-9rem]" style={{ gap: "0rem" }}>
             <div></div>
-            <select className='form-control w-[95%]'
-              onChange={(e => {
-                handleInputChange(e, "Originator");
-              })}>
-              <option value="" className=''>Select Originator</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-            </select>
-            <select className='form-control w-[95%]'
-              onChange={(e => {
-                handleInputChange(e, "Lead");
-
-              })}
-            >
-              <option value="" className=''>Select Lead</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-            </select>
-            <select className='form-control w-[95%]'
-              onChange={(e => {
-                handleInputChange(e, "Advisor");
-
-              })}>
-              <option value="" className=''>Select Advisor</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-            </select>
-          </div>
-          <div className="mb-3 d-flex flex-row w-[65%]">
+          </div> */}
+          <div className="mb-3 d-flex flex-row w-[65%] mt-[30px]" style={{ marginTop: "30px" }}>
             <label htmlFor="master_type_study" className='w-25'>Type of Study</label>
           </div>
           <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="0" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-              setshowOther(false)
-            }} />
+            <input type="radio" name="master_type_study" id="master_type_study" value="1" onClick={(e) => { handleradiobutton(e.target as HTMLTextAreaElement); setshowOther(false) }} />
             <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>SOB</label>
-            <input type="radio" name="master_type_study" id="master_type_study" value="1" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-
-              setshowOther(false)
-            }} className='' />
+            <input type="radio" name="master_type_study" id="master_type_study" value="5" onClick={(e) => { handleradiobutton(e.target as HTMLTextAreaElement); setshowOther(false) }} className='' />
             <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>Surface Water Flood Mapping</label>
-            <input type="radio" name="master_type_study" value="2" id="master_type_study" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-
-              setshowOther(false)
-            }} />
+            <input type="radio" name="master_type_study" value="9" id="master_type_study" onClick={(e) => { handleradiobutton(e.target as HTMLTextAreaElement); setshowOther(false) }} />
             <label htmlFor="master_type_study" style={{ marginLeft: "8px" }}>Flood Risk Assessment</label>
           </div>
           <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="3" onClick={(e) => {
+            <input type="radio" name="master_type_study" id="master_type_study" value="2" onClick={(e) => {
               handleradiobutton(e.target as HTMLTextAreaElement);
               setshowOther(false)
             }} />
             <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>OBC</label>
-            <input type="radio" name="master_type_study" id="master_type_study" value="4" onClick={(e) => {
+            <input type="radio" name="master_type_study" id="master_type_study" value="6" onClick={(e) => {
               handleradiobutton(e.target as HTMLTextAreaElement);
               setshowOther(false)
             }} />
@@ -200,19 +196,19 @@ export default function ProjectInfo({ step }: TabsProps) {
             {/* </div> */}
           </div>
           <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="5" onClick={(e) => {
+            <input type="radio" name="master_type_study" id="master_type_study" value="3" onClick={(e) => {
               handleradiobutton(e.target as HTMLTextAreaElement);
               setshowOther(false)
             }} />
             <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>Detailed Desgin</label>
-            <input type="radio" name="master_type_study" id="master_type_study" value="6" onClick={(e) => {
+            <input type="radio" name="master_type_study" id="master_type_study" value="7" onClick={(e) => {
               handleradiobutton(e.target as HTMLTextAreaElement);
               setshowOther(false)
             }} />
             <label htmlFor="master_type_study" style={{ marginLeft: "8px" }}>Reservoir Flood Safety</label>
           </div>
           <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="7" onClick={(e) => {
+            <input type="radio" name="master_type_study" id="master_type_study" value="4" onClick={(e) => {
               handleradiobutton(e.target as HTMLTextAreaElement);
               setshowOther(false)
             }} />

@@ -21,8 +21,8 @@ export default function Dashboard() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="row stats my-0 h-[100vh] pb-[10rem]">
-        <div className=" ms-2">
+      <div className="row55 stats55 my-0 h-[90vh] pt-[0rem]">
+        <div className=" ms-2" style={{height:"0rem"}}>
           <Link href="/CreateQA" passHref={true}>
             <button className="btn btn-light btn-lg float-end m-4 me-5 px-5 bg-#6d7fcc" style={{backgroundColor:'#263c9c',color:'white'}}>Create QA</button>
           </Link>
@@ -39,7 +39,7 @@ export default function Dashboard() {
           </div> */}
         </div>
         <div className="" style={{borderRadius: "2%", 
-          backgroundColor:"white",width:"92%", marginLeft:"35px", marginRight:"9"
+          backgroundColor:"white",width:"92%", height:"25.5rem", marginLeft:"35px", marginRight:"9", marginTop:"8%", padding:"0.5rem"
           }}>
         <Table />
         </div>
