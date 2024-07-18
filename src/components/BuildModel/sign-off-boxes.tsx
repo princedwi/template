@@ -20,7 +20,7 @@ const Signoff = () => {
     return (
         <>
             <div className=' gap-4 w-full ' >
-                <form className=' w-full' style={{ backgroundColor: "", width: "100%", display: "flex", justifyContent: "space-between", height: "130px" }}>
+                <div className=' w-full' style={{ backgroundColor: "", width: "100%", display: "flex", justifyContent: "space-between", height: "130px" }}>
                     <div className='flex flex-col items-center justify-center' style={{ width: "30%", textAlign: "center", fontSize: "14px", justifyContent:"center" }}>
                         <div className=''>
                             Model Advisor Review Comment
@@ -44,7 +44,7 @@ const Signoff = () => {
                         <input type="file" onChange={handleFileChange} style={{ textAlign: "center", display: "flex", justifyContent: "center", width: "87px", overflow: "hidden", marginLeft: "40%" }} />
                         {/* <button type="submit" >Upload</button> */}
                     </div>
-                </form>
+                </div>
             </div>
         </>
     )

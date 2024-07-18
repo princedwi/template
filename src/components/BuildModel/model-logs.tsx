@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import ApproachDefinition from './approach-definition';
 import ModelChecks from './model-checks';
 import ModelLeadSignOff from './model-lead-sign-off';
 import Signoff from './sign-off-boxes';
@@ -30,14 +29,17 @@ export default function ModelLogsComponent({ step }: TabsProps2) {
       <div className=''>
         <div className=''>
             <table className="" style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>
+              <tbody>
                 <tr style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>
                     {values.map((value) => (
+                      <React.Fragment key={value.id}> 
                         <>
                         <th style={{fontWeight:"400", fontSize:"13px", borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)"}}>
                             <div className="" style={{fontSize:"13px", textAlign:"center"}}>
                               {value.name}
                               </div>
                               </th></>
+                              </React.Fragment>
                     ))}
                 </tr>
                 <tr style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>
@@ -64,7 +66,7 @@ export default function ModelLogsComponent({ step }: TabsProps2) {
                 <tr style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>
                 <td style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>&nbsp;</td><td style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>&nbsp;</td><td style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>&nbsp;</td><td style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>&nbsp;</td><td style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>&nbsp;</td><td style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>&nbsp;</td><td style={{borderStyle:"solid", borderWidth:"1px", borderColor:"rgba(204, 204, 204,1)", borderCollapse:"collapse"}}>&nbsp;</td>
                 </tr>
-                
+                </tbody>
             </table>
         </div>
       </div>

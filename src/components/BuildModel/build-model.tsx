@@ -30,12 +30,14 @@ export default function BuildModel({ step }: TabsProps2) {
       // className={`tab-pane fade ${step == 1 ? "show active" : ""}`}
       // id="step2"
       >
-        <form action="" method="post" id="registration" className="stepForm">
+        <div>
+        {/* <form action="" method="post" id="registration" className="stepForm"> */}
           <nav>
             <div className="nav nav-pills nav-fill gap-2" id="nav-tab" role="tablist">
 
               {values.map((value) => (
                 <a
+                key={value.id}
                   className={`nav-link  ${steptwo === value.id ? "" : ""}`}
                   //style={{ backgroundColor: '#6d7fcc', color: 'white', margin: '0 5px' }}
                   id={`steptwo${value.id}-tab`}
@@ -53,8 +55,8 @@ export default function BuildModel({ step }: TabsProps2) {
             </div>
           </nav>
 
-        </form>
-
+        {/* </form> */}
+        </div>
       </div>
     </>
   )

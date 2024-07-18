@@ -29,8 +29,8 @@ export default function DetailedSpecification({ step }: TabsProps) {
 
       >
 
-        <form action="" method="post" id="registration" className="stepForm ">
-
+        {/* <form action="" method="post" id="registration" className="stepForm "> */}
+        <div>
           <div className='d-flex'>
             <div className="nav-pills w-25 p-4 m-2 nav-fill " id="nav-tab" role="tablist" style={{ backgroundColor: 'white', borderRadius: "10px" }}>
 
@@ -43,7 +43,7 @@ export default function DetailedSpecification({ step }: TabsProps) {
                   key={i}
                   data-bs-toggle="tab"
                   onClick={() => handleStep(value.id)}
-                  style={{fontSize:"smaller"}}
+                  style={{ fontSize: "smaller" }}
                 >
                   {value.name}
                 </a>
@@ -57,7 +57,8 @@ export default function DetailedSpecification({ step }: TabsProps) {
 
             </div>
           </div>
-        </form>
+          {/* </form> */}
+        </div>
       </div>
 
 

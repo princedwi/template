@@ -68,6 +68,7 @@ export default function Form() {
 
             {values.map((value) => (
               <a
+              key={value.id}
                 className={`${clr?'bg-grey':'bg-theme-clr'} nav-link  ${step === value.id ? "active" : ""} `}
                 //style={{ backgroundColor: '#6d7fcc', color: 'White', margin: '0 5px'}}
                 id={`step${value.id}-tab`}

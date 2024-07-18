@@ -43,9 +43,9 @@ export default function DataTab({ step }: TabsProps) {
 
       <div className='d-flex'>
         <div className='data w-25' >
-          {data.map((item, index) => (<>
-            <div><input key={item.key} type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
-          </>))}
+          {data.map((item, index) => (
+            <div key={item.key}><input  type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
+        ))}
           {/* <div><input type="text" name="field3" id="field3" className='me-2 mb-3 border rounded-sm' /></div>
           <div><input type="text" name="field3" id="field3" className='me-2 mb-3 border rounded-sm' /></div> */}
         </div>
@@ -53,21 +53,21 @@ export default function DataTab({ step }: TabsProps) {
         <div className='description w-25'>
 
           {data.map((item, index) => (<>
-            <div><input key={item.key} type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%] ' /></div>
+            <div key={item.key}><input type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%] ' /></div>
           </>))}
         </div>
 
         <div className='location w-25'>
 
           {data.map((item, index) => (<>
-            <div><input key={item.key} type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div  key={item.key}><input type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
           </>))}
         </div>
 
         <div className='dataAdded w-25'>
 
           {data.map((item, index) => (<>
-            <div><input key={item.key} type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div  key={item.key}><input type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
           </>))}
         </div>
 

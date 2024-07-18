@@ -57,6 +57,7 @@ export default function TableModel({ step }: TabsProps2) {
                
             </div>
             <table style={{ fontSize: "0.94rem" }}>
+                <tbody>
                 <tr>
                     <td className="" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                         <div className="mb-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
@@ -75,9 +76,11 @@ export default function TableModel({ step }: TabsProps2) {
                     <td style={{ borderStyle: "solid", borderWidth: "0px", borderColor: "grey", paddingTop: "15px" }}>
                     </td>
                 </tr>
+                </tbody>
             </table>
             <div style={{ backgroundColor: '#4e67d4', marginBottom: '20px', textAlign: 'center', }}>Watercourse Schematisation<br></br></div>
             <table style={{ fontSize: "0.94rem" }}>
+                <tbody>
                 <tr>
                     <td className="" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                         <div className="mb-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
@@ -194,10 +197,12 @@ export default function TableModel({ step }: TabsProps2) {
                     </td>
 
                 </tr>
+                </tbody>
             </table>
 
             <div style={{ backgroundColor: '#4e67d4', marginBottom: '20px', textAlign: 'center', }}>1D Floodplain Schematisation<br></br></div>
             <table style={{ fontSize: "0.94rem" }}>
+                <tbody>
                 <tr>
                     <td className="" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                         <div className="mb-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
@@ -311,10 +316,12 @@ export default function TableModel({ step }: TabsProps2) {
                     </td>
 
                 </tr>
+                </tbody>
             </table>
 
             <div style={{ backgroundColor: '#4e67d4', marginBottom: '20px', textAlign: 'center', }}>Structure representation<br></br></div>
             <table style={{ fontSize: "0.94rem" }}>
+                <tbody>
                 <tr>
                     <td className="" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                         <div className="mb-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
@@ -480,12 +487,13 @@ export default function TableModel({ step }: TabsProps2) {
                     <td style={{ borderStyle: "solid", borderWidth: "0px", borderColor: "grey" }}>
                     </td>
                 </tr>
-                
+                </tbody>
             </table>
 
 
             <div style={{ backgroundColor: '#4e67d4', marginBottom: '20px', textAlign: 'center', }}>Initial Conditions<br></br></div>
             <table style={{ fontSize: "0.94rem" }}>
+                <tbody>
                 <tr>
                     <td className="" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                         <div className="mb-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
@@ -548,11 +556,12 @@ export default function TableModel({ step }: TabsProps2) {
 
                     </td>
                 </tr>
-                
+                </tbody>
             </table>
 
             <div style={{ backgroundColor: '#4e67d4', marginBottom: '20px', textAlign: 'center', }}>Boundary Conditions<br></br></div>
             <table style={{ fontSize: "0.94rem" }}>
+                <tbody>
                 <tr>
                     <td className="" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                         <div className="mb-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
@@ -644,11 +653,12 @@ export default function TableModel({ step }: TabsProps2) {
                     </td>
 
                 </tr>
-                
+                </tbody>
             </table>
 
             <div style={{ backgroundColor: '#4e67d4', marginBottom: '20px', textAlign: 'center', }}>Model Parameters<br></br></div>
             <table style={{ fontSize: "0.94rem" }}>
+                <tbody>
                 <tr>
                     <td className="" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                         <div className="mb-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
@@ -732,7 +742,7 @@ export default function TableModel({ step }: TabsProps2) {
                     </td>
 
                 </tr>
-                
+                </tbody>
             </table>
         <div style={{ backgroundColor: '#dc3545c7', marginBottom: '20px', textAlign: 'center', }}>Model Advisor Sign Off<br></br></div>
 

@@ -45,7 +45,7 @@ export default function ProjectInfo({ step }: TabsProps) {
 
     createProject(data)
       .then(e => {
-        console.log("successfully created")
+        console.log("successfully created Project-Info")
         setData(data);
       })
       .catch(err => console.log(err.message))
@@ -59,7 +59,7 @@ export default function ProjectInfo({ step }: TabsProps) {
         id="step1"
       >
         <link href='tabs/style.css'></link>
-        <form>
+         {/* <form> */}
           <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
             {/* <button type="submit" className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }} style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px' }}>Submit</button> */}
             <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }}>Submit</div>
@@ -212,7 +212,7 @@ export default function ProjectInfo({ step }: TabsProps) {
             }} />
             <label htmlFor="master_type_study" style={{ marginLeft: "8px" }}>Initial Assessment</label>
           </div>
-        </form>
+        {/* </form> */}
       </div>
     </>
   )
