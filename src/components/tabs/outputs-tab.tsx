@@ -6,10 +6,14 @@ import { TabsProps } from './project-info'
         return (
     
       <div
-            className={`tab-pane fade ${step == 4 ? "show active" : ""}`}
+            className={`tab-pane relative fade ${step == 4 ? "show active" : ""}`}
             style={{backgroundColor: 'white',padding: '3rem'}}
             id="step4"
           >
+
+<div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
+            <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => {  }}>Submit</div>
+          </div>
             <div className="mb-3 d-flex flex-row">
               <label htmlFor="field1" className='w-25'><h5>Output Name</h5></label>
               <label htmlFor="field1" className='w-25 me-4 ml-7'><h5>Recipient</h5></label>

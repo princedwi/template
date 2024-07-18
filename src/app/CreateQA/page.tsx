@@ -43,8 +43,9 @@ export default function Form() {
     StudyOther:"",
     master_type_study: 0,
   });
-  const [clr,setclr]=React.useState(false);
+  const [clr,setclr]=React.useState(true);
   const check = () => {
+    return 1;
     if (
       ProjectContextData["ProjectName"] === "" ||
       ProjectContextData["ProjectCode"] === "" ||

@@ -1,10 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import ApproachDefinition from './approach-definition';
-import ModelChecks from './model-checks';
-import ModelLeadSignOff from './model-lead-sign-off';
-import Signoff from './sign-off-boxes';
 export interface TabsProps2 {
   step: number;
 }

@@ -16,7 +16,7 @@ export default function ProjectInfo({ step }: TabsProps) {
     ProjectCode: "",
     ProjectManager: "",
     ProjectVerifier: "",
-    ClientScope: "",
+    ClientScope: "", 
     Budget: "",
     Originator: "",
     Lead: "",
@@ -36,6 +36,7 @@ export default function ProjectInfo({ step }: TabsProps) {
 
   const fill = () => {
     // to check if none of the field is empty
+    setProjectContextData(data); // set context
     for (const key in data)
       if ((key === "StudyOther" && data["master_type_study" as keyof Project_Info] === 9 && data[key as keyof Project_Info] === "") || ((key) != "StudyOther" && data[key as keyof Project_Info] === ""))
         return;
@@ -60,9 +61,9 @@ export default function ProjectInfo({ step }: TabsProps) {
         <link href='tabs/style.css'></link>
         <form>
           <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
-            {/* <button type="submit" className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }} style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px' }}>Submit</button> */}
             <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }}>Submit</div>
           </div>
+            {/* <button type="submit" className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }} style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px' }}>Submit</button> */}
           <div className="mb-3 d-flex flex-row w-[65%]">
             <label htmlFor="ProjectName" className='w-25'>Project Name</label>
             <input type="text" name="ProjectName" className="form-control w-[20rem]" id="ProjectName" required value={data.ProjectName}

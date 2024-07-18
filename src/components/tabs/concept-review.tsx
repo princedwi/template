@@ -7,10 +7,13 @@ export default function ConceptReview({ step }: TabsProps) {
   return (
 
     <div
-      className={`tab-pane fade ${step == 2 ? "show active" : ""}`}
+      className={`tab-pane fade relative ${step == 2 ? "show active" : ""}`}
       style={{backgroundColor: 'white',padding: '3rem'}}
       id="step2"
     >
+            <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
+            <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => {  }}>Submit</div>
+          </div>
       <div className="mb-3 d-flex flex-row">
         <label htmlFor="field1" className='w-25'>Modelling Objectives and how does it meet the overall project aims</label>
         <input type="text" name="field1" className="form-control w-25" id="field1" />

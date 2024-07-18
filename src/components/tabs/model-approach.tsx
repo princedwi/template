@@ -7,10 +7,14 @@ export default function ModelApproach({step}: TabsProps) {
   return (
     
       <div
-            className={`tab-pane fade ${step == 3 ? "show active" : ""}`}
+            className={`tab-pane relative fade ${step == 3 ? "show active" : ""}`}
             style={{backgroundColor: 'white',padding: '3rem'}}
             id="step3"
           >
+            
+            <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
+            <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => {  }}>Submit</div>
+          </div>
             <link href='tabs/style.css'></link>
             
             <div className="mb-3 d-flex flex-row">
