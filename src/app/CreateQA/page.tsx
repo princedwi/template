@@ -43,7 +43,7 @@ export default function Form() {
     StudyOther:"",
     master_type_study: 0,
   });
-  const [clr,setclr]=React.useState(true);
+  const [clr,setclr]=React.useState(false);
   const check = () => {
     return 1;
     if (
@@ -63,12 +63,15 @@ export default function Form() {
   )=>{var g=check();},[ProjectContextData])
   return (
     <>
-      <form action="" method="post" id="registration" className="stepForm m-4">
+    <div className="stepForm m-4">
+
+      {/* <form action="" method="post" id="registration" className="stepForm m-4"> */}
         <nav>
           <div className="nav nav-pills nav-fill gap-2 mx-2" id="nav-tab" role="tablist">
 
             {values.map((value) => (
               <a
+              key={value.id}
                 className={`${clr?'bg-grey':'bg-theme-clr'} nav-link  ${step === value.id ? "active" : ""} `}
                 //style={{ backgroundColor: '#6d7fcc', color: 'White', margin: '0 5px'}}
                 id={`step${value.id}-tab`}
@@ -135,7 +138,9 @@ export default function Form() {
             </button>
           </div>
         </div> */}
-      </form>
+      {/* </form> */}
+    </div>
+
     </>
   );
 }

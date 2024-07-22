@@ -32,10 +32,11 @@ export default function DetailedSpecification({ step }: TabsProps) {
         <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right'>
           <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { }}>Submit</div>
         </div>
-        <form action="" method="post" id="registration" className="stepForm ">
+        {/* <form action="" method="post" id="registration" className="stepForm "> */}
 
-          <div className='d-flex' >
-            <div className="nav-pills w-25 p-4 m-2 nav-fill  " id="nav-tab" role="tablist" style={{ backgroundColor: 'white', borderRadius: "10px" }}>
+        <div>
+          <div className='d-flex'>
+            <div className="nav-pills w-25 p-4 m-2 nav-fill " id="nav-tab" role="tablist" style={{ backgroundColor: 'white', borderRadius: "10px" }}>
 
 
               {values.map((value, i) => (
@@ -60,7 +61,8 @@ export default function DetailedSpecification({ step }: TabsProps) {
 
             </div>
           </div>
-        </form>
+          {/* </form> */}
+        </div>
       </div>
 
 

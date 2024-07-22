@@ -188,7 +188,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             }}
           />
         </TableCell> */}
-        {headCells.map((headCell) => {console.log(headCell.label); return(
+        {headCells.map((headCell) => {return(
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}

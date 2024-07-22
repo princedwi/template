@@ -5,7 +5,7 @@ export interface TabsProps2 {
     step: number;
 }
 import JSONData from "../../assests/Detailed_Specification_Json.json"
-
+ 
 export default function TableModel(step: TabsProps2) {
     const [selectedFile, setSelectedFile] = useState<Array<File | null>>([null, null, null, null, null, null, null]);
     const [imagePreview, setImagePreview] = useState<Array<string | null>>([null, null, null, null, null, null, null]);
@@ -82,14 +82,14 @@ export default function TableModel(step: TabsProps2) {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, num: Number) => {
         const file = e.target.files?.[0] || null;
-        const nextCounters = selectedFile.map((c, i) => {
-            if (i === num) {
-                return file;
-            } else {
-                return c;
-            }
-        });
-        setSelectedFile(nextCounters);
+        // const nextCounters = selectedFile.map((c, i) => {
+        //     if (i === num) {
+        //         return file;
+        //     } else {
+        //         return c;
+        //     }
+        // });
+        // setSelectedFile(nextCounters);
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -124,11 +124,11 @@ export default function TableModel(step: TabsProps2) {
             <>
                 {
                     arr.map(function (value1, index) {
-                        return (<tr className=''>
+                        return (<tr className='' key={index}>
                             {categories?.map(function (cat, index2) {
                                 var gt: string[] | undefined = TableData?.get(`${val}$${cat}`)
                                 return (
-                                    <td className="ml-3" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
+                                    <td key={index2} className="ml-3" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                                         <div className="mb-3 ml-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
                                             <label style={{ textAlign: "left", fontSize: "0.94rem" }} htmlFor="field1" className=''>
                                                 {gt && gt[index]}
@@ -152,14 +152,17 @@ export default function TableModel(step: TabsProps2) {
             <div className='flex flex-row w-full' style={{ width: "100%", flexDirection: "row", display: "flex", fontSize: "0.94rem" }}>
             </div>
             {subcategories.map(function (val, index) {
-                return <>
-                    {val != "other" && <div style={{ backgroundColor: '#4e67d4', marginBottom: '20px', textAlign: 'center', }}>{val === "other" ? "" : val}<br></br></div>}
-                    <table style={{ fontSize: "0.94rem" }}>
-                        <tr>
-                            {helper(val)}
-                        </tr>
-                    </table>
-                </>
+                return( 
+                    <div key={index}>
+                        {val != "other" && <div key={index} style={{ backgroundColor: '#4e67d4', marginBottom: '20px', textAlign: 'center', }}>{val === "other" ? "" : val}<br></br></div>}
+                        <table key={Math.random() * 1000} style={{ fontSize: "0.94rem" }}>
+                            <thead>
+                                {/* <tr> */}
+                                {helper(val)}
+                                {/* </tr> */}
+                            </thead>
+                        </table>
+                    </div>)
             })}
             <div style={{ backgroundColor: '#dc3545c7', marginBottom: '20px', textAlign: 'center', }}>Model Advisor Sign Off<br></br></div>
         </>

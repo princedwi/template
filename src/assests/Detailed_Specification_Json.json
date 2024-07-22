@@ -224,6 +224,258 @@
           }
         }
       }
+    },
+    {
+      "id": 10,
+      "attributes": {
+        "SpecQueryID": "9",
+        "Query": "",
+        "isActive": null,
+        "Category1": "Automated Checks",
+        "Category2": "Watercourse Schematisation",
+        "createdAt": "2024-07-16T09:30:57.090Z",
+        "updatedAt": "2024-07-16T09:31:01.080Z",
+        "publishedAt": "2024-07-16T09:31:01.077Z",
+        "MasterModelSpecID": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "MasterModelSpecID": "1",
+              "ModelSpec": "1D River Model Build",
+              "createdAt": "2024-07-12T10:35:58.454Z",
+              "updatedAt": "2024-07-12T10:35:58.454Z",
+              "publishedAt": "2024-07-12T10:39:08.507Z"
+            }
+          }
+        }
+      }
+    }
+    ,
+    {
+      "id": 11,
+      "attributes": {
+        "SpecQueryID": "9",
+        "Query": "Define reaches where extended sections are required. Define approach for extended cross sections.",
+        "isActive": null,
+        "Category1": "Approach Definition",
+        "Category2": "1D Floodplain Schematisation",
+        "createdAt": "2024-07-16T09:30:57.090Z",
+        "updatedAt": "2024-07-16T09:31:01.080Z",
+        "publishedAt": "2024-07-16T09:31:01.077Z",
+        "MasterModelSpecID": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "MasterModelSpecID": "1",
+              "ModelSpec": "1D River Model Build",
+              "createdAt": "2024-07-12T10:35:58.454Z",
+              "updatedAt": "2024-07-12T10:35:58.454Z",
+              "publishedAt": "2024-07-12T10:39:08.507Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 12,
+      "attributes": {
+        "SpecQueryID": "9",
+        "Query": "Confirm/justify whether hard bed/soft bed to be used Define connectivity approach between channels and reservoir and between reservoirs. Define source of data for spill units (LiDAR/Survey)",
+        "isActive": null,
+        "Category1": "Approach Definition",
+        "Category2": "1D Floodplain Schematisation",
+        "createdAt": "2024-07-16T09:30:57.090Z",
+        "updatedAt": "2024-07-16T09:31:01.080Z",
+        "publishedAt": "2024-07-16T09:31:01.077Z",
+        "MasterModelSpecID": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "MasterModelSpecID": "1",
+              "ModelSpec": "1D River Model Build",
+              "createdAt": "2024-07-12T10:35:58.454Z",
+              "updatedAt": "2024-07-12T10:35:58.454Z",
+              "publishedAt": "2024-07-12T10:39:08.507Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 11,
+      "attributes": {
+        "SpecQueryID": "9",
+        "Query": "Define reaches where extended sections are required. Define approach for extended cross sections.",
+        "isActive": null,
+        "Category1": "Approach Definition",
+        "Category2": "1D Floodplain Schematisation",
+        "createdAt": "2024-07-16T09:30:57.090Z",
+        "updatedAt": "2024-07-16T09:31:01.080Z",
+        "publishedAt": "2024-07-16T09:31:01.077Z",
+        "MasterModelSpecID": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "MasterModelSpecID": "1",
+              "ModelSpec": "1D River Model Build",
+              "createdAt": "2024-07-12T10:35:58.454Z",
+              "updatedAt": "2024-07-12T10:35:58.454Z",
+              "publishedAt": "2024-07-12T10:39:08.507Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 14,
+      "attributes": {
+        "SpecQueryID": "6",
+        "Query": "Do the locations and profile of the cross section look reasonable?",
+        "isActive": true,
+        "Category1": "Model Checks",
+        "Category2": "1D Floodplain Schematisation",
+        "createdAt": "2024-07-16T09:29:41.971Z",
+        "updatedAt": "2024-07-16T09:29:43.294Z",
+        "publishedAt": "2024-07-16T09:29:43.291Z",
+        "MasterModelSpecID": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "MasterModelSpecID": "1",
+              "ModelSpec": "1D River Model Build",
+              "createdAt": "2024-07-12T10:35:58.454Z",
+              "updatedAt": "2024-07-12T10:35:58.454Z",
+              "publishedAt": "2024-07-12T10:39:08.507Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 15,
+      "attributes": {
+        "SpecQueryID": "7",
+        "Query": "Is the distance to next correct? Is the overall reach length matching survey? Do the distances in the model and section names match?",
+        "isActive": true,
+        "Category1": "Model Checks",
+        "Category2": "1D Floodplain Schematisation",
+        "createdAt": "2024-07-16T09:30:05.957Z",
+        "updatedAt": "2024-07-16T09:30:07.829Z",
+        "publishedAt": "2024-07-16T09:30:07.827Z",
+        "MasterModelSpecID": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "MasterModelSpecID": "1",
+              "ModelSpec": "1D River Model Build",
+              "createdAt": "2024-07-12T10:35:58.454Z",
+              "updatedAt": "2024-07-12T10:35:58.454Z",
+              "publishedAt": "2024-07-12T10:39:08.507Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 16,
+      "attributes": {
+        "SpecQueryID": "8",
+        "Query": "Bank and panel markers appropriately defined?",
+        "isActive": null,
+        "Category1": "Model Checks",
+        "Category2": "1D Floodplain Schematisation",
+        "createdAt": "2024-07-16T09:30:30.239Z",
+        "updatedAt": "2024-07-16T09:30:32.614Z",
+        "publishedAt": "2024-07-16T09:30:32.609Z",
+        "MasterModelSpecID": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "MasterModelSpecID": "1",
+              "ModelSpec": "1D River Model Build",
+              "createdAt": "2024-07-12T10:35:58.454Z",
+              "updatedAt": "2024-07-12T10:35:58.454Z",
+              "publishedAt": "2024-07-12T10:39:08.507Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 17,
+      "attributes": {
+        "SpecQueryID": "9",
+        "Query": "Does conveyance look appropriate? Do channel conveyance values vary outside the ratios of 0.7 and 1.4 between adjacent river sections? (Are panel markers needed or in the correct place?) Use 1D Health Check",
+        "isActive": null,
+        "Category1": "Model Checks",
+        "Category2": "1D Floodplain Schematisation",
+        "createdAt": "2024-07-16T09:30:57.090Z",
+        "updatedAt": "2024-07-16T09:31:01.080Z",
+        "publishedAt": "2024-07-16T09:31:01.077Z",
+        "MasterModelSpecID": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "MasterModelSpecID": "1",
+              "ModelSpec": "1D River Model Build",
+              "createdAt": "2024-07-12T10:35:58.454Z",
+              "updatedAt": "2024-07-12T10:35:58.454Z",
+              "publishedAt": "2024-07-12T10:39:08.507Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 18,
+      "attributes": {
+        "SpecQueryID": "9",
+        "Query": "",
+        "isActive": null,
+        "Category1": "Automated Checks",
+        "Category2": "1D Floodplain Schematisation",
+        "createdAt": "2024-07-16T09:30:57.090Z",
+        "updatedAt": "2024-07-16T09:31:01.080Z",
+        "publishedAt": "2024-07-16T09:31:01.077Z",
+        "MasterModelSpecID": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "MasterModelSpecID": "1",
+              "ModelSpec": "1D River Model Build",
+              "createdAt": "2024-07-12T10:35:58.454Z",
+              "updatedAt": "2024-07-12T10:35:58.454Z",
+              "publishedAt": "2024-07-12T10:39:08.507Z"
+            }
+          }
+        }
+      }
+    }
+    ,
+    {
+      "id": 19,
+      "attributes": {
+        "SpecQueryID": "9",
+        "Query": "",
+        "isActive": null,
+        "Category1": "Automated Checks",
+        "Category2": "1D Floodplain Schematisation",
+        "createdAt": "2024-07-16T09:30:57.090Z",
+        "updatedAt": "2024-07-16T09:31:01.080Z",
+        "publishedAt": "2024-07-16T09:31:01.077Z",
+        "MasterModelSpecID": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "MasterModelSpecID": "1",
+              "ModelSpec": "1D River Model Build",
+              "createdAt": "2024-07-12T10:35:58.454Z",
+              "updatedAt": "2024-07-12T10:35:58.454Z",
+              "publishedAt": "2024-07-12T10:39:08.507Z"
+            }
+          }
+        }
+      }
     }
   ],
   "meta": {

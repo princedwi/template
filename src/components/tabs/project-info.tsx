@@ -2,10 +2,15 @@ import React, { useState } from 'react'
 export interface TabsProps {
   step: number;
 }
+import { MasterTypeStudy } from '@/types/master_data.types';
+import axios from 'axios';
 import { useProjectInfoContext } from '@/context/context';
 import { createProject } from '@/utilities/axios/project/createProject';
+import { getProjectInfoMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { Project_Info } from '@/types/project.types';
-// import { createProject } from '@/utilities/axios/createproject';
+
+
+
 export default function ProjectInfo({ step }: TabsProps) {
 
   const { ProjectContextData, setProjectContextData } = useProjectInfoContext();
@@ -24,34 +29,43 @@ export default function ProjectInfo({ step }: TabsProps) {
     StudyOther: "",
     master_type_study: 0, // Set an initial value
   });
+  const [masterTypeStudy, setMasterTypeStudy] = useState<MasterTypeStudy[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, tname: string = "") => {
     const { name, value } = e.target;
     setData({ ...data, [tname === "" ? name : tname]: value })
   };
 
+  const groupedMasterTypeStudy = masterTypeStudy.reduce<MasterTypeStudy[][]>((acc, item, index) => {
+    const groupIndex = Math.floor(index / 3);
+    if (!acc[groupIndex]) {
+      acc[groupIndex] = [];
+    }
+    acc[groupIndex].push(item);
+    return acc;
+  }, []);
 
   const handleradiobutton = (e: HTMLTextAreaElement) => {
     setData({ ...data, [e.name]: Number(e.value) })
   }
 
   const fill = () => {
-    // to check if none of the field is empty
     setProjectContextData(data); // set context
-    for (const key in data)
-      if ((key === "StudyOther" && data["master_type_study" as keyof Project_Info] === 9 && data[key as keyof Project_Info] === "") || ((key) != "StudyOther" && data[key as keyof Project_Info] === ""))
-        return;
-
-    setProjectContextData(data); // set context
-
     createProject(data)
       .then(e => {
-        console.log("successfully created")
+        console.log("successfully created Project-Info")
         setData(data);
       })
       .catch(err => console.log(err.message))
   }
-
+  const fetchdata = async () => {
+    const response = await getProjectInfoMasterData();
+    console.log(response.data[0]);
+    setMasterTypeStudy(response.data);
+  }
+  React.useEffect(() => {
+    fetchdata();
+  }, [])
   return (
     <>
       <div
@@ -60,166 +74,142 @@ export default function ProjectInfo({ step }: TabsProps) {
         id="step1"
       >
         <link href='tabs/style.css'></link>
-        <form>
-          <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
-            <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }}>Submit</div>
-          </div>
-          {/* <button type="submit" className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }} style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px' }}>Submit</button> */}
-          <div className="mb-3 d-flex flex-row w-[65%]">
-            <label htmlFor="ProjectName" className='w-25'>Project Name</label>
-            <input type="text" name="ProjectName" className="form-control w-[20rem]" id="ProjectName" required value={data.ProjectName}
-              onChange={(e => {
-                handleInputChange(e);
-              })} />
-          </div>
-          <div className="mb-3 d-flex flex-row w-[65%]">
-            <label htmlFor="ProjectCode" className='w-25'>Project Code</label>
-            <input type="text" name="ProjectCode" className="form-control w-[20rem]" id="ProjectCode" value={data.ProjectCode} required
-              onChange={(e => {
-                handleInputChange(e);
-              })}
-            />
-          </div>
-          <div className="mb-3 d-flex flex-row w-[65%]">
-            <label htmlFor="ProjectManager" className='w-25'>Project Manager</label>
-            <select name="ProjectManager" className='form-control w-[20rem] relative' onChange={(e => {
+        {/* <form> */}
+        <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
+          <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }}>Submit</div>
+        </div>
+        {/* <button type="submit" className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { fill() }} style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px' }}>Submit</button> */}
+        <div className="mb-3 d-flex flex-row w-[65%]">
+          <label htmlFor="ProjectName" className='w-25'>Project Name</label>
+          <input type="text" name="ProjectName" className="form-control w-[20rem]" id="ProjectName" required value={data.ProjectName}
+            onChange={(e => {
+              handleInputChange(e);
+            })} />
+        </div>
+        <div className="mb-3 d-flex flex-row w-[65%]">
+          <label htmlFor="ProjectCode" className='w-25'>Project Code</label>
+          <input type="text" name="ProjectCode" className="form-control w-[20rem]" id="ProjectCode" value={data.ProjectCode} required
+            onChange={(e => {
+              handleInputChange(e);
+            })}
+          />
+        </div>
+        <div className="mb-3 d-flex flex-row w-[65%]">
+          <label htmlFor="ProjectManager" className='w-25'>Project Manager</label>
+          <select name="ProjectManager" className='form-control w-[20rem] relative' onChange={(e => {
+            handleInputChange(e);
+          })}>
+            <option value="" className=''>Select Project Manager</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+          </select>
+        </div>
+        <div className="mb-3 d-flex flex-row w-[65%]">
+          <label htmlFor="ProjectVerifier" className='w-25'>Project Verifier</label>
+          <select name="ProjectVerifier" className='form-control w-[20rem]'
+            onChange={(e => {
               handleInputChange(e);
             })}>
-              <option value="" className=''>Select Project Manager</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-            </select>
-          </div>
-          <div className="mb-3 d-flex flex-row w-[65%]">
-            <label htmlFor="ProjectVerifier" className='w-25'>Project Verifier</label>
-            <select name="ProjectVerifier" className='form-control w-[20rem]'
-              onChange={(e => {
-                handleInputChange(e);
-              })}>
-              <option value="" className=''>Select Project Verifier</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-            </select>
-          </div>
-          <div className="mb-3 d-flex flex-row w-[65%]">
-            <label htmlFor="ClientScope" className='w-25'>Client Scope</label>
-            <input type="text" name="ClientScope" className="form-control w-[20rem]" id="ClientScope" value={data.ClientScope}
-              onChange={(e => {
-                handleInputChange(e);
-              })}
-            />
-          </div>
-          <div className="mb-3 d-flex flex-row w-[65%]">
-            <label htmlFor="Budget" className='w-25'>Budget</label>
-            <input type="text" name="Budget" className="form-control w-[20rem]" id="Budget" value={data.Budget}
-              onChange={(e => {
-                handleInputChange(e);
-              })} />
-          </div>
-          <div className='w-full'>
+            <option value="" className=''>Select Project Verifier</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+          </select>
+        </div>
+        <div className="mb-3 d-flex flex-row w-[65%]">
+          <label htmlFor="ClientScope" className='w-25'>Client Scope</label>
+          <input type="text" name="ClientScope" className="form-control w-[20rem]" id="ClientScope" value={data.ClientScope}
+            onChange={(e => {
+              handleInputChange(e);
+            })}
+          />
+        </div>
+        <div className="mb-3 d-flex flex-row w-[65%]">
+          <label htmlFor="Budget" className='w-25'>Budget</label>
+          <input type="text" name="Budget" className="form-control w-[20rem]" id="Budget" value={data.Budget}
+            onChange={(e => {
+              handleInputChange(e);
+            })} />
+        </div>
+        <div className='w-full'>
 
-            <div className="mb-3 flex" style={{
-              justifyContent: "start",
-              justifyItems: "start",
-            }}>
-              <label htmlFor="ModellingTeam" className='w-[12rem]'>Modelling Team</label>
-              <div className=''>
-                <label htmlFor="ModellingTeam" className='w-[21rem]'>Originator</label>
-                <select className='form-control w-[95%] mt-[10px]'
-                  onChange={(e => {
-                    handleInputChange(e, "Originator");
-                  })}>
-                  <option value="" className=''>Select Originator</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
-                </select>
-              </div>
-              <div className=''>
-                <label htmlFor="ModellingTeam" className='w-[21rem]'>Lead</label>
-                <select className='form-control w-[95%] mt-[10px]'
-                  onChange={(e => {
-                    handleInputChange(e, "Lead");
+          <div className="mb-3 flex" style={{
+            justifyContent: "start",
+            justifyItems: "start",
+          }}>
+            <label htmlFor="ModellingTeam" className='w-[12rem]'>Modelling Team</label>
+            <div className=''>
+              <label htmlFor="ModellingTeam" className='w-[21rem]'>Originator</label>
+              <select className='form-control w-[95%] mt-[10px]'
+                onChange={(e => {
+                  handleInputChange(e, "Originator");
+                })}>
+                <option value="" className=''>Select Originator</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+              </select>
+            </div>
+            <div className=''>
+              <label htmlFor="ModellingTeam" className='w-[21rem]'>Lead</label>
+              <select className='form-control w-[95%] mt-[10px]'
+                onChange={(e => {
+                  handleInputChange(e, "Lead");
 
-                  })}
-                >
-                  <option value="" className=''>Select Lead</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
-                </select>
-              </div>
-              <div className=''>
-                <label htmlFor="ModellingTeam" className='w-[21rem]'>Advisor</label>
-                <select className='form-control w-[95%] mt-[10px]'
-                  onChange={(e => {
-                    handleInputChange(e, "Advisor");
+                })}
+              >
+                <option value="" className=''>Select Lead</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+              </select>
+            </div>
+            <div className=''>
+              <label htmlFor="ModellingTeam" className='w-[21rem]'>Advisor</label>
+              <select className='form-control w-[95%] mt-[10px]'
+                onChange={(e => {
+                  handleInputChange(e, "Advisor");
 
-                  })}>
-                  <option value="" className=''>Select Advisor</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
-                </select>
-              </div>
+                })}>
+                <option value="" className=''>Select Advisor</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+              </select>
             </div>
           </div>
-          {/* <div className="mb-3 grid grid-cols-4 items-right ml-[-9rem]" style={{ gap: "0rem" }}>
+        </div>
+        {/* <div className="mb-3 grid grid-cols-4 items-right ml-[-9rem]" style={{ gap: "0rem" }}>
             <div></div>
           </div> */}
-          <div className="mb-3 d-flex flex-row w-[65%] mt-[30px]" style={{ marginTop: "30px" }}>
-            <label htmlFor="master_type_study" className='w-25'>Type of Study</label>
-          </div>
-          <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="1" onClick={(e) => { handleradiobutton(e.target as HTMLTextAreaElement); setshowOther(false) }} />
-            <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>SOB</label>
-            <input type="radio" name="master_type_study" id="master_type_study" value="5" onClick={(e) => { handleradiobutton(e.target as HTMLTextAreaElement); setshowOther(false) }} className='' />
-            <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>Surface Water Flood Mapping</label>
-            <input type="radio" name="master_type_study" value="9" id="master_type_study" onClick={(e) => { handleradiobutton(e.target as HTMLTextAreaElement); setshowOther(false) }} />
-            <label htmlFor="master_type_study" style={{ marginLeft: "8px" }}>Flood Risk Assessment</label>
-          </div>
-          <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="2" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-              setshowOther(false)
-            }} />
-            <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>OBC</label>
-            <input type="radio" name="master_type_study" id="master_type_study" value="6" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-              setshowOther(false)
-            }} />
-            <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>Reservoir Inundation Flood Mapping</label>
-            {/* <div className=''> */}
-            <input type="radio" name="master_type_study" id="master_type_study" value="9" onClick={(e) => {
-              setshowOther(true);
-              handleradiobutton(e.target as HTMLTextAreaElement);
-            }} />
-            <label htmlFor="StudyOther" style={{ marginLeft: "0.5rem" }}>Other: </label>
-            {showOther && <input type="input" name="StudyOther" id="StudyOther" onChange={(e) => { handleInputChange(e, "StudyOther") }} style={{ marginLeft: "8rem" }} className={` border border-sm rounded-lg`} />}
-            {/* </div> */}
-          </div>
-          <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="3" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-              setshowOther(false)
-            }} />
-            <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>Detailed Desgin</label>
-            <input type="radio" name="master_type_study" id="master_type_study" value="7" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-              setshowOther(false)
-            }} />
-            <label htmlFor="master_type_study" style={{ marginLeft: "8px" }}>Reservoir Flood Safety</label>
-          </div>
-          <div>
-            <input type="radio" name="master_type_study" id="master_type_study" value="4" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-              setshowOther(false)
-            }} />
-            <label htmlFor="master_type_study" className='w-25' style={{ marginLeft: "8px" }}>Fluvial Flood Mapping</label>
-            <input type="radio" name="master_type_study" id="master_type_study" value="8" onClick={(e) => {
-              handleradiobutton(e.target as HTMLTextAreaElement);
-              setshowOther(false)
-            }} />
-            <label htmlFor="master_type_study" style={{ marginLeft: "8px" }}>Initial Assessment</label>
-          </div>
-        </form>
+        <div className="mb-3 d-flex flex-row w-[65%] mt-[30px]" style={{ marginTop: "30px" }}>
+          <label htmlFor="master_type_study" className='w-25'>Type of Study</label>
+        </div>
+        <div>
+          {groupedMasterTypeStudy.map((group, groupIndex) => (
+            <div key={groupIndex}>
+              {group.map((item) => (
+                <React.Fragment key={item.id}>
+                  <input
+                    type="radio"
+                    name="master_type_study"
+                    id={`master_type_study_${item.id}`}
+                    value={item.attributes.MasterTypeStudy_Id}
+                    onClick={(e) => {
+                      handleradiobutton(e.target as HTMLTextAreaElement);
+                      if(item.attributes.Field==="Other")
+                      setshowOther(true);
+                      else
+                      setshowOther(false);
+                    }}
+                  />
+                  <label htmlFor={`master_type_study_${item.id}`} className="w-25" style={{ marginLeft: "8px" }}>
+                    {item.attributes.Field}
+                  </label>
+                {item.attributes.Field==="Other" && showOther && <input type="input" name="StudyOther" id="StudyOther" onChange={(e) => { handleInputChange(e, "StudyOther") }} style={{ marginLeft: "0rem" }} className={` border border-sm rounded-lg`} />}
+                </React.Fragment>
+              ))}
+            </div>
+          ))}
+        </div>
+        
+        {/* </form> */}
       </div>
     </>
   )
