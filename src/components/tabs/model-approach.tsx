@@ -62,6 +62,10 @@ export default function ModelApproach({ step }: TabsProps) {
                 <input type="Checkbox" name="field3" id="field3" className='me-2'/>
                 <label htmlFor="field3" className='w-25'>Tidal</label>
             </div> */}
+      {/* <div className="mb-3 d-flex flex-row">
+          <label htmlFor="Data_Management_Strategy" className='w-25'>Type of Model Needed</label>
+          <input type="text" name="Data_Management_Strategy" className="form-control w-25" id="Data_Management_Strategy" onChange={(e => { handleInputChange(e); })} />
+        </div> */}
       <div className='d-flex'>
         <div className='typeofModel w-25' >
           {ModelTypes.map((modelType) => (

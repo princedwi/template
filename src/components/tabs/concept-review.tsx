@@ -6,6 +6,7 @@ import { MasterModellingTask } from '@/types/master_data.types';
 export default function ConceptReview({ step }: TabsProps) {
   const [showOther, setshowOther] = React.useState(false)
   const [masterModellingTasks, setmasterModellingTasks] = useState<MasterModellingTask[]>([]);
+  const [otherID, setotherID] = useState(0);
 
   const [formData, setFormData] = useState({
     Modelling_Objective: '',
@@ -18,9 +19,9 @@ export default function ConceptReview({ step }: TabsProps) {
     ModellingTaskOther: '',
     Modelling_Task: 4,
   });
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, str:string="") => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [str===""?name:str]: value });
   };
   const handleradiobutton = (e: HTMLTextAreaElement) => {
     setFormData({ ...formData, [e.name]: Number(e.value) })
@@ -29,12 +30,10 @@ export default function ConceptReview({ step }: TabsProps) {
     e.preventDefault();
     console.log("Formdata", formData)
     try {
-
       await conceptReview(formData);
       setFormData(formData);
       console.log('successfully created CONCEPT-REVIEW')
     } catch (error) {
-
       console.error('Error creating project:', error);
     }
   };
@@ -47,6 +46,8 @@ export default function ConceptReview({ step }: TabsProps) {
   React.useEffect(() => {
     getConceptReviewMasterData().then((response) => {
       setmasterModellingTasks(response.data);
+      const otherTask = response.data.find((task: MasterModellingTask) => task.attributes.Field === "Other");
+      setotherID(otherTask.attributes.MasterModellingTask_ID);
     });
   }, [])
   return (
@@ -62,7 +63,7 @@ export default function ConceptReview({ step }: TabsProps) {
         </div>
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="Modelling_Objective" className='w-25'>Modelling Objectives and how does it meet the overall project aims</label>
-          <input type="text" name="Modelling_Objective" className="form-control w-25" id="Modelling_Objective" onChange={(e => { handleInputChange(e); })} />
+          <input type="text" name="Modelling_Objective" className="form-control w-25 h-[fit-content]" id="Modelling_Objective" onChange={(e => { handleInputChange(e); })} />
         </div>
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="Modelling_approach" className='w-25'>Define Modelling approach</label>
@@ -92,33 +93,30 @@ export default function ConceptReview({ step }: TabsProps) {
           <label htmlFor="Data_Management_Strategy" className='w-25'>Data Management Strategy</label>
           <input type="text" name="Data_Management_Strategy" className="form-control w-25" id="Data_Management_Strategy" onChange={(e => { handleInputChange(e); })} />
         </div>
-        <div className="mb-3 d-flex flex-row">
+        <div className='mb-3 d-flex flex-row'>
           <label htmlFor="Modelling_Task" className='w-25'>Modelling Tasks</label>
+          <select name="Modelling_Task" className='form-control w-25' onChange={(e) => {
+            if (Number(e.target.value) === otherID) {
+              console.log("Other selected");
+              setshowOther(true);
+            }
+            else {
+              setshowOther(false);
+            }
+            handleInputChange(e, "Modelling_Task");
+          }}
+          >
+            <option value="">Select Modelling Task</option>
+            {masterModellingTasks.map((task, index) => (
+              <option key={task.id} value={task.attributes.MasterModellingTask_ID}>{task.attributes.Field}</option>
+            ))}
+          </select>
         </div>
         <div>
-          {masterModellingTasks.map((task, index) => (
-            <div key={task.id}
-            className={`${task.attributes.Field==="Other"?"mb-4 flex flex-row items-center jus ":""}`}
-            >
-              <input
-                type="radio"
-                name="Modelling_Task"
-                id={`Modelling_Task_${task.id}`}
-                value={task.attributes.MasterModellingTask_ID}
-                onClick={(e) => {
-                  if(task.attributes.Field==="Other")
-                    setshowOther(true);
-                  else
-                  setshowOther(false);
-                  handleradiobutton(e.target as HTMLTextAreaElement);
-                }}
-              />
-              <label htmlFor={`Modelling_Task_${task.id}`} className="w-25" style={{ marginLeft: "8px" }}>
-                {task.attributes.Field}
-              </label>
-              {task.attributes.Field==="Other" && showOther && <input type="text" name="ModellingTaskOther" className="form-control w-25 ml-[-1.3rem]" onChange={(e) => { handleInputChange(e); }} id="ModellingTaskOther" />}
-            </div>
-          ))}
+          <div className='mb-3 d-flex flex-row'>
+            <label className='w-25'></label>
+            {showOther && <input type="text" name="ModellingTaskOther" className="form-control w-25" onChange={(e) => { handleInputChange(e); }} id="ModellingTaskOther" />}
+          </div>
           {/* <div className='mb-4 d-flex flex-row' style={{}}>
             <input type='radio' name="Modelling_Task" id="ModellingTaskOther" value={6} onClick={(e) => { setshowOther(true); handleradiobutton(e.target as HTMLTextAreaElement); }}></input>
             <label htmlFor="ModellingTaskOther" style={{ marginLeft: "8px", marginRight: "19.9%", paddingTop: "7px" }}>Other</label>

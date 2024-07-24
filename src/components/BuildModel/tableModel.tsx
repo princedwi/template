@@ -3,28 +3,72 @@
 import React, { useState } from 'react';
 export interface TabsProps2 {
     step: number;
+    setnumb: React.Dispatch<React.SetStateAction<number>>;
+
+}
+export interface lowerinterface {
+    lower: React.Dispatch<React.SetStateAction<number>>;
 }
 import JSONData from "../../assests/Detailed_Specification_Json.json"
- 
-export default function TableModel(step: TabsProps2) {
+import { Table } from '@nextui-org/table';
+
+type JsonValue = string | number | boolean | null;
+type JsonArray = Array<JsonValue | JsonObject>;
+interface JsonObject {
+    [key: string]: JsonValue | JsonObject | JsonArray;
+}
+export default function TableModel({ step, setnumb }: TabsProps2) {
     const [selectedFile, setSelectedFile] = useState<Array<File | null>>([null, null, null, null, null, null, null]);
     const [imagePreview, setImagePreview] = useState<Array<string | null>>([null, null, null, null, null, null, null]);
-    const [categories, setCategories] = React.useState<string[]>(); // contain 4 heaidngs
-    const [subcategories, subsetCategories] = React.useState<string[]>([]); // contains sub main headins
+    const [categories, setCategories] = React.useState<string[]>(); // contain tab headings
+    const [subcategories, subsetCategories] = React.useState<string[]>([]); // contains sub main headings
     interface datas {
         len: number,
         type: string
     }
     const [maxlength, setmaxlength] = React.useState<datas[]>([]);
-    const [TableData, setTableData] = React.useState<Map<string, string[]>>();
+    const [TableData, setTableData] = React.useState<Map<string, string[]>>(); // contain table data
+    const [lower, setlower] = React.useState(1); // number of tabs to be activated
 
+
+    const [tablestate, setTableState] = React.useState<JsonObject>({});  // contain form data --main issue
+
+    const handleChange = (categoryKey: string, index: number, value: string) => {
+        // trying to set state in form of 
+        /*
+            {
+                heading1$subheading1:[
+                    index1: value1,
+                    index2: value2,
+                    ....
+                ]
+                ....
+            }
+        */
+        
+        
+        setTableState({
+            ...tablestate,
+            [categoryKey]: {
+                ...(tablestate[categoryKey] as JsonObject),
+                [index]: value
+            }
+        });
+    };
     const filldata = () => {
-        var arr: string[] = [];
-        var arr2: string[] = [];
-        let st: Map<string, number> = new Map([]);
-        let st2: Map<string, number> = new Map([]);
-        let finallength: Map<string, number> = new Map([]);
-        let mp: Map<string, string[]> = new Map([]);
+        var arr: string[] = []; // will contain unique heading
+        var arr2: string[] = []; // will contain sub headings
+        let st: Map<string, number> = new Map([]); // store Watercourse Schematisation 1D Floodplain Schematisation etc.
+        let st2: Map<string, number> = new Map([]); // store approach definition, model checks, automated checks etc.
+        let finallength: Map<string, number> = new Map([]); // store length of each tabs of each headings
+        let mp: Map<string, string[]> = new Map([]); // to map the categories, subcategories, and data and at last store it to state
+
+        // --------
+        // working: map, mp will contain the labels array for each heading and subheadings
+        // for example: for heading Approach and subheading Water Scheme, it will form key Approach$WaterScheme and will contain string array of label as value
+        // from this map, we will also fill categories, subcategories, length of each subcategory under particular category
+        // --------
+
         JSONData.data.forEach((item) => {
             const category2: string = item.attributes.Category2 ?? "other";
             const category1: string = item.attributes.Category1 ?? "other";
@@ -45,13 +89,15 @@ export default function TableModel(step: TabsProps2) {
         st2.forEach((value: number, key: string) => {
             arr.push(key);
         });
+
         subsetCategories(arr2)
         setCategories(arr)
+
         for (var j = 0; j < arr2.length; j++) {
             for (var i = 0; i < arr?.length; i++) {
                 var keys: string = `${arr2[j]}$${arr[i]}`
                 if (!mp.has(keys)) {
-                    mp.set(keys, [""]);
+                    mp.set(keys, []);
                 }
                 if (finallength.has(arr2[j])) {
                     var lengthi = finallength.get(arr2[j]);
@@ -74,12 +120,46 @@ export default function TableModel(step: TabsProps2) {
             d.push({ len: value, type: key });
         });
         setmaxlength(d);
+
+    }
+
+    // Below checkfill function will keep checking whether the current column is filled or not on typing each character, if filled it will enable the next tab and vice versa
+    // no issue with time complexity as it will break when it meet with an unfilled index/value
+    // so total time complexity(worst case) is number of input fields which will occur when we have filled all the inputs with atleast one character.
+    const checkfill = () => {
+        if (categories) {
+            for (var i = 0; i < categories.length; i++) {
+                setlower(i + 1);
+                setnumb(i + 1);
+                for (var j = 0; j < subcategories.length; j++) {
+                    if (!TableData?.get(`${subcategories[j]}$${categories[i]}`)) {
+                        continue;
+                    }
+                    const g = `${subcategories[j]}$${categories[i]}`;
+                    const gt = TableData?.get(g);
+                    if (gt) {
+                        for (let k = 0; k < gt.length; k++) {
+                            const field = (tablestate[g] as JsonObject)?.[k];
+                            if (!field || field === "") {
+                                setlower(i + 1);
+                                setnumb(i + 1);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     React.useEffect(() => {
-        filldata();
-    }, [step])
+        if (!categories || categories.length === 0)
+            filldata();
+        checkfill();
+        // filltablestate();
+    }, [step, categories])
 
+    // handleFileChange to handle images of sign(which now is removed for 4th column)
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, num: Number) => {
         const file = e.target.files?.[0] || null;
         // const nextCounters = selectedFile.map((c, i) => {
@@ -108,6 +188,7 @@ export default function TableModel(step: TabsProps2) {
             // setImagePreview(null);
         }
     };
+
     const [steptwo, setStep] = useState<number>(1);
     const handleStep = (stepNumber: number) => {
         setStep(stepNumber);
@@ -119,14 +200,17 @@ export default function TableModel(step: TabsProps2) {
         for (var k = 0; k < maxlength.length; k++) {
             if (maxlength[k].type === val) { lent = maxlength[k].len; break; }
         }
-        while (arr.length < lent) arr.push("")
+        while (arr.length < lent) { arr.push("") }
         return (
             <>
                 {
                     arr.map(function (value1, index) {
                         return (<tr className='' key={index}>
                             {categories?.map(function (cat, index2) {
+
                                 var gt: string[] | undefined = TableData?.get(`${val}$${cat}`)
+                                const categoryKey = `${val}$${cat}`;
+                                const inputValue = (tablestate[categoryKey] as JsonObject)?.[index] || "";
                                 return (
                                     <td key={index2} className="ml-3" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                                         <div className="mb-3 ml-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
@@ -134,7 +218,17 @@ export default function TableModel(step: TabsProps2) {
                                                 {gt && gt[index]}
                                             </label>
                                             {gt && gt[index] && gt[index] != "" ?
-                                                <input type="text" name="field1" className="form-control ml-0" id="field1" required />
+                                                <input
+                                                    type="text"
+                                                    name={`field${index}-${index2}`}
+                                                    className="form-control ml-0"
+                                                    id={`field${index}-${index2}`}
+                                                    required
+                                                    value={String(inputValue)}
+                                                    onChange={(e) => {
+                                                        handleChange(categoryKey, index, e.target.value);
+                                                    }}
+                                                />
                                                 : <></>}
                                         </div>
                                     </td>
@@ -148,18 +242,15 @@ export default function TableModel(step: TabsProps2) {
     }
     return (
         <>
-            {/* <ApproachDefinition step={steptwo} /> */}
             <div className='flex flex-row w-full' style={{ width: "100%", flexDirection: "row", display: "flex", fontSize: "0.94rem" }}>
             </div>
             {subcategories.map(function (val, index) {
-                return( 
+                return (
                     <div key={index}>
                         {val != "other" && <div key={index} style={{ backgroundColor: '#4e67d4', marginBottom: '20px', textAlign: 'center', }}>{val === "other" ? "" : val}<br></br></div>}
                         <table key={Math.random() * 1000} style={{ fontSize: "0.94rem" }}>
                             <thead>
-                                {/* <tr> */}
                                 {helper(val)}
-                                {/* </tr> */}
                             </thead>
                         </table>
                     </div>)
