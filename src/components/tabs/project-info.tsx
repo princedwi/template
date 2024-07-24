@@ -193,8 +193,10 @@ export default function ProjectInfo({ step }: TabsProps) {
                     value={item.attributes.MasterTypeStudy_Id}
                     onClick={(e) => {
                       handleradiobutton(e.target as HTMLTextAreaElement);
+                      console.log(item.attributes.MasterTypeStudy_Id)
                       if(item.attributes.Field==="Other")
                       setshowOther(true);
+                    
                       else
                       setshowOther(false);
                     }}
