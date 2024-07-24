@@ -15,6 +15,7 @@ export default function ProjectInfo({ step }: TabsProps) {
 
   const { ProjectContextData, setProjectContextData } = useProjectInfoContext();
   const [showOther, setshowOther] = React.useState(false)
+  const [otherID, setotherID] = useState(0);
 
   const [data, setData] = useState<Project_Info>({
     ProjectName: "",
@@ -33,17 +34,12 @@ export default function ProjectInfo({ step }: TabsProps) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, tname: string = "") => {
     const { name, value } = e.target;
+    if (tname === "master_type_study") {
+      setData({ ...data, "master_type_study": Number(value) })
+      return;
+    }
     setData({ ...data, [tname === "" ? name : tname]: value })
   };
-
-  const groupedMasterTypeStudy = masterTypeStudy.reduce<MasterTypeStudy[][]>((acc, item, index) => {
-    const groupIndex = Math.floor(index / 3);
-    if (!acc[groupIndex]) {
-      acc[groupIndex] = [];
-    }
-    acc[groupIndex].push(item);
-    return acc;
-  }, []);
 
   const handleradiobutton = (e: HTMLTextAreaElement) => {
     setData({ ...data, [e.name]: Number(e.value) })
@@ -60,8 +56,9 @@ export default function ProjectInfo({ step }: TabsProps) {
   }
   const fetchdata = async () => {
     const response = await getProjectInfoMasterData();
-    console.log(response.data[0]);
     setMasterTypeStudy(response.data);
+    const otherTask = response.data.find((task: MasterTypeStudy) => task.attributes.Field === "Other");
+    setotherID(otherTask.attributes.MasterTypeStudy_Id);
   }
   React.useEffect(() => {
     fetchdata();
@@ -130,87 +127,68 @@ export default function ProjectInfo({ step }: TabsProps) {
               handleInputChange(e);
             })} />
         </div>
-        <div className='w-full'>
-
-          <div className="mb-3 flex" style={{
-            justifyContent: "start",
-            justifyItems: "start",
-          }}>
-            <label htmlFor="ModellingTeam" className='w-[12rem]'>Modelling Team</label>
-            <div className=''>
-              <label htmlFor="ModellingTeam" className='w-[21rem]'>Originator</label>
-              <select className='form-control w-[95%] mt-[10px]'
-                onChange={(e => {
-                  handleInputChange(e, "Originator");
-                })}>
-                <option value="" className=''>Select Originator</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-              </select>
-            </div>
-            <div className=''>
-              <label htmlFor="ModellingTeam" className='w-[21rem]'>Lead</label>
-              <select className='form-control w-[95%] mt-[10px]'
-                onChange={(e => {
-                  handleInputChange(e, "Lead");
-
-                })}
-              >
-                <option value="" className=''>Select Lead</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-              </select>
-            </div>
-            <div className=''>
-              <label htmlFor="ModellingTeam" className='w-[21rem]'>Advisor</label>
-              <select className='form-control w-[95%] mt-[10px]'
-                onChange={(e => {
-                  handleInputChange(e, "Advisor");
-
-                })}>
-                <option value="" className=''>Select Advisor</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-              </select>
-            </div>
-          </div>
+        <label htmlFor="ModellingTeam" className='w-[12rem]'><b>Modelling Team</b></label>
+        <br />
+        <br />
+        <div className="mb-3 d-flex flex-row w-[65%]">
+          <label htmlFor="ModellingTeam" className='w-25'>Originator</label>
+          <select className='form-control w-[20rem]'
+            onChange={(e => {
+              handleInputChange(e, "Originator");
+            })}>
+            <option value="" className=''>Select Originator</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+          </select>
+        </div>
+        <div className="mb-3 d-flex flex-row w-[65%]">
+          <label htmlFor="ModellingTeam" className='w-25'>Lead</label>
+          <select className='form-control w-[20rem]'
+            onChange={(e => {
+              handleInputChange(e, "Lead");
+            })}>
+            <option value="" className=''>Select Lead</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+          </select>
+        </div>
+        <div className="mb-3 d-flex flex-row w-[65%]">
+          <label htmlFor="ModellingTeam" className='w-25'>Advisor</label>
+          <select className='form-control w-[20rem]'
+            onChange={(e => {
+              handleInputChange(e, "Advisor");
+            })}>
+            <option value="" className=''>Select Advisor</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+          </select>
         </div>
         {/* <div className="mb-3 grid grid-cols-4 items-right ml-[-9rem]" style={{ gap: "0rem" }}>
             <div></div>
           </div> */}
         <div className="mb-3 d-flex flex-row w-[65%] mt-[30px]" style={{ marginTop: "30px" }}>
           <label htmlFor="master_type_study" className='w-25'>Type of Study</label>
+          <select className='form-control w-[20rem]' name="master_type_study" id="master_type_study" required
+            onChange={(e) => {
+              if (Number(e.target.value) === otherID) {
+                setshowOther(true);
+              }
+              else {
+                setshowOther(false);
+              }
+              handleInputChange(e, "master_type_study");
+            }}
+          >
+            <option value="" className=''>Select Type of Study</option>
+            {masterTypeStudy.map((group, index) => (
+              <option key={group.id} value={group.attributes.MasterTypeStudy_Id}>{group.attributes.Field}</option>
+            ))}
+          </select>
         </div>
-        <div>
-          {groupedMasterTypeStudy.map((group, groupIndex) => (
-            <div key={groupIndex}>
-              {group.map((item) => (
-                <React.Fragment key={item.id}>
-                  <input
-                    type="radio"
-                    name="master_type_study"
-                    id={`master_type_study_${item.id}`}
-                    value={item.attributes.MasterTypeStudy_Id}
-                    onClick={(e) => {
-                      handleradiobutton(e.target as HTMLTextAreaElement);
-                      console.log(item.attributes.MasterTypeStudy_Id)
-                      if(item.attributes.Field==="Other")
-                      setshowOther(true);
-                    
-                      else
-                      setshowOther(false);
-                    }}
-                  />
-                  <label htmlFor={`master_type_study_${item.id}`} className="w-25" style={{ marginLeft: "8px" }}>
-                    {item.attributes.Field}
-                  </label>
-                {item.attributes.Field==="Other" && showOther && <input type="input" name="StudyOther" id="StudyOther" onChange={(e) => { handleInputChange(e, "StudyOther") }} style={{ marginLeft: "0rem" }} className={` border border-sm rounded-lg`} />}
-                </React.Fragment>
-              ))}
-            </div>
-          ))}
+        <div className="mb-3 d-flex flex-row w-[65%]">
+          <label htmlFor="master_type_study" className='w-25'>&nbsp;</label>
+          {showOther && <input type="text" name="StudyOther" className="form-control w-[20rem]" onChange={(e) => { handleInputChange(e); }} id="ModellingTaskOther" />}
         </div>
-        
         {/* </form> */}
       </div>
     </>

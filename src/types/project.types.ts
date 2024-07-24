@@ -11,6 +11,7 @@ export interface Project_Info{
     StudyOther:string;
     master_type_study: number;
 }
+
 export interface Concept_Review{
     Modelling_Objective:string ,
     Link_to_Hydrology: string,
@@ -25,7 +26,7 @@ export interface Concept_Review{
 export interface Model_Approach{
     ModelType_ID:number,
     ModelSoftware_ID:number[],
-    ModelSystem_ID:number
+    ModelSystem_ID:number[]
 }
 export type ProjectInfoInterface = {
     ProjectContextData: Project_Info,

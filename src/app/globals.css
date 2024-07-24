@@ -564,12 +564,32 @@ a.article:hover {
 .nav-pills .show > .nav-link {
   background-color: #4e67d4;
 }
+.nav-pills .nav-link2.active,
+.nav-pills .show > .nav-link2 {
+  background-color: gray;
+}
 .nav-pills .nav-link.active,
 .nav-pills .show > .bg-theme-clr {
   background-color: #4e67d4;
 }
+
+
+.nav-pills .nav-link2.active,
+.nav-pills .show > .bg-theme-clr {
+  background-color: gray;
+}
+
 .nav {
   --bs-nav-link-hover-color: #b0b9c2;
+}
+
+.nav2 {
+  --bs-nav-link-hover-color: #b0b9c2;
+}
+.nav-link2 {
+  background-color: gray;
+  color: #fff;
+  margin: 0 5px;
 }
 .bg-theme-clr{
   background-color: grey;

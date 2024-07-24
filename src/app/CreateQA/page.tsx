@@ -63,14 +63,12 @@ export default function Form() {
   )=>{var g=check();},[ProjectContextData])
   return (
     <>
-    <div className="stepForm m-4">
-
+    <div className="stepForm m-4 min-h-[90vh]">
       {/* <form action="" method="post" id="registration" className="stepForm m-4"> */}
         <nav>
           <div className="nav nav-pills nav-fill gap-2 mx-2" id="nav-tab" role="tablist">
-
             {values.map((value) => (
-              <a
+              <a 
               key={value.id}
                 className={`${clr?'bg-grey':'bg-theme-clr'} nav-link  ${step === value.id ? "active" : ""} `}
                 //style={{ backgroundColor: '#6d7fcc', color: 'White', margin: '0 5px'}}

@@ -15,18 +15,26 @@ export default function ModelApproach({ step }: TabsProps) {
   const [formData, setFormData] = useState({
     ModelType_ID:0,
     ModelSoftware_ID:[] as number[],
-    ModelSystem_ID:0
+    ModelSystem_ID:[] as number[]
   })
 
   const handleradiobutton = (e: HTMLTextAreaElement) => {
     setFormData({ ...formData, [e.name]: Number(e.value) })
   }
-  const handleCheckboxbutton=(e: HTMLInputElement)=> {
-    setFormData({ ...formData, [e.name]: Number(e.value) })
-  }
 
+  const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, type: 'ModelSoftware_ID' | 'ModelSystem_ID') => {
+    const value = Number(e.target.value);
+    const isChecked = e.target.checked;
+    const updatedArray = isChecked
+      ? [...formData[type], value]
+      : formData[type].filter((id) => id !== value);
   
-  
+    setFormData({
+      ...formData,
+      [type]: updatedArray
+    });
+  };
+   
 const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log("Formdata", formData)
@@ -99,14 +107,7 @@ const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
             <div key={software.id}>
               <input type="checkbox" name="ModelSoftware_ID" id={`ModelSoftware_ID_${software.id}`} className='me-2' 
               value={software.attributes.Master_ModelSoftware_ID}
-              onClick={(e) => {
-                console.log(software.attributes.Master_ModelSoftware_ID)
-                if(software.attributes.Field==="Other")
-                  setshowOther(true);
-                else
-                setshowOther(false);
-                handleCheckboxbutton(e.target as HTMLInputElement);
-              }}/>
+              onChange={(e) => handleCheckbox(e, 'ModelSoftware_ID')}/>
               <label htmlFor={`ModelSoftware_ID_${software.id}`} >{software.attributes.Field}</label>
             </div>
           ))}
@@ -121,14 +122,7 @@ const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
                 id={`ModelSystem_ID-${system.id}`}  // Ensure unique id
                 className='me-2'
                 value={system.attributes.Master_ModelSystem_ID}
-                onClick={(e) => {
-                  console.log(system.attributes.Master_ModelSystem_ID)
-                  if(system.attributes.Field==="Other")
-                    setshowOther(true);
-                  else
-                  setshowOther(false);
-                  handleCheckboxbutton(e.target as HTMLInputElement);
-                }}
+                onChange={(e) => handleCheckbox(e, 'ModelSystem_ID')}
               />
               <label htmlFor={`ModelSystem_ID-${system.id}`} >
                 {system.attributes.Field}
