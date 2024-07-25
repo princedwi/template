@@ -28,7 +28,7 @@ export default function OutputsTab({ step }: TabsProps) {
         <label htmlFor="field1" className='w-25 ml-[-12px]'><h5>Notes</h5></label>
       </div>
       <div>
-      {masterMasterOutput.map((item) => (
+      {masterMasterOutput.map(function(item){ return(
         <div key={item.id} className="mb-3 d-flex flex-row">
           <input
             type="checkbox"
@@ -54,7 +54,8 @@ export default function OutputsTab({ step }: TabsProps) {
             required
           />
         </div>
-         ))}
+         )}
+         )}
       </div>
       <div className="mb-3 d-flex flex-row">
         <input type="Checkbox" name="field3" id="field3" className='mx-2 mb-3' />

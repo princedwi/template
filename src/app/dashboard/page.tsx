@@ -10,7 +10,6 @@ import { Inter } from "next/font/google";
 import Table from "@/components/table";
 
 const inter = Inter({ subsets: ["latin"] });
-
 export default function Dashboard() {
   return (
     <>
@@ -22,9 +21,9 @@ export default function Dashboard() {
       </Head>
 
       <div className="row55 stats55 my-0 h-[90vh] pt-[0rem]">
-        <div className=" ms-2" style={{height:"0rem"}}>
+        <div className=" ms-2" style={{ height: "0rem" }}>
           <Link href="/CreateQA" passHref={true}>
-            <button className="btn btn-light btn-lg float-end m-4 me-5 px-5 bg-#6d7fcc" style={{backgroundColor:'#263c9c',color:'white'}}>Create QA</button>
+            <button className="btn btn-light btn-lg float-end m-4 me-5 px-5 bg-#6d7fcc" style={{ backgroundColor: '#263c9c', color: 'white' }}>Create QA</button>
           </Link>
           <h2 className="m-4 text-[2rem]">Project Details</h2>
           {/* <div className="card">
@@ -38,10 +37,11 @@ export default function Dashboard() {
             </div>
           </div> */}
         </div>
-        <div className="" style={{borderRadius: "2%", 
-          backgroundColor:"white",width:"92%", height:"25.5rem", marginLeft:"35px", marginRight:"9", marginTop:"8%", padding:"0.5rem"
-          }}>
-        <Table />
+        <div className="" style={{
+          borderRadius: "2%",
+          backgroundColor: "transparent", width: "92%", height: "25.5rem", marginLeft: "35px", marginRight: "9", marginTop: "8%", padding: "0rem"
+        }}>
+          <Table />
         </div>
       </div>
     </>

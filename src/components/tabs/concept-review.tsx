@@ -19,9 +19,9 @@ export default function ConceptReview({ step }: TabsProps) {
     ModellingTaskOther: '',
     Modelling_Task: 4,
   });
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, str:string="") => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, str: string = "") => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [str===""?name:str]: value });
+    setFormData({ ...formData, [str === "" ? name : str]: value });
   };
   const handleradiobutton = (e: HTMLTextAreaElement) => {
     setFormData({ ...formData, [e.name]: Number(e.value) })

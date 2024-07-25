@@ -21,7 +21,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { columns } from "./data";
-
+import { getDashboardData } from '@/utilities/axios/project/createProject';
+import { getMasterOutputMasterData } from "@/utilities/axios/masterData/masterDataApi";
 interface Data {
   key: Number;
   name: string;
@@ -63,13 +64,13 @@ function createData(
 //   createData(12, 'Nougat', 360, 19.0, 9, 37.0),
 //   createData(13, 'Oreo', 437, 18.0, 63, 4.0),
 // ];
-const rows = [
-  createData(1, "Flood Modeller", "2023-02-18 10:34:17", "William Howk", "Chris Price", "2024-02-18 18:40:34", ),
-  createData(2, "Sales", "2020-11-30 08:57:10", "Steven Gorge", "Charles Anne", "2022-05-26 12:59:02", ),
-  createData(3, "Digital", "2024-01-04 19:14:45", "Mary Thomos", "Adrien K", "2024-06-10 10:34:17", ),
-  createData(4, "Hydraulic Modeller", "2018-02-18 20:55:12", "David Jhon", "Justin Tan", "2020-09-07 21:10:03", ),
-  createData(5, "HR", "2022-12-08 18:03:48", "Adelina", "Mark Davies", "2024-02-28 11:30:29", ),
-];
+// const rows = [
+//   createData(1, "Flood Modeller", "2023-02-18 10:34:17", "William Howk", "Chris Price", "2024-02-18 18:40:34",),
+//   createData(2, "Sales", "2020-11-30 08:57:10", "Steven Gorge", "Charles Anne", "2022-05-26 12:59:02",),
+//   createData(3, "Digital", "2024-01-04 19:14:45", "Mary Thomos", "Adrien K", "2024-06-10 10:34:17",),
+//   createData(4, "Hydraulic Modeller", "2018-02-18 20:55:12", "David Jhon", "Justin Tan", "2020-09-07 21:10:03",),
+//   createData(5, "HR", "2022-12-08 18:03:48", "Adelina", "Mark Davies", "2024-02-28 11:30:29",),
+// ];
 const rowss = [
   { key: "1", name: "Flood Modeller", createddate: "2023-02-18 10:34:17", bycreated: "William Howk", updatedby: "Chris Price", updateddate: "2024-02-18 18:40:34", },
   { key: "2", name: "Sales", createddate: "2020-11-30 08:57:10", bycreated: "Steven Gorge", updatedby: "Charles Anne", updateddate: "2022-05-26 12:59:02", },
@@ -138,10 +139,10 @@ const headCells: readonly HeadCell[] = [
     label: 'Created Date',
   },
   {
-    id: 'bycreated',
+    id: 'updateddate',
     numeric: false,
     disablePadding: false,
-    label: 'Created By',
+    label: 'Updated Date',
   },
   {
     id: 'updatedby',
@@ -150,10 +151,10 @@ const headCells: readonly HeadCell[] = [
     label: 'Updated By',
   },
   {
-    id: 'updateddate',
+    id: 'bycreated',
     numeric: false,
     disablePadding: false,
-    label: 'Updated Date',
+    label: 'Created By',
   },
 ];
 
@@ -188,34 +189,36 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             }}
           />
         </TableCell> */}
-        {headCells.map((headCell) => {return(
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            className=''
-            >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+        {headCells.map((headCell) => {
+          return (
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? 'right' : 'left'}
+              padding={headCell.disablePadding ? 'none' : 'normal'}
+              sortDirection={orderBy === headCell.id ? order : false}
               className=''
             >
-              {headCell.label=="  Name"?<>
-                &nbsp;
-                &nbsp;
-              </>:<>
-              </>}
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        )})
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={createSortHandler(headCell.id)}
+                className=''
+              >
+                {headCell.label == "  Name" ? <>
+                  &nbsp;
+                  &nbsp;
+                </> : <>
+                </>}
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          )
+        })
         }
       </TableRow>
     </TableHead>
@@ -280,9 +283,11 @@ export default function App() {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('createddate');
   const [selected, setSelected] = React.useState<readonly number[]>([]);
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(1);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rows, setrows] = React.useState<Data[]>([]);
+  
   const setrowsdata = () => {
     const datae: Data[] = [];
     for (var i = 0; i < rowss.length; i++) {
@@ -290,10 +295,16 @@ export default function App() {
     }
     // setrows(datae);
   }
-  if(rows.length===0)setrowsdata();
-  React.useEffect(() => {
-    // setrowsdata();
-  }, [rows])
+  if (rows.length === 0) setrowsdata();
+  const fetchtable = async () => {
+    const data = await getDashboardData();
+    const datae: Data[] = [];
+    for (var i = 0; i < data.data.length; i++) {
+      datae.push(createData(Number(data.data[i].id), data.data[i].attributes.ProjectName, data.data[i].attributes.createdAt, "Created By", "Updated By", data.data[i].attributes.updatedAt));
+    }
+    setrows(datae);
+  }
+  
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof Data,
@@ -359,10 +370,14 @@ export default function App() {
       ),
     [order, orderBy, page, rowsPerPage],
   );
+  React.useEffect(() => {
+    if(rows.length===0)fetchtable();
+    else {setPage(0);}
+  }, [rows.length]);
 
   return (
     <Box sx={{ width: '100%' }} >
-      <Paper sx={{ width: '100%', mb: 0, mt:2 }} >
+      <Paper sx={{ width: '100%', mb: 0, mt: 2 }} >
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
@@ -396,7 +411,7 @@ export default function App() {
                     sx={{ cursor: 'pointer' }}
                   >
                     {/* <TableCell padding="checkbox"> */}
-                      {/* <Checkbox
+                    {/* <Checkbox
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
@@ -409,14 +424,14 @@ export default function App() {
                       id={labelId}
                       scope="row"
                       padding="normal"
-                      style={{fontWeight:"400", fontFamily:"sans-serif"}}
+                      style={{ fontWeight: "400", fontFamily: "sans-serif" }}
                     >
                       {row.name}
                     </TableCell>
-                    <TableCell align="left" style={{fontWeight:"400", fontFamily:"sans-serif"}}>{row.createddate}</TableCell>
-                    <TableCell align="left" style={{fontWeight:"400", fontFamily:"sans-serif"}}>{row.bycreated}</TableCell>
-                    <TableCell align="left" style={{fontWeight:"400", fontFamily:"sans-serif"}}>{row.updatedby}</TableCell>
-                    <TableCell align="left" style={{fontWeight:"400", fontFamily:"sans-serif"}}>{row.updateddate}</TableCell>
+                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }}>{row.createddate}</TableCell>
+                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }}>{row.bycreated}</TableCell>
+                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }}>{row.updatedby}</TableCell>
+                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }}>{row.updateddate}</TableCell>
                   </TableRow>
                 );
               })}
