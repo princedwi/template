@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MasterModelType, MasterModelSoftware, MasterModelSystem } from '@/types/master_data.types';
 import { getModelTypeMasterData, getModelSoftwaresMasterData, getModelSystemsMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { Checkbox, createTheme, FormControl, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, ThemeProvider } from '@mui/material';
 import { StringDecoder } from 'string_decoder';
+import { modelApproach } from '@/utilities/axios/project/createProject';
+
 export interface TabsProps {
   step: number;
 }
@@ -35,33 +37,85 @@ const theme = createTheme({
   },
 });
 export default function ModelApproach({ step }: TabsProps) {
+  const [showOther, setshowOther] = React.useState(false)
   const [ModelTypes, setModelTypes] = React.useState<MasterModelType[]>([]);
   const [ModelSoftwares, setModelSoftwares] = React.useState<MasterModelSoftware[]>([]);
   const [ModelSystems, setModelSystems] = React.useState<MasterModelSystem[]>([]);
+
+  const [formData, setFormData] = useState({
+    ModelType_ID: 0,
+    ModelSoftware_ID: [] as number[],
+    ModelSystem_ID: [] as number[]
+  })
+
+  const handledropdown = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: Number(e.target.value) })
+  }
+
+  const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, type: 'ModelSoftware_ID' | 'ModelSystem_ID') => {
+    const value = Number(e.target.value);
+    const isChecked = e.target.checked;
+    const updatedArray = isChecked
+      ? [...formData[type], value]
+      : formData[type].filter((id) => id !== value);
+    setFormData({
+      ...formData,
+      [type]: updatedArray
+    });
+  };
+
+  const handleChange = (event: SelectChangeEvent<typeof selectedModelSoftwares>, index: number) => {
+    if (index === 2) {
+      const {
+        target: { value },
+      } = event;
+      selectedsetModelSystems(
+        typeof value === 'string' ? value.split(',') : value,
+      );
+    }
+    else if (index === 1) {
+      const {
+        target: { value },
+      } = event;
+      selectedsetModelSoftwares(
+        typeof value === 'string' ? value.split(',') : value,
+      );
+    }
+  };
+  const check = (index: number, type: string) => {
+    if (type === "ModelSoftware_ID") {
+      for (var i = 0; i < selectedModelSoftwares.length; i++) {
+        if (selectedModelSoftwares[i] == String(index)) return true;
+      }
+      return false;
+    }
+    else if (type === "ModelSystem_ID") {
+      for (var i = 0; i < selectedModelSystems.length; i++) {
+        if (selectedModelSystems[i] == String(index)) return true;
+      }
+      return false
+    }
+  }
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log(selectedModelSoftwares, selectedModelSystems)
+    setFormData({ ...formData, ModelSoftware_ID: selectedModelSoftwares.map((index) => ModelSoftwares[Number(index)].attributes.Master_ModelSoftware_ID), ModelSystem_ID: selectedModelSystems.map((index) => ModelSystems[Number(index)].attributes.Master_ModelSystem_ID) });
+    console.log("Formdata", formData)
+    try {
+      await modelApproach(formData);
+      setFormData(formData);
+      console.log('successfully created Model-Approach')
+    } catch (error) {
+      console.error('Error creating project:', error);
+    }
+  };
   const [selectedModelSystems, selectedsetModelSystems] = React.useState<string[]>([]);
   const [selectedModelSoftwares, selectedsetModelSoftwares] = React.useState<string[]>([]);
 
-  const handleChange = (event: SelectChangeEvent<typeof selectedModelSystems>) => {
-    const {
-      target: { value },
-    } = event;
-    selectedsetModelSystems(
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
-  const handleChange2 = (event: SelectChangeEvent<typeof selectedModelSoftwares>) => {
-    const {
-      target: { value },
-    } = event;
-    selectedsetModelSoftwares(
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
   React.useEffect(() => {
     getModelTypeMasterData().then((response) => {
       setModelTypes(response.data);
     });
-    console.log(ModelTypes);
     getModelSoftwaresMasterData().then((response) => {
       setModelSoftwares(response.data);
     });
@@ -78,55 +132,43 @@ export default function ModelApproach({ step }: TabsProps) {
     >
 
       <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
-        <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { }}>Submit</div>
+        <button type="submit" style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px', 'float': 'right' }} className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={handleSubmit}>Submit</button>
       </div>
       <link href='tabs/style.css'></link>
 
-      {/* <div className="mb-3 d-flex flex-row">
-        <label htmlFor="field3" className='w-25'><h5>Type of Model Needed</h5></label>
-        <label htmlFor="field3" className='w-25'><h5>Software To Be Used</h5></label>
-        <label htmlFor="field3" className='w-25'><h5>System To Be Modelled</h5></label>
-      </div> */}
-      {/* <div>
-            <input type="radio" name="field3" id="field3" className='me-2'/>
-                <label htmlFor="field3" className='w-25'>1D Only</label>
-                <input type="Checkbox" name="field3" id="field3" className='me-2'/>
-                <label htmlFor="field3" className='w-25'>Flood Modeller</label>
-                <input type="Checkbox" name="field3" id="field3" className='me-2'/>
-                <label htmlFor="field3" className='w-25'>Fluvial</label>
-            </div>
-                <div>
-                <input type="radio" name="field3" id="field3" className='me-2'/>
-                <label htmlFor="field3" className='w-25'>2D Only</label>
-                <input type="Checkbox" name="field3" id="field3" className='me-2'/>
-                <label htmlFor="field3" className='w-25'>TUFLOW</label>
-                <input type="Checkbox" name="field3" id="field3" className='me-2'/>
-                <label htmlFor="field3" className='w-25'>Pluvial</label>
-            </div>
-                <div>
-                <input type="radio" name="field3" id="field3" className='me-2'/>
-                <label htmlFor="field3" className='w-25'>1D/2D Linked</label>
-                <input type="Checkbox" name="field3" id="field3" className='me-2'/>
-                <label htmlFor="field3" className='w-25'>Info Work ICM</label>
-                <input type="Checkbox" name="field3" id="field3" className='me-2'/>
-                <label htmlFor="field3" className='w-25'>Tidal</label>
-            </div> */}
+
+
       {/* <div className="mb-3 d-flex flex-row">
           <label htmlFor="Data_Management_Strategy" className='w-25'>Type of Model Needed</label>
           <input type="text" name="Data_Management_Strategy" className="form-control w-25" id="Data_Management_Strategy" onChange={(e => { handleInputChange(e); })} />
         </div> */}
       {/* <div className='d-flex'>
+      <div className="mb-3 d-flex flex-row">
+        <label htmlFor="ModelType" className='w-25'><h5>Type of Model Needed</h5></label>
+        <label htmlFor="ModelSoftware" className='w-25'><h5>Software To Be Used</h5></label>
+        <label htmlFor="ModelSystem" className='w-25'><h5>System To Be Modelled</h5></label>
+      </div>
+      
+      <div className='d-flex'>
         <div className='typeofModel w-25' >
           {ModelTypes.map((modelType) => (
             <div key={modelType.id}>
               <input
                 type="radio"
-                name="field3"
-                id={`field3-${modelType.id}`}
+                name="ModelType_ID"
+                id={`ModelType_ID-${modelType.id}`}
                 className="me-2"
                 value={modelType.attributes.Master_ModelType_ID}
+                onClick={(e) => {
+                  console.log(modelType.attributes.Master_ModelType_ID)
+                  if(modelType.attributes.Field==="Other")
+                    setshowOther(true);
+                  else
+                  setshowOther(false);
+                  handleradiobutton(e.target as HTMLTextAreaElement);
+                }}
               />
-              <label htmlFor={`field3-${modelType.id}`}>{modelType.attributes.Field}</label>
+              <label htmlFor={`ModelType_ID-${modelType.id}`}>{modelType.attributes.Field}</label>
             </div>
           ))}
         </div>
@@ -134,8 +176,10 @@ export default function ModelApproach({ step }: TabsProps) {
         <div className='softwareUsed w-25'>
           {ModelSoftwares.map((software) => (
             <div key={software.id}>
-              <input type="checkbox" name="field3" id={`field3_${software.id}`} className='me-2' />
-              <label htmlFor={`field3_${software.id}`} >{software.attributes.Field}</label>
+              <input type="checkbox" name="ModelSoftware_ID" id={`ModelSoftware_ID_${software.id}`} className='me-2' 
+              value={software.attributes.Master_ModelSoftware_ID}
+              onChange={(e) => handleCheckbox(e, 'ModelSoftware_ID')}/>
+              <label htmlFor={`ModelSoftware_ID_${software.id}`} >{software.attributes.Field}</label>
             </div>
           ))}
         </div>
@@ -145,11 +189,13 @@ export default function ModelApproach({ step }: TabsProps) {
             <div key={system.id}>
               <input
                 type="checkbox"
-                name="field3"
-                id={`field3-${system.id}`}  // Ensure unique id
+                name="ModelSystem_ID"
+                id={`ModelSystem_ID-${system.id}`}  // Ensure unique id
                 className='me-2'
+                value={system.attributes.Master_ModelSystem_ID}
+                onChange={(e) => handleCheckbox(e, 'ModelSystem_ID')}
               />
-              <label htmlFor={`field3-${system.id}`} >
+              <label htmlFor={`ModelSystem_ID-${system.id}`} >
                 {system.attributes.Field}
               </label>
             </div>
@@ -161,11 +207,13 @@ export default function ModelApproach({ step }: TabsProps) {
       <div className=''>
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="Events_To_Be_Modelled" className='w-25'>Type of Model Needed</label>
-          <select className='form-control w-[20rem] h-[2.1rem]'>
+          <select name="ModelType_ID" className='form-control w-[20rem] h-[2.1rem]'
+            onChange={(e) => { handledropdown(e) }}
+          >
             <option value="">Select Type of Model </option>
             {ModelTypes.map((modelType) => (
               <option
-                value={modelType.attributes.Field}
+                value={modelType.attributes.Master_ModelType_ID}
                 key={modelType.id}
                 id={`field3-${modelType.id}`}
                 className="me-2"
@@ -177,7 +225,7 @@ export default function ModelApproach({ step }: TabsProps) {
         </div>
         <ThemeProvider theme={theme}>
           <div className="mb-3 d-flex flex-row">
-            <label htmlFor="Events_To_Be_Modelled" className='w-25'>System To Be Used</label>
+            <label htmlFor="Events_To_Be_Modelled" className='w-25'>Software To Be Used</label>
             <FormControl sx={{ fontSize: "10px" }}>
               <Select
                 displayEmpty
@@ -186,22 +234,24 @@ export default function ModelApproach({ step }: TabsProps) {
                 labelId="System To Be Modelled"
                 id="System To Be Used"
                 value={selectedModelSoftwares}
-                onChange={handleChange2}
+                onChange={(e) => handleChange(e, 1)}
+                name="ModelSoftware_ID"
                 input={<OutlinedInput />}
                 renderValue={(selected) => {
                   if (selected.length === 0) {
-                    return <><div className='font-normal '>Select System</div></>;
+                    return <><div className='font-normal '>Select Software</div></>;
                   }
 
-                  return selected.join(', ');
+                  return <div className='' style={{ fontWeight: "200", fontFamily: "" }}>{selectedModelSoftwares
+                    .map((selectedModelSoftwares) => ModelSoftwares[Number(selectedModelSoftwares)].attributes.Field)
+                    .join(', ')}</div>
                 }}
                 MenuProps={MenuProps}
               >
-
                 <MenuItem value="" className='me-2' disabled><em>Select System To Be Used</em></MenuItem>
-                {ModelSoftwares.map((modelType) => (
-                  <MenuItem className="me-2 h-[fit-content] font-[300]" key={modelType.id} value={modelType.attributes.Field}>
-                    <Checkbox checked={selectedModelSoftwares.indexOf(modelType.attributes.Field) > -1} />
+                {ModelSoftwares.map((modelType, index) => (
+                  <MenuItem value={index} className="me-2 h-[fit-content] font-[300]" key={modelType.id}>
+                    <Checkbox checked={check(index, "ModelSoftware_ID")} />
                     <ListItemText className="font-[300]" style={{ fontWeight: "300" }} primary={modelType.attributes.Field} />
                   </MenuItem>
                 ))}
@@ -220,21 +270,22 @@ export default function ModelApproach({ step }: TabsProps) {
                 labelId="System To Be Modelled"
                 id="System To Be Modelled"
                 value={selectedModelSystems}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, 2)}
                 input={<OutlinedInput />}
                 renderValue={(selected) => {
                   if (selected.length === 0) {
                     return <><div className='font-normal  '>Select System</div></>;
                   }
-
-                  return <div className='' style={{ fontWeight: "200", fontFamily: "" }}>{selected.join(', ')}</div>
+                  return <div className='' style={{ fontWeight: "200", fontFamily: "" }}>{selectedModelSystems
+                    .map((selectedModelSystem) => ModelSystems[Number(selectedModelSystem)].attributes.Field)
+                    .join(', ')}</div>
                 }}
                 MenuProps={MenuProps}
               >
                 <MenuItem value="" className='me-2' disabled><em>Select System To Be Modelled</em></MenuItem>
-                {ModelSystems.map((modelType) => (
-                  <MenuItem className="me-2 h-[fit-content] font-[300]" key={modelType.id} value={modelType.attributes.Field}>
-                    <Checkbox checked={selectedModelSystems.indexOf(modelType.attributes.Field) > -1} />
+                {ModelSystems.map((modelType, index) => (
+                  <MenuItem className="me-2 h-[fit-content] font-[300]" key={modelType.id} value={index}>
+                    <Checkbox checked={check(index, "ModelSystem_ID")} />
                     <ListItemText className="font-[300] " style={{ fontWeight: "300" }} primary={modelType.attributes.Field} />
                   </MenuItem>
                 ))}

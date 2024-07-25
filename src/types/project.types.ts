@@ -23,7 +23,11 @@ export interface Concept_Review{
     ModellingTaskOther: string,
     Modelling_Task:number,
 }
-
+export interface Model_Approach{
+    ModelType_ID:number,
+    ModelSoftware_ID:number[],
+    ModelSystem_ID:number[]
+}
 export type ProjectInfoInterface = {
     ProjectContextData: Project_Info,
     setProjectContextData: React.Dispatch<React.SetStateAction<Project_Info>>

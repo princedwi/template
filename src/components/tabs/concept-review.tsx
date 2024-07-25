@@ -17,7 +17,7 @@ export default function ConceptReview({ step }: TabsProps) {
     Events_To_Be_Modelled: '',
     Climate_Change_Approach: '',
     ModellingTaskOther: '',
-    Modelling_Task: 4,
+    Modelling_Task: 0,
   });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, str: string = "") => {
     const { name, value } = e.target;

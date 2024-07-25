@@ -1,6 +1,7 @@
 import api from "../api";
-import { Concept_Review, Project_Info } from "@/types/project.types";
 import { ProjectInterface } from "@/types/project-info.types";
+import { Concept_Review, Project_Info, Model_Approach } from "@/types/project.types";
+
 
 //import { Project_Info as Project_Info } from "@/types/project.types";
 // const post_project = () => api.post("http://localhost:1337/api/project-infos");
@@ -9,3 +10,4 @@ export const createProject = (formData: Project_Info) => api.post("http://localh
 export const conceptReview = (formData: Concept_Review) => api.post("http://localhost:1337/api/concept-reviews", {data:formData});
 export const getProjectInfo = (formData: ProjectInterface) => api.get("http://localhost:1337/api/concept-reviews");
 export const getDashboardData = () => api.get("http://localhost:1337/api/project-infos");
+export const modelApproach = (formData: Model_Approach) => api.post("http://localhost:1337/api/model-approches", {data:formData});
