@@ -2,19 +2,44 @@ import React from 'react'
 export interface TabsProps {
   step: number;
 }
-
+import { DataTabInterface } from '@/types/data_tab.types';
 export default function DataTab({ step }: TabsProps) {
-  const [data, setData] = React.useState([
+  const [data, setData] = React.useState<DataTabInterface[]>([
     {
       key: 1,
+      Name: "item1",
+      Data: "",
+      DescriptionUse: "",
+      Location: "",
+      DataAdded: "",
+      Source: "",
     }
-  ])
-  const findMaxKey = () => {
+  ]);
+  // const [data,setData]=React.useState<DataTabInterface[]>([]);
+  const findMaxKey = (): number => {
     return data.reduce((max, item) => (item.key > max ? item.key : max), 0);
   };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key: number) => {
+    const value=e.target.value;
+    const field=e.target.name;
+    setData(prevData => prevData.map(item => 
+      item.key === key ? { ...item, [field]: value } : item
+    ));
+    console.log(data);
+    // setData({...data, [field]:value})
+  }
   const addItem = (index: number) => {
+    console.log(data, "data");
     const newKey = findMaxKey() + 1;
-    const newItem = { key: newKey, name: `item${newKey}` };
+    const newItem: DataTabInterface = {
+      key: newKey,
+      Name: `item${newKey}`,
+      Data: "",
+      DescriptionUse: "",
+      Location: "",
+      DataAdded: "",
+      Source: "",
+    }
     const newdata = [...data];
     newdata.splice(index + 1, 0, newItem);
     setData(newdata);
@@ -46,39 +71,41 @@ export default function DataTab({ step }: TabsProps) {
       <div className='d-flex'>
         <div className='data w-25' >
           {data.map((item, index) => (
-            <div key={item.key} ><input type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }}  type="text" name="Data" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
           ))}
-          {/* <div><input type="text" name="field3" id="field3" className='me-2 mb-3 border rounded-sm' /></div>
-          <div><input type="text" name="field3" id="field3" className='me-2 mb-3 border rounded-sm' /></div> */}
+          {/* <div><input onChange={(e) => { handleChange(e, item.key) }}  type="text" name="field3" id="field3" className='me-2 mb-3 border rounded-sm' /></div>
+          <div><input onChange={(e) => { handleChange(e, item.key) }}  type="text" name="field3" id="field3" className='me-2 mb-3 border rounded-sm' /></div> */}
         </div>
 
         <div className='description w-25'>
           {data.map((item, index) => (
-            <div key={item.key} ><input type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%] ' /></div>
+            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }}  type="text" name="DescriptionUse" id="field3" className='me-2 mb-3 border form-control w-[80%] ' /></div>
           ))}
         </div>
 
         <div className='location w-25'>
 
           {data.map((item, index) => (
-            <div key={item.key} ><input type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }}  type="text" name="Location" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
           ))}
         </div>
 
         <div className='dataAdded w-25'>
 
           {data.map((item, index) => (
-            <div key={item.key} ><input type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="Source" id="DataAdded" className='me-2 mb-3 border form-control w-[80%]' /></div>
           ))}
         </div>
 
         <div className='source w-25'>
 
           {data.map((item, index) => (
-            <div key={item.key} className='flex' style={{ display: "flex", gap: "3px", justifyItems: "center" }}><input key={item.key} type="text" name="field3" id="field3" className='me-2 mb-3 border form-control w-[80%]' />
+            <div key={item.key} className='flex' style={{ display: "flex", gap: "3px", justifyItems: "center" }}>
+              <input onChange={(e) => { handleChange(e, item.key) }}  key={item.key} type="text" name="Source" id="field3" className='me-2 mb-3 border form-control w-[80%]' />
               <div className=''>
                 <button className='btn btn-primary' style={{ height: "2.2rem", marginTop: "-5px" }} onClick={
                   () => {
+                    console.log("K")
                     addItem(index);
                   }
                 }>+</button>
