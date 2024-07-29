@@ -18,9 +18,9 @@ export interface TabsProps {
 
 export default function Form() {
   const [step, setStep] = useState<number>(1);
-  const [LoaderData, setLoaderData] = useState<LoaderProps>({ data: "", display: false });
+  const [LoaderData, setLoaderData] = useState<LoaderProps>({ data: "", display: false, type:1 });
   const setloaderdata=()=>{
-    setLoaderData({data:"",display:false})
+    setLoaderData({data:"",display:false, type:1})
   }
   const values = [
     { name: "Project Info", id: 1, },
@@ -69,16 +69,16 @@ export default function Form() {
   }
   const dataLoader:LoaderProps={
     data:LoaderData.data,
-    display:LoaderData.display
+    display:LoaderData.display,
+    type:LoaderData.type
   }
   React.useEffect((
   )=>{var g=check();
 
-    console.log(LoaderData,"000")
   },[ProjectContextData, LoaderData])
   return (
     <>
-    <Loader data={LoaderData.data} display={LoaderData.display} setloaderdata={setloaderdata}/>
+    {/* <Loader data={LoaderData.data} display={LoaderData.display} setloaderdata={setloaderdata} type={LoaderData.type}/> */}
     <div className="stepForm m-4 min-h-[90vh]">
       {/* <form action="" method="post" id="registration" className="stepForm m-4"> */}
         <nav>

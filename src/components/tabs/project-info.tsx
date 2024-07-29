@@ -46,19 +46,19 @@ export default function ProjectInfo({ step }: TabsProps) {
   }
 
   const fill = () => {
-    setLoaderData({ data: "Saving Data...", display: true });
+    setLoaderData({ data: "Saving Data...", display: true, type:1 });
     setProjectContextData(data); // set context
     createProject(data)
       .then(e => {
         console.log("successfully created Project-Info")
         setData(data);
-        setLoaderData({ data: "Data Saved", display: true });
+        setLoaderData({ data: "Data Saved", display: true, type:2 });
         setTimeout(() => {
-          setLoaderData({ data: "Data Saved", display: false });
+          setLoaderData({ data: "", display: false, type:1 });
         }, 2000);
       })
       .catch(err => {
-        setLoaderData({ data: err, display: true });
+        setLoaderData({ data: err.message, display: true, type:3 });
         console.log(err.message)
       })
   }

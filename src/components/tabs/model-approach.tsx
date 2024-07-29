@@ -4,6 +4,7 @@ import { getModelTypeMasterData, getModelSoftwaresMasterData, getModelSystemsMas
 import { Checkbox, createTheme, FormControl, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, ThemeProvider } from '@mui/material';
 import { StringDecoder } from 'string_decoder';
 import { modelApproach } from '@/utilities/axios/project/createProject';
+import { useProjectInfoContext } from '@/context/context';
 
 export interface TabsProps {
   step: number;
@@ -37,6 +38,8 @@ const theme = createTheme({
   },
 });
 export default function ModelApproach({ step }: TabsProps) {
+  const { setLoaderData } = useProjectInfoContext();
+
   const [showOther, setshowOther] = React.useState(false)
   const [ModelTypes, setModelTypes] = React.useState<MasterModelType[]>([]);
   const [ModelSoftwares, setModelSoftwares] = React.useState<MasterModelSoftware[]>([]);
@@ -98,15 +101,28 @@ export default function ModelApproach({ step }: TabsProps) {
   }
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(selectedModelSoftwares, selectedModelSystems)
-    setFormData({ ...formData, ModelSoftware_ID: selectedModelSoftwares.map((index) => ModelSoftwares[Number(index)].attributes.Master_ModelSoftware_ID), ModelSystem_ID: selectedModelSystems.map((index) => ModelSystems[Number(index)].attributes.Master_ModelSystem_ID) });
+    setLoaderData({ data: "Saving Data...", display: true, type: 1 });
+    var arr1: number[] = selectedModelSoftwares.map((index) => ModelSoftwares[Number(index)].attributes.Master_ModelSoftware_ID);
+    var arr2: number[] = selectedModelSystems.map((index) => ModelSystems[Number(index)].attributes.Master_ModelSystem_ID);
+    setFormData({ ...formData, ModelSoftware_ID: arr1, ModelSystem_ID: arr2 });
     console.log("Formdata", formData)
+    console.log(arr1, "))))", arr2)
     try {
-      await modelApproach(formData);
+      // await modelApproach(formData);
       setFormData(formData);
+      for(var i=0;i<arr1.length;i++){
+        for(var j=0;j<arr2.length;j++){
+          await modelApproach({ModelType_ID:formData.ModelType_ID,ModelSoftware_ID:arr1[i],ModelSystem_ID:arr2[j]})
+        }
+      }
+      setLoaderData({ data: "Data Saved", display: true, type: 2 });
+      setTimeout(() => {
+        setLoaderData({ data: "", display: false, type: 1 });
+      }, 2000);
       console.log('successfully created Model-Approach')
     } catch (error) {
       console.error('Error creating project:', error);
+      setLoaderData({ data: JSON.stringify(error) ? JSON.stringify(error) : "Some Error Occurred, Please Try Again Later", display: true, type: 3 });
     }
   };
   const [selectedModelSystems, selectedsetModelSystems] = React.useState<string[]>([]);

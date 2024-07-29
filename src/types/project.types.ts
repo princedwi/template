@@ -27,8 +27,8 @@ export interface Concept_Review{
 }
 export interface Model_Approach{
     ModelType_ID:number,
-    ModelSoftware_ID:number[],
-    ModelSystem_ID:number[]
+    ModelSoftware_ID:number,
+    ModelSystem_ID:number
 }
 export type ProjectInfoInterface = {
     ProjectContextData: Project_Info,

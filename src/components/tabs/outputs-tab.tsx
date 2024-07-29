@@ -5,7 +5,9 @@ import { MasterOutput } from '@/types/master_data.types';
 import { getMasterOutputMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { outputDetail } from '@/utilities/axios/project/createProject';
 import { Output_Detail } from '@/types/project.types';
+import { useProjectInfoContext } from '@/context/context';
 export default function OutputsTab({ step }: TabsProps) {
+  const { setLoaderData } = useProjectInfoContext();
   const [masterMasterOutput, setmasterMasterOutput] = React.useState<MasterOutput[]>([]);
   const [checks, setcheck] = React.useState<boolean[]>([]);
   const [formData, setFormData] = useState<Output_Detail[]>([]);
@@ -31,15 +33,20 @@ export default function OutputsTab({ step }: TabsProps) {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setLoaderData({ data: "Saving Data...", display: true, type:1 });
     try {
       for (var i = 0; i < masterMasterOutput.length; i++) {
         if (checks[i]) {
           await outputDetail(formData[i]);
         }
       }
+      setLoaderData({ data: "Data Saved", display: true, type:2 });
+        setTimeout(() => {
+          setLoaderData({ data: "", display: false, type:1 });
+        }, 2000);
       console.log('successfully created Output-Table')
     } catch (error) {
-
+      setLoaderData({ data: JSON.stringify(error)?JSON.stringify(error):"Some Error Occurred, Please Try Again Later", display: true, type:3 });
       console.error('Error creating project:', error);
     }
   };

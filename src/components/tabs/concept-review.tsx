@@ -3,10 +3,13 @@ import { TabsProps } from './project-info'
 import { conceptReview } from '@/utilities/axios/project/createProject';
 import { getConceptReviewMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { MasterModellingTask } from '@/types/master_data.types';
+import { useProjectInfoContext } from '@/context/context';
+import { stringifyError } from 'next/dist/shared/lib/utils';
 export default function ConceptReview({ step }: TabsProps) {
   const [showOther, setshowOther] = React.useState(false)
   const [masterModellingTasks, setmasterModellingTasks] = useState<MasterModellingTask[]>([]);
   const [otherID, setotherID] = useState(0);
+  const { setLoaderData } = useProjectInfoContext();
 
   const [formData, setFormData] = useState({
     Modelling_Objective: '',
@@ -27,14 +30,19 @@ export default function ConceptReview({ step }: TabsProps) {
     setFormData({ ...formData, [e.name]: Number(e.value) })
   }
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    setLoaderData({ data: "Saving Data...", display: true, type:1 });
     e.preventDefault();
-    console.log("Formdata", formData)
     try {
       await conceptReview(formData);
       setFormData(formData);
+      setLoaderData({ data: "Data Saved", display: true, type:2 });
+        setTimeout(() => {
+          setLoaderData({ data: "", display: false, type:1 });
+        }, 2000);
       console.log('successfully created CONCEPT-REVIEW')
     } catch (error) {
       console.error('Error creating project:', error);
+      setLoaderData({ data: JSON.stringify(error)?JSON.stringify(error):"Some Error Occurred, Please Try Again Later", display: true, type:3 });
     }
   };
   // conceptReview(formData)
