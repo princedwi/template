@@ -3,6 +3,7 @@ export interface TabsProps {
   step: number;
 }
 import { DataTabInterface } from '@/types/data_tab.types';
+import {sendDataDetails} from '@/utilities/axios/project/createProject';
 export default function DataTab({ step }: TabsProps) {
   const [data, setData] = React.useState<DataTabInterface[]>([
     {
@@ -18,7 +19,7 @@ export default function DataTab({ step }: TabsProps) {
   // const [data,setData]=React.useState<DataTabInterface[]>([]);
   const findMaxKey = (): number => {
     return data.reduce((max, item) => (item.key > max ? item.key : max), 0);
-  };
+  }; 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key: number) => {
     const value=e.target.value;
     const field=e.target.name;
@@ -47,6 +48,17 @@ export default function DataTab({ step }: TabsProps) {
   const deleteItem = (key: number) => {
     setData(data.filter(item => item.key !== key));
   };
+  const handleSubmit = async() => {
+    try {
+      for(var i=0;i<data.length;i++){
+        if(data[i].Data!=""){
+          await sendDataDetails(data[i]);
+        }
+      }
+    } catch (error) {
+      
+    }
+  }
   return (
 
     <div
@@ -56,7 +68,7 @@ export default function DataTab({ step }: TabsProps) {
     >
 
       <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
-        <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { }}>Submit</div>
+        <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { handleSubmit() }}>Submit</div>
       </div>
       <link href='tabs/style.css'></link>
 
