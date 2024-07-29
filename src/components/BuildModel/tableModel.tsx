@@ -10,7 +10,7 @@ export interface lowerinterface {
     lower: React.Dispatch<React.SetStateAction<number>>;
 }
 import JSONData from "../../assests/Detailed_Specification_Json.json"
-import { Table } from '@nextui-org/table';
+// import { Table } from '@nextui-org/table';
 
 type JsonValue = string | number | boolean | null;
 type JsonArray = Array<JsonValue | JsonObject>;
@@ -157,7 +157,8 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
             filldata();
         checkfill();
         // filltablestate();
-    }, [step, categories])
+        console.log(lower,"lower");
+    }, [step, categories, lower, tablestate ])
 
     // handleFileChange to handle images of sign(which now is removed for 4th column)
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, num: Number) => {
@@ -211,13 +212,12 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                                 var gt: string[] | undefined = TableData?.get(`${val}$${cat}`)
                                 const categoryKey = `${val}$${cat}`;
                                 const inputValue = (tablestate[categoryKey] as JsonObject)?.[index] || "";
-                                return (
-                                    <td key={index2} className="ml-3" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
+                                return (<td key={index2} className="ml-3" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                                         <div className="mb-3 ml-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
                                             <label style={{ textAlign: "left", fontSize: "0.94rem" }} htmlFor="field1" className=''>
-                                                {gt && gt[index]}
+                                                {index2<lower && gt && gt[index]}
                                             </label>
-                                            {gt && gt[index] && gt[index] != "" ?
+                                            {index2<lower && gt && gt[index] && gt[index] != "" ?
                                                 <input
                                                     type="text"
                                                     name={`field${index}-${index2}`}

@@ -10,10 +10,18 @@ import ModelLogs from "@/components/tabs/model-logs";
 import { ProjectInfoContext } from "@/context/context";
 import ProjectInfo from "@/components/tabs/project-info";
 import { Project_Info } from "@/types/project.types";
+import Loader from "@/components/Loader";
+import { LoaderProps } from "@/types/loader.types";
+export interface TabsProps {
+  step: number;
+}
 
 export default function Form() {
   const [step, setStep] = useState<number>(1);
-
+  const [LoaderData, setLoaderData] = useState<LoaderProps>({ data: "", display: false });
+  const setloaderdata=()=>{
+    setLoaderData({data:"",display:false})
+  }
   const values = [
     { name: "Project Info", id: 1, },
     { name: "Concept Review", id: 2 },
@@ -59,10 +67,18 @@ export default function Form() {
       setclr(true);
     return 1;
   }
+  const dataLoader:LoaderProps={
+    data:LoaderData.data,
+    display:LoaderData.display
+  }
   React.useEffect((
-  )=>{var g=check();},[ProjectContextData])
+  )=>{var g=check();
+
+    console.log(LoaderData,"000")
+  },[ProjectContextData, LoaderData])
   return (
     <>
+    <Loader data={LoaderData.data} display={LoaderData.display} setloaderdata={setloaderdata}/>
     <div className="stepForm m-4 min-h-[90vh]">
       {/* <form action="" method="post" id="registration" className="stepForm m-4"> */}
         <nav>
@@ -95,7 +111,7 @@ export default function Form() {
           </div>
         </nav>
         <div className="tab-content" style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "1.5rem" }}>
-          <ProjectInfoContext.Provider value={{ ProjectContextData: ProjectContextData, setProjectContextData: setProjectContextData }}>
+          <ProjectInfoContext.Provider value={{ ProjectContextData: ProjectContextData, setProjectContextData: setProjectContextData, setLoaderData:setLoaderData }}>
             <ProjectInfo step={step} />
             <ConceptReview step={step} />
             <ModelApproach step={step} />

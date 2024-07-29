@@ -1,3 +1,5 @@
+import { LoaderProps } from "./loader.types";
+
 export interface Project_Info{
     ProjectName:string;
     ProjectCode:string;
@@ -30,7 +32,8 @@ export interface Model_Approach{
 }
 export type ProjectInfoInterface = {
     ProjectContextData: Project_Info,
-    setProjectContextData: React.Dispatch<React.SetStateAction<Project_Info>>
+    setProjectContextData: React.Dispatch<React.SetStateAction<Project_Info>>,
+    setLoaderData:React.Dispatch<React.SetStateAction<LoaderProps>>,
 }
 export interface Output_Detail{
     Recipient: string,

@@ -8,12 +8,12 @@ import { useProjectInfoContext } from '@/context/context';
 import { createProject } from '@/utilities/axios/project/createProject';
 import { getProjectInfoMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { Project_Info } from '@/types/project.types';
-
+import Loader from '../Loader';
 
 
 export default function ProjectInfo({ step }: TabsProps) {
 
-  const { ProjectContextData, setProjectContextData } = useProjectInfoContext();
+  const { ProjectContextData, setProjectContextData, setLoaderData } = useProjectInfoContext();
   const [showOther, setshowOther] = React.useState(false)
   const [otherID, setotherID] = useState(0);
 
@@ -31,7 +31,7 @@ export default function ProjectInfo({ step }: TabsProps) {
     master_type_study: 0, // Set an initial value
   });
   const [masterTypeStudy, setMasterTypeStudy] = useState<MasterTypeStudy[]>([]);
-
+  const [LoaderData, setLoaderDatastate] = useState({ data: "", display: false });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, tname: string = "") => {
     const { name, value } = e.target;
     if (tname === "master_type_study") {
@@ -46,13 +46,21 @@ export default function ProjectInfo({ step }: TabsProps) {
   }
 
   const fill = () => {
+    setLoaderData({ data: "Saving Data...", display: true });
     setProjectContextData(data); // set context
     createProject(data)
       .then(e => {
         console.log("successfully created Project-Info")
         setData(data);
+        setLoaderData({ data: "Data Saved", display: true });
+        setTimeout(() => {
+          setLoaderData({ data: "Data Saved", display: false });
+        }, 2000);
       })
-      .catch(err => console.log(err.message))
+      .catch(err => {
+        setLoaderData({ data: err, display: true });
+        console.log(err.message)
+      })
   }
   const fetchdata = async () => {
     const response = await getProjectInfoMasterData();
