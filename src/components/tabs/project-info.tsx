@@ -13,7 +13,7 @@ import Loader from '../Loader';
 
 export default function ProjectInfo({ step }: TabsProps) {
 
-  const { ProjectContextData, setProjectContextData, setLoaderData } = useProjectInfoContext();
+  const { ProjectContextData, setProjectContextData, setLoaderData, projectId } = useProjectInfoContext();
   const [showOther, setshowOther] = React.useState(false)
   const [otherID, setotherID] = useState(0);
 

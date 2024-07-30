@@ -34,6 +34,7 @@ export type ProjectInfoInterface = {
     ProjectContextData: Project_Info,
     setProjectContextData: React.Dispatch<React.SetStateAction<Project_Info>>,
     setLoaderData:React.Dispatch<React.SetStateAction<LoaderProps>>,
+    projectId:number
 }
 export interface Output_Detail{
     Recipient: string,
