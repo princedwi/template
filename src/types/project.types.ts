@@ -45,3 +45,9 @@ export interface Output_Detail{
     OutputName:number,
     Notes:string
 }
+export type MasterSpecQueryID = number;
+export interface DetailedSpec_Query{
+    // ProjectSpecQueryResID:string,
+    MasterSpecQueryID:MasterSpecQueryID | null,
+    Response:string
+}

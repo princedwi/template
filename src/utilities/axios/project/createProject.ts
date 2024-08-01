@@ -1,6 +1,6 @@
 import api from "../api";
 import { ProjectInterface } from "@/types/project-info.types";
-import { Concept_Review, Project_Info, Model_Approach, Output_Detail } from "@/types/project.types";
+import { Concept_Review, Project_Info, Model_Approach, Output_Detail, DetailedSpec_Query } from "@/types/project.types";
 import {DataTabInterface} from '@/types/data_tab.types';
 
 //import { Project_Info as Project_Info } from "@/types/project.types";
@@ -19,3 +19,4 @@ export const outputDetail = (formData: Output_Detail) => api.post("http://localh
 export const outputDetailUpdate = (formData: Output_Detail, id:number) => api.put(`http://localhost:1337/api/output-details-tables/${id}`, {data:formData});
 export const outputDetailDelete = (formData: Output_Detail, id:number) => api.delete(`http://localhost:1337/api/output-details-tables/${id}`, {data:formData});
 export const sendDataDetails = (formData: DataTabInterface) => api.post("http://localhost:1337/api/data-tables", {data:formData});
+export const detailSpecQuery = (formData: DetailedSpec_Query) => api.post("http://localhost:1337/api/project-spec-query-responses",{data:formData});

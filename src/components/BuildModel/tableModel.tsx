@@ -10,6 +10,8 @@ export interface lowerinterface {
     lower: React.Dispatch<React.SetStateAction<number>>;
 }
 import JSONData from "../../assests/Detailed_Specification_Json.json"
+import { detailSpecQuery } from '@/utilities/axios/project/createProject';
+import { DetailedSpec_Query} from '@/types/project.types'
 // import { Table } from '@nextui-org/table';
 
 type JsonValue = string | number | boolean | null;
@@ -18,6 +20,61 @@ interface JsonObject {
     [key: string]: JsonValue | JsonObject | JsonArray;
 }
 export default function TableModel({ step, setnumb }: TabsProps2) {
+    const [fieldlabel, setfieldlabel] = React.useState<datas2[]>([]); // contain the id of the current tab
+    interface datas2 {
+        name: string
+        idz: number,
+    }
+
+    const [formData, setFormData] = useState<DetailedSpec_Query>({
+        MasterSpecQueryID:null,
+        Response: ''
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, str: string = "") => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [str === "" ? name : str]: value });
+    };
+    const handleSubmit = async () => {
+        
+        try {
+            if (categories) {
+                for (var i = 0; i < categories.length; i++) {
+                    setlower(i + 1);
+                    setnumb(i + 1);
+                    for (var j = 0; j < subcategories.length; j++) {
+                        if (!TableData?.get(`${subcategories[j]}$${categories[i]}`)) {
+                            continue;
+                        }
+                        const g = `${subcategories[j]}$${categories[i]}`;
+                        const gt = TableData?.get(g);
+                        if (gt) {
+                            for (let k = 0; k < gt.length; k++) {
+                                const field = (tablestate[g] as JsonObject)?.[k];
+                                if (!field || field === "") {
+                                    console.log("asd",field)
+                                }else{
+                                    for(var i=0;i<fieldlabel.length;i++){
+                                        if(fieldlabel[i].name===(gt[i] as string)){
+                                            await detailSpecQuery({MasterSpecQueryID:fieldlabel[i].idz, Response:field as string})
+                                            console.log("RGVB",field,fieldlabel)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+        
+          
+        } catch (error) {
+          console.error('Error creating project:', error);
+        }
+      };
+
+
     const [selectedFile, setSelectedFile] = useState<Array<File | null>>([null, null, null, null, null, null, null]);
     const [imagePreview, setImagePreview] = useState<Array<string | null>>([null, null, null, null, null, null, null]);
     const [categories, setCategories] = React.useState<string[]>(); // contain tab headings
@@ -25,11 +82,6 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
     interface datas {
         len: number,
         type: string
-    }
-    const [fieldlabel, setfieldlabel] = React.useState<datas2[]>([]); // contain the id of the current tab
-    interface datas2 {
-        name: string
-        idz: number,
     }
     const [maxlength, setmaxlength] = React.useState<datas[]>([]);
     const [TableData, setTableData] = React.useState<Map<string, string[]>>(); // contain table data
@@ -91,6 +143,7 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
             st2.set(category1, 1);
         });
         setfieldlabel(dataz);
+
         st.forEach((value: number, key: string) => {
             arr2.push(key);
         });
@@ -153,16 +206,6 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                                 setnumb(i + 1);
                                 return;
                             }
-                            else{
-                                for(var i=0;i<fieldlabel.length;i++){
-                                    if(fieldlabel[i].name===gt[i]){
-                                        // await senddata({subcategory:fieldlabel[i].idz, response:field})
-                                    }
-                                }
-                            }
-                            // else{
-                            //     await senddata({subcategory:subcategory, response:field})
-                            // }
                         }
                     }
                 }
@@ -176,7 +219,7 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         checkfill();
         // filltablestate();
         console.log(lower, "lower");
-    }, [step, categories, lower, tablestate, fieldlabel])
+    }, [step, categories, lower, tablestate])
 
     // handleFileChange to handle images of sign(which now is removed for 4th column)
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, num: Number) => {
@@ -245,6 +288,7 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                                                 value={String(inputValue)}
                                                 onChange={(e) => {
                                                     handleChange(categoryKey, index, e.target.value);
+                                                   // handleInputChange;
                                                 }}
                                             />
                                             : <></>}
@@ -262,10 +306,10 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         <>
             <div className='flex flex-row w-full' style={{ width: "100%", flexDirection: "row", display: "flex", fontSize: "0.94rem" }}>
                 <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right'>
-                    <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { }}>Submit</div>
+                    <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => {handleSubmit(); console.log("CLICKED") }} >Submit</div>
                 </div>
             </div>
-            {subcategories.map(function (val, index) {
+            {subcategories.map(function (val, index) {  
                 return (
                     <div key={index}>
                         {val != "other" && <div key={index} style={{ backgroundColor: '#4e67d4', marginBottom: '20px', textAlign: 'center', }}>{val === "other" ? "" : val}<br></br></div>}
