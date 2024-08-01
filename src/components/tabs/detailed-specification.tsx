@@ -3,8 +3,8 @@ import { TabsProps } from './project-info'
 import ProjectInfo from "@/components/tabs/project-info";
 import BuildModel from '../BuildModel/build-model';
 
-
 export default function DetailedSpecification({ step }: TabsProps) {
+
   const [steptwo, setStep] = useState<number>(1);
   const values = [
     { name: "1D River Model Build", id: 1, },
@@ -25,20 +25,16 @@ export default function DetailedSpecification({ step }: TabsProps) {
     <>
 
       <div
-        className={`tab-pane relative fade ${step == 7 ? "show active" : ""}`}
+        className={`tab-pane relative fade ${step == 7 ? "show active" : ""}`}>
 
-      >
-
-        <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right'>
-          <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { }}>Submit</div>
-        </div>
+        {/* <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right'>
+        <button type="submit" style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px', 'float': 'right' }} className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={handleSubmit}>Submit</button>
+        </div> */}
         {/* <form action="" method="post" id="registration" className="stepForm "> */}
 
         <div>
           <div className='d-flex'>
             <div className="nav-pills w-25 p-4 m-2 nav-fill " id="nav-tab" role="tablist" style={{ backgroundColor: 'white', borderRadius: "10px" }}>
-
-
               {values.map((value, i) => (
                 <a
                   className={`nav-link py-2 my-2  ${steptwo === value.id ? "active" : ""}`}
@@ -52,20 +48,14 @@ export default function DetailedSpecification({ step }: TabsProps) {
                   {value.name}
                 </a>
               ))}
-
-
-
             </div>
             <div className="tab-content  p-4 m-2" style={{ backgroundColor: 'white', borderRadius: "10px", width: "100%" }}>
               <BuildModel step={steptwo} />
-
             </div>
           </div>
           {/* </form> */}
         </div>
       </div>
-
-
     </>
   )
 }

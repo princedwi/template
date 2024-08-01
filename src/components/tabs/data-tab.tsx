@@ -90,7 +90,7 @@ export default function DataTab({ step }: TabsProps) {
       <div className='d-flex'>
         <div className='data w-25' >
           {data.map((item, index) => (
-            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="Data" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="Data" id="Data" className='me-2 mb-3 border form-control w-[80%]' /></div>
           ))}
           {/* <div><input onChange={(e) => { handleChange(e, item.key) }}  type="text" name="field3" id="field3" className='me-2 mb-3 border rounded-sm' /></div>
           <div><input onChange={(e) => { handleChange(e, item.key) }}  type="text" name="field3" id="field3" className='me-2 mb-3 border rounded-sm' /></div> */}
@@ -98,21 +98,21 @@ export default function DataTab({ step }: TabsProps) {
 
         <div className='description w-25'>
           {data.map((item, index) => (
-            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="DescriptionUse" id="field3" className='me-2 mb-3 border form-control w-[80%] ' /></div>
+            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="DescriptionUse" id="DescriptionUse" className='me-2 mb-3 border form-control w-[80%] ' /></div>
           ))}
         </div>
 
         <div className='location w-25'>
 
           {data.map((item, index) => (
-            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="Location" id="field3" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="Location" id="Location" className='me-2 mb-3 border form-control w-[80%]' /></div>
           ))}
         </div>
 
         <div className='dataAdded w-25'>
 
           {data.map((item, index) => (
-            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="Source" id="DataAdded" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="DataAdded" id="DataAdded" className='me-2 mb-3 border form-control w-[80%]' /></div>
           ))}
         </div>
 

@@ -6,7 +6,6 @@ import TableModel from './tableModel';
 import { Category } from '@/types/detailesSpecification.types';
 export interface TabsProps2 {
   step: number;
-
 }
 
 import JSONData from "../../assests/Detailed_Specification_Json.json"
@@ -14,6 +13,7 @@ import { extractUniqueCategories } from './build-model-helper';
 
 export default function BuildModel({ step }: TabsProps2) {
 
+  
   const [steptwo, setStep] = useState<number>(1);
   const [numb, setnumb] = useState<number>(1);
 
