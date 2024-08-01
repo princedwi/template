@@ -6,10 +6,11 @@ import { DataTabInterface } from '@/types/data_tab.types';
 import { sendDataDetails } from '@/utilities/axios/project/createProject';
 import { useProjectInfoContext } from '@/context/context';
 export default function DataTab({ step }: TabsProps) {
-  const { setLoaderData } = useProjectInfoContext();
+  const { setLoaderData, projectId } = useProjectInfoContext();
   const [data, setData] = React.useState<DataTabInterface[]>([
     {
       key: 1,
+      ProjectID:projectId,
       Name: "item1",
       Data: "",
       DescriptionUse: "",
@@ -28,13 +29,12 @@ export default function DataTab({ step }: TabsProps) {
     setData(prevData => prevData.map(item =>
       item.key === key ? { ...item, [field]: value } : item
     ));
-    console.log(data);
     // setData({...data, [field]:value})
   }
   const addItem = (index: number) => {
-    console.log(data, "data");
     const newKey = findMaxKey() + 1;
     const newItem: DataTabInterface = {
+      ProjectID:projectId,
       key: newKey,
       Name: `item${newKey}`,
       Data: "",
@@ -55,7 +55,7 @@ export default function DataTab({ step }: TabsProps) {
     try {
       for (var i = 0; i < data.length; i++) {
         if (data[i].Data != "") {
-          await sendDataDetails(data[i]);
+          await sendDataDetails({...data[i], ProjectID:projectId});
         }
       }
       setLoaderData({ data: "Data Saved", display: true, type: 2 });
@@ -63,6 +63,7 @@ export default function DataTab({ step }: TabsProps) {
         setLoaderData({ data: "", display: false, type: 1 });
       }, 2000);
     } catch (error) {
+      console.log(error);
       setLoaderData({ data: JSON.stringify(error) ? JSON.stringify(error) : "Some Error Occurred, Please Try Again Later", display: true, type: 3 });
     }
   }
@@ -124,7 +125,6 @@ export default function DataTab({ step }: TabsProps) {
               <div className=''>
                 <button className='btn btn-primary' style={{ height: "2.2rem", marginTop: "-5px" }} onClick={
                   () => {
-                    console.log("K")
                     addItem(index);
                   }
                 }>+</button>

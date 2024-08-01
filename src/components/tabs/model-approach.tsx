@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { MasterModelType, MasterModelSoftware, MasterModelSystem } from '@/types/master_data.types';
 import { getModelTypeMasterData, getModelSoftwaresMasterData, getModelSystemsMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { Checkbox, createTheme, FormControl, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, ThemeProvider } from '@mui/material';
-import { StringDecoder } from 'string_decoder';
-import { modelApproach } from '@/utilities/axios/project/createProject';
+import { modelApproach, modelApproachUpdate } from '@/utilities/axios/project/createProject';
 import { useProjectInfoContext } from '@/context/context';
 
 export interface TabsProps {
@@ -38,40 +37,37 @@ const theme = createTheme({
   },
 });
 export default function ModelApproach({ step }: TabsProps) {
-  const { setLoaderData } = useProjectInfoContext();
+  const { setLoaderData, projectId } = useProjectInfoContext();
+  const [ID, setID] = useState(-1);
+
+  const [selectedModelSystems, selectedsetModelSystems] = React.useState<string[]>([]);
+  const [selectedModelSoftwares, selectedsetModelSoftwares] = React.useState<string[]>([]);
 
   const [showOther, setshowOther] = React.useState(false)
   const [ModelTypes, setModelTypes] = React.useState<MasterModelType[]>([]);
   const [ModelSoftwares, setModelSoftwares] = React.useState<MasterModelSoftware[]>([]);
   const [ModelSystems, setModelSystems] = React.useState<MasterModelSystem[]>([]);
-
   const [formData, setFormData] = useState({
+    ProjectID: projectId,
     ModelType_ID: 0,
     ModelSoftware_ID: [] as number[],
     ModelSystem_ID: [] as number[]
   })
 
   const handledropdown = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: Number(e.target.value) })
+    setFormData({ ...formData, ProjectID: projectId, [e.target.name]: Number(e.target.value) })
   }
 
-  const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, type: 'ModelSoftware_ID' | 'ModelSystem_ID') => {
-    const value = Number(e.target.value);
-    const isChecked = e.target.checked;
-    const updatedArray = isChecked
-      ? [...formData[type], value]
-      : formData[type].filter((id) => id !== value);
-    setFormData({
-      ...formData,
-      [type]: updatedArray
-    });
-  };
 
   const handleChange = (event: SelectChangeEvent<typeof selectedModelSoftwares>, index: number) => {
     if (index === 2) {
       const {
         target: { value },
       } = event;
+      selectedsetModelSystems(
+        typeof value === 'string' ? value.split(',') : value,
+      );
+
       selectedsetModelSystems(
         typeof value === 'string' ? value.split(',') : value,
       );
@@ -85,6 +81,7 @@ export default function ModelApproach({ step }: TabsProps) {
       );
     }
   };
+  
   const check = (index: number, type: string) => {
     if (type === "ModelSoftware_ID") {
       for (var i = 0; i < selectedModelSoftwares.length; i++) {
@@ -101,20 +98,37 @@ export default function ModelApproach({ step }: TabsProps) {
   }
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setLoaderData({ data: "Saving Data...", display: true, type: 1 });
+
     var arr1: number[] = selectedModelSoftwares.map((index) => ModelSoftwares[Number(index)].attributes.Master_ModelSoftware_ID);
     var arr2: number[] = selectedModelSystems.map((index) => ModelSystems[Number(index)].attributes.Master_ModelSystem_ID);
-    setFormData({ ...formData, ModelSoftware_ID: arr1, ModelSystem_ID: arr2 });
-    console.log("Formdata", formData)
-    console.log(arr1, "))))", arr2)
+
+    // setFormData({ ModelType_ID:1, ModelSoftware_ID: [1,2], ModelSystem_ID: arr2 });
     try {
-      // await modelApproach(formData);
-      setFormData(formData);
-      for(var i=0;i<arr1.length;i++){
-        for(var j=0;j<arr2.length;j++){
-          await modelApproach({ModelType_ID:formData.ModelType_ID,ModelSoftware_ID:arr1[i],ModelSystem_ID:arr2[j]})
+      if (ID != -1) {
+        try {
+          setLoaderData({ data: "Updating Data...", display: true, type: 1 });
+          const res = await modelApproachUpdate({
+            ProjectID: projectId,
+            ModelType_ID: formData.ModelType_ID,
+            ModelSoftware_ID: arr1,
+            ModelSystem_ID: arr2
+          }, ID);
+        setLoaderData({ data: "Data Updated", display: true, type: 2 });
+          console.log("Successfully Updated Model-Approach", res);
+        } catch (error) {
+          console.error('Error updating model-approach:', error);
+          setLoaderData({ data: JSON.stringify(error) ? JSON.stringify(error) : "Some Error Occurred, Please Try Again Later", display: true, type: 3 });
         }
+        return;
       }
+      setLoaderData({ data: "Saving Data...", display: true, type: 1 });
+      const red = await modelApproach({
+        ProjectID: projectId,
+        ModelType_ID: formData.ModelType_ID,
+        ModelSoftware_ID: arr1,
+        ModelSystem_ID: arr2
+      });
+      setID(red.data.id);
       setLoaderData({ data: "Data Saved", display: true, type: 2 });
       setTimeout(() => {
         setLoaderData({ data: "", display: false, type: 1 });
@@ -125,20 +139,19 @@ export default function ModelApproach({ step }: TabsProps) {
       setLoaderData({ data: JSON.stringify(error) ? JSON.stringify(error) : "Some Error Occurred, Please Try Again Later", display: true, type: 3 });
     }
   };
-  const [selectedModelSystems, selectedsetModelSystems] = React.useState<string[]>([]);
-  const [selectedModelSoftwares, selectedsetModelSoftwares] = React.useState<string[]>([]);
-
   React.useEffect(() => {
-    getModelTypeMasterData().then((response) => {
-      setModelTypes(response.data);
-    });
-    getModelSoftwaresMasterData().then((response) => {
-      setModelSoftwares(response.data);
-    });
-    getModelSystemsMasterData().then((response) => {
-      setModelSystems(response.data);
-    });
-  }, [])
+    if (ModelTypes.length == 0 && ModelSoftwares.length == 0 && ModelSystems.length == 0) {
+      getModelTypeMasterData().then((response) => {
+        setModelTypes(response.data);
+      });
+      getModelSoftwaresMasterData().then((response) => {
+        setModelSoftwares(response.data);
+      });
+      getModelSystemsMasterData().then((response) => {
+        setModelSystems(response.data);
+      });
+    }
+  }, [formData]);
   return (
 
     <div

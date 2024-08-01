@@ -5,15 +5,19 @@ export interface TabsProps {
 import { MasterTypeStudy } from '@/types/master_data.types';
 import axios from 'axios';
 import { useProjectInfoContext } from '@/context/context';
-import { createProject } from '@/utilities/axios/project/createProject';
+import { createProject, getProject } from '@/utilities/axios/project/createProject';
 import { getProjectInfoMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { Project_Info } from '@/types/project.types';
 import Loader from '../Loader';
+import { useSearchParams } from 'next/navigation'
 
 
 export default function ProjectInfo({ step }: TabsProps) {
 
-  const { ProjectContextData, setProjectContextData, setLoaderData, projectId } = useProjectInfoContext();
+  const searchParams = useSearchParams()
+  const paramsid:unknown = searchParams.get('id')
+  const [isfetchdata, setisfetchdata]=React.useState(false);
+  const { ProjectContextData, setProjectContextData, setLoaderData, setProjectId } = useProjectInfoContext();
   const [showOther, setshowOther] = React.useState(false)
   const [otherID, setotherID] = useState(0);
 
@@ -44,7 +48,23 @@ export default function ProjectInfo({ step }: TabsProps) {
   const handleradiobutton = (e: HTMLTextAreaElement) => {
     setData({ ...data, [e.name]: Number(e.value) })
   }
-
+  const fetchproject=async()=>{
+    const ds=await getProject((paramsid as number));
+    setData({...data,
+      ProjectName:ds.data.attributes.ProjectName,
+      ProjectCode:ds.data.attributes.ProjectCode,
+      ProjectManager:ds.data.attributes.ProjectManager,
+      ProjectVerifier:ds.data.attributes.ProjectVerifier,
+      ClientScope:ds.data.attributes.ClientScope,
+      Budget:ds.data.attributes.Budget,
+      Originator:ds.data.attributes.Originator,
+      Lead:ds.data.attributes.Lead,
+      Advisor:ds.data.attributes.Advisor,
+      StudyOther:ds.data.attributes.StudyOther,
+    });
+    setisfetchdata(true);
+    setProjectContextData(data);
+  }
   const fill = () => {
     setLoaderData({ data: "Saving Data...", display: true, type:1 });
     setProjectContextData(data); // set context
@@ -52,6 +72,7 @@ export default function ProjectInfo({ step }: TabsProps) {
       .then(e => {
         console.log("successfully created Project-Info")
         setData(data);
+        setProjectId(e.data.id);
         setLoaderData({ data: "Data Saved", display: true, type:2 });
         setTimeout(() => {
           setLoaderData({ data: "", display: false, type:1 });
@@ -69,8 +90,14 @@ export default function ProjectInfo({ step }: TabsProps) {
     setotherID(otherTask.attributes.MasterTypeStudy_Id);
   }
   React.useEffect(() => {
-    fetchdata();
-  }, [])
+    if(masterTypeStudy.length==0)fetchdata(); 
+    console.log(paramsid);
+    if(paramsid && !isfetchdata){
+      console.log("called")
+      fetchproject();
+    }
+    console.log(data,")3")
+  }, [data]);
   return (
     <>
       <div
@@ -101,17 +128,17 @@ export default function ProjectInfo({ step }: TabsProps) {
         </div>
         <div className="mb-3 d-flex flex-row w-[65%]">
           <label htmlFor="ProjectManager" className='w-25'>Project Manager</label>
-          <select name="ProjectManager" className='form-control w-[20rem] relative' onChange={(e => {
+          <select name="ProjectManager" className='form-control w-[20rem] relative' value={data.ProjectManager} onChange={(e => {
             handleInputChange(e);
           })}>
-            <option value="" className=''>Select Project Manager</option>
+            <option value="" className='' >Select Project Manager</option>
             <option value={2}>2</option>
             <option value={3}>3</option>
           </select>
         </div>
         <div className="mb-3 d-flex flex-row w-[65%]">
           <label htmlFor="ProjectVerifier" className='w-25'>Project Verifier</label>
-          <select name="ProjectVerifier" className='form-control w-[20rem]'
+          <select name="ProjectVerifier" className='form-control w-[20rem]' value={data.ProjectVerifier} 
             onChange={(e => {
               handleInputChange(e);
             })}>
@@ -140,7 +167,7 @@ export default function ProjectInfo({ step }: TabsProps) {
         <br />
         <div className="mb-3 d-flex flex-row w-[65%]">
           <label htmlFor="ModellingTeam" className='w-25'>Originator</label>
-          <select className='form-control w-[20rem]'
+          <select className='form-control w-[20rem]' value={data.Originator} 
             onChange={(e => {
               handleInputChange(e, "Originator");
             })}>
@@ -151,7 +178,7 @@ export default function ProjectInfo({ step }: TabsProps) {
         </div>
         <div className="mb-3 d-flex flex-row w-[65%]">
           <label htmlFor="ModellingTeam" className='w-25'>Lead</label>
-          <select className='form-control w-[20rem]'
+          <select className='form-control w-[20rem]' value={data.Lead} 
             onChange={(e => {
               handleInputChange(e, "Lead");
             })}>
@@ -162,7 +189,7 @@ export default function ProjectInfo({ step }: TabsProps) {
         </div>
         <div className="mb-3 d-flex flex-row w-[65%]">
           <label htmlFor="ModellingTeam" className='w-25'>Advisor</label>
-          <select className='form-control w-[20rem]'
+          <select className='form-control w-[20rem]' value={data.Advisor} 
             onChange={(e => {
               handleInputChange(e, "Advisor");
             })}>

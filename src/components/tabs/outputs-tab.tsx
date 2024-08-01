@@ -3,14 +3,17 @@ import React, { useState } from 'react'
 import { TabsProps } from './project-info'
 import { MasterOutput } from '@/types/master_data.types';
 import { getMasterOutputMasterData } from '@/utilities/axios/masterData/masterDataApi';
-import { outputDetail } from '@/utilities/axios/project/createProject';
+import { outputDetail, outputDetailUpdate, outputDetailDelete } from '@/utilities/axios/project/createProject';
 import { Output_Detail } from '@/types/project.types';
 import { useProjectInfoContext } from '@/context/context';
 export default function OutputsTab({ step }: TabsProps) {
-  const { setLoaderData } = useProjectInfoContext();
+  const { setLoaderData, projectId } = useProjectInfoContext();
   const [masterMasterOutput, setmasterMasterOutput] = React.useState<MasterOutput[]>([]);
   const [checks, setcheck] = React.useState<boolean[]>([]);
+  const [metachecks, setmetacheck] = React.useState<boolean[]>([]);
+  const [metaIds, setmetaIds] = React.useState<number[]>([]);
   const [formData, setFormData] = useState<Output_Detail[]>([]);
+  const [ID, setID] = useState(-1);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, index: number, field: string) => {
     const value = e.target.value;
@@ -28,25 +31,37 @@ export default function OutputsTab({ step }: TabsProps) {
     var c = checks;
     c[index] = !c[index];
     setcheck(c);
-    console.log(checks);
   };
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setLoaderData({ data: "Saving Data...", display: true, type:1 });
+    setLoaderData({ data: "Saving Data...", display: true, type: 1 });
     try {
+      var c = metachecks;
+      var cId = metaIds;
+      setLoaderData({ data: "Saving Data...", display: true, type: 1 });
       for (var i = 0; i < masterMasterOutput.length; i++) {
         if (checks[i]) {
-          await outputDetail(formData[i]);
+          if (metachecks[i] && metachecks[i] === true && cId[i] !== undefined && cId[i] != -1) {
+            const datares = await outputDetailUpdate(formData[i], cId[i]);
+            continue;
+          }
+          c[i] = true;
+          formData[i].projectID = projectId;
+          const datares = await outputDetail(formData[i]);
+          cId[i] = datares.data.id;
+        }
+        else if (metachecks[i] && metachecks[i] === true && cId[i] !== undefined) {
+          const datares = await outputDetailDelete(formData[i], cId[i]);
+          console.log("deleted");
+          c[i] = false;
+          cId[i] = -1;
         }
       }
-      setLoaderData({ data: "Data Saved", display: true, type:2 });
-        setTimeout(() => {
-          setLoaderData({ data: "", display: false, type:1 });
-        }, 2000);
+      setLoaderData({ data: "Data Saved", display: true, type: 2 });
       console.log('successfully created Output-Table')
     } catch (error) {
-      setLoaderData({ data: JSON.stringify(error)?JSON.stringify(error):"Some Error Occurred, Please Try Again Later", display: true, type:3 });
+      setLoaderData({ data: JSON.stringify(error) ? JSON.stringify(error) : "Some Error Occurred, Please Try Again Later", display: true, type: 3 });
       console.error('Error creating project:', error);
     }
   };
@@ -63,10 +78,11 @@ export default function OutputsTab({ step }: TabsProps) {
       for (var i = 0; i < n; i++) {
         c.push(false);
       }
+      // setmetacheck(c);
       setcheck(c);
       var d: Output_Detail[] = [];
       for (var i = 0; i < n; i++) {
-        d.push({ Recipient: "", OutputName: masterMasterOutput[i].id, Notes: "" });
+        d.push({ projectID: projectId, Recipient: "", OutputName: masterMasterOutput[i].id, Notes: "" });
       }
       setFormData(d);
     }
@@ -119,7 +135,7 @@ export default function OutputsTab({ step }: TabsProps) {
           </div>
         ))}
       </div>
-      
+
       <div className="mb-3 d-flex flex-row">
         <input type="Checkbox" name="other" id="other" className='mx-2 mb-3' />
         <input type="text" name="other" className="form-control w-[18.3rem] me-2" id="other" required />

@@ -18,7 +18,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
       router.push("/login");
     }
   });
-  // console.log(user, "SDdsd");
   return path.includes("/login") ? (
     <NextUIProvider>
 

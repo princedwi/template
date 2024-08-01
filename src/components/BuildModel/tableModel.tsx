@@ -26,6 +26,11 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         len: number,
         type: string
     }
+    const [fieldlabel, setfieldlabel] = React.useState<datas2[]>([]); // contain the id of the current tab
+    interface datas2 {
+        name: string
+        idz: number,
+    }
     const [maxlength, setmaxlength] = React.useState<datas[]>([]);
     const [TableData, setTableData] = React.useState<Map<string, string[]>>(); // contain table data
     const [lower, setlower] = React.useState(1); // number of tabs to be activated
@@ -45,8 +50,8 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                 ....
             }
         */
-        
-        
+
+
         setTableState({
             ...tablestate,
             [categoryKey]: {
@@ -69,6 +74,7 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         // from this map, we will also fill categories, subcategories, length of each subcategory under particular category
         // --------
 
+        var dataz:datas2[]=fieldlabel;
         JSONData.data.forEach((item) => {
             const category2: string = item.attributes.Category2 ?? "other";
             const category1: string = item.attributes.Category1 ?? "other";
@@ -76,13 +82,15 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
             const query = item.attributes.Query;
             if (mp.has(key)) {
                 mp.get(key)?.push(query);
+                dataz.push({name:query,idz:item.id});
             } else {
                 mp.set(key, [query]);
+                dataz.push({name:query,idz:item.id});
             }
             st.set(category2, 1);
             st2.set(category1, 1);
         });
-
+        setfieldlabel(dataz);
         st.forEach((value: number, key: string) => {
             arr2.push(key);
         });
@@ -145,6 +153,16 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                                 setnumb(i + 1);
                                 return;
                             }
+                            else{
+                                for(var i=0;i<fieldlabel.length;i++){
+                                    if(fieldlabel[i].name===gt[i]){
+                                        // await senddata({subcategory:fieldlabel[i].idz, response:field})
+                                    }
+                                }
+                            }
+                            // else{
+                            //     await senddata({subcategory:subcategory, response:field})
+                            // }
                         }
                     }
                 }
@@ -157,8 +175,8 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
             filldata();
         checkfill();
         // filltablestate();
-        console.log(lower,"lower");
-    }, [step, categories, lower, tablestate ])
+        console.log(lower, "lower");
+    }, [step, categories, lower, tablestate, fieldlabel])
 
     // handleFileChange to handle images of sign(which now is removed for 4th column)
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, num: Number) => {
@@ -213,25 +231,25 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                                 const categoryKey = `${val}$${cat}`;
                                 const inputValue = (tablestate[categoryKey] as JsonObject)?.[index] || "";
                                 return (<td key={index2} className="ml-3" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
-                                        <div className="mb-3 ml-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
-                                            <label style={{ textAlign: "left", fontSize: "0.94rem" }} htmlFor="field1" className=''>
-                                                {index2<lower && gt && gt[index]}
-                                            </label>
-                                            {index2<lower && gt && gt[index] && gt[index] != "" ?
-                                                <input
-                                                    type="text"
-                                                    name={`field${index}-${index2}`}
-                                                    className="form-control ml-0"
-                                                    id={`field${index}-${index2}`}
-                                                    required
-                                                    value={String(inputValue)}
-                                                    onChange={(e) => {
-                                                        handleChange(categoryKey, index, e.target.value);
-                                                    }}
-                                                />
-                                                : <></>}
-                                        </div>
-                                    </td>
+                                    <div className="mb-3 ml-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
+                                        <label style={{ textAlign: "left", fontSize: "0.94rem" }} htmlFor="field1" className=''>
+                                            {index2 < lower && gt && gt[index]}
+                                        </label>
+                                        {index2 < lower && gt && gt[index] && gt[index] != "" ?
+                                            <input
+                                                type="text"
+                                                name={`field${index}-${index2}`}
+                                                className="form-control ml-0"
+                                                id={`field${index}-${index2}`}
+                                                required
+                                                value={String(inputValue)}
+                                                onChange={(e) => {
+                                                    handleChange(categoryKey, index, e.target.value);
+                                                }}
+                                            />
+                                            : <></>}
+                                    </div>
+                                </td>
                                 )
                             })}
                         </tr>)
@@ -243,6 +261,9 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
     return (
         <>
             <div className='flex flex-row w-full' style={{ width: "100%", flexDirection: "row", display: "flex", fontSize: "0.94rem" }}>
+                <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right'>
+                    <div className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={() => { }}>Submit</div>
+                </div>
             </div>
             {subcategories.map(function (val, index) {
                 return (

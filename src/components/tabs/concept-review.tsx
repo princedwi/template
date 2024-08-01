@@ -1,15 +1,19 @@
 import React, { useState } from 'react'
 import { TabsProps } from './project-info'
-import { conceptReview } from '@/utilities/axios/project/createProject';
+import { conceptReview, conceptReviewUpdate } from '@/utilities/axios/project/createProject';
 import { getConceptReviewMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { MasterModellingTask } from '@/types/master_data.types';
 import { useProjectInfoContext } from '@/context/context';
 import { stringifyError } from 'next/dist/shared/lib/utils';
+import { useSearchParams } from 'next/navigation'
 export default function ConceptReview({ step }: TabsProps) {
+  const searchParams = useSearchParams()
+  const paramsid:unknown = searchParams.get('id')
   const [showOther, setshowOther] = React.useState(false)
   const [masterModellingTasks, setmasterModellingTasks] = useState<MasterModellingTask[]>([]);
   const [otherID, setotherID] = useState(0);
-  const { setLoaderData } = useProjectInfoContext();
+  const { setLoaderData, projectId } = useProjectInfoContext();
+  const [ID, setID] = useState(-1);
 
   const [formData, setFormData] = useState({
     Modelling_Objective: '',
@@ -21,6 +25,7 @@ export default function ConceptReview({ step }: TabsProps) {
     Climate_Change_Approach: '',
     ModellingTaskOther: '',
     Modelling_Task: 0,
+    ProjectID: projectId
   });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, str: string = "") => {
     const { name, value } = e.target;
@@ -30,19 +35,28 @@ export default function ConceptReview({ step }: TabsProps) {
     setFormData({ ...formData, [e.name]: Number(e.value) })
   }
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    setLoaderData({ data: "Saving Data...", display: true, type:1 });
+    setLoaderData({ data: "Saving Data...", display: true, type: 1 });
     e.preventDefault();
+    // return;
     try {
-      await conceptReview(formData);
+      if (ID !== -1) {
+        setLoaderData({ data: "Updating Data", display: true, type: 1 });
+        const res = await conceptReviewUpdate({...formData, ProjectID:projectId}, ID);
+        setFormData(formData);
+        setLoaderData({ data: "Data Updated", display: true, type: 2 });
+        console.log('successfully updated CONCEPT-REVIEW')
+        return;
+      }
+      setFormData({...formData, ProjectID:projectId})
+      setLoaderData({ data: "Saving Data", display: true, type: 1 });
+      const res=await conceptReview({...formData, ProjectID:projectId});
+      setLoaderData({ data: "Data Saved", display: true, type: 2 });
+      setID(res.data.id);
       setFormData(formData);
-      setLoaderData({ data: "Data Saved", display: true, type:2 });
-        setTimeout(() => {
-          setLoaderData({ data: "", display: false, type:1 });
-        }, 2000);
       console.log('successfully created CONCEPT-REVIEW')
     } catch (error) {
       console.error('Error creating project:', error);
-      setLoaderData({ data: JSON.stringify(error)?JSON.stringify(error):"Some Error Occurred, Please Try Again Later", display: true, type:3 });
+      setLoaderData({ data: JSON.stringify(error) ? JSON.stringify(error) : "Some Error Occurred, Please Try Again Later", display: true, type: 3 });
     }
   };
   // conceptReview(formData)
@@ -55,7 +69,8 @@ export default function ConceptReview({ step }: TabsProps) {
     getConceptReviewMasterData().then((response) => {
       setmasterModellingTasks(response.data);
       const otherTask = response.data.find((task: MasterModellingTask) => task.attributes.Field === "Other");
-      setotherID(otherTask.attributes.MasterModellingTask_ID);
+      setotherID(otherTask.id);
+      console.log(otherID);
     });
   }, [])
   return (
@@ -65,6 +80,7 @@ export default function ConceptReview({ step }: TabsProps) {
       style={{ backgroundColor: 'white', padding: '3rem' }}
       id="step2"
     >
+      
       <div>
         <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
           <button type="submit" style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px', 'float': 'right' }} className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={handleSubmit}>Submit</button>
@@ -75,7 +91,7 @@ export default function ConceptReview({ step }: TabsProps) {
         </div>
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="Modelling_approach" className='w-25'>Define Modelling approach</label>
-          {/* <input type="text" name="field3" className="form-control w-25" id="field3" /> */}
+          {/* <input type="text" disabled name="field3" className="form-control w-25" id="field3" /> */}
         </div>
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="Link_to_Hydrology" className='w-25'>Link to Hydrology MS</label>
@@ -83,11 +99,11 @@ export default function ConceptReview({ step }: TabsProps) {
         </div>
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="field3" className='w-25'>Input Data Required</label>
-          {/* <input type="text" name="field3" className="form-control w-25" id="field3" /> */}
+          {/* <input type="text" disabled name="field3" className="form-control w-25" id="field3" /> */}
         </div>
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="field3" className='w-25'>Key Output Required</label>
-          {/* <input type="text" name="field3" className="form-control w-25" id="field3" /> */}
+          {/* <input type="text" disabled name="field3" className="form-control w-25" id="field3" /> */}
         </div>
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="Main_Data_Gaps" className='w-25'>Main Data gaps</label>
@@ -115,9 +131,14 @@ export default function ConceptReview({ step }: TabsProps) {
           }}
           >
             <option value="">Select Modelling Task</option>
-            {masterModellingTasks.map((task, index) => (
-              <option key={task.id} value={task.attributes.MasterModellingTask_ID}>{task.attributes.Field}</option>
-            ))}
+            {masterModellingTasks.map(function (task, index) {
+              // if(task.attributes.Field.toLowerCase()==="other"){
+              //   setotherID(task.attributes.MasterModellingTask_ID);
+              // }
+              return (
+                <option key={task.id} value={task.id}>{task.attributes.Field}</option>
+              )
+            })}
           </select>
         </div>
         <div>

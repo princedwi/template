@@ -6,6 +6,7 @@ export interface DataTabInterface {
     Location: string;
     DataAdded: string;
     Source: string;
+    ProjectID:number;
   }
   
   

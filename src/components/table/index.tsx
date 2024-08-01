@@ -21,6 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { columns } from "./data";
+import { useRouter } from 'next/navigation'
 import { getDashboardData } from '@/utilities/axios/project/createProject';
 import { getMasterOutputMasterData } from "@/utilities/axios/masterData/masterDataApi";
 interface Data {
@@ -279,6 +280,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   );
 }
 export default function App() {
+  const router = useRouter()
   // const [rows, setrows] = React.useState<Data[]>([])
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('createddate');
@@ -324,23 +326,24 @@ export default function App() {
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    console.log(id);
+    router.push('/CreateQA?id=' + id);
+    // const selectedIndex = selected.indexOf(id);
+    // let newSelected: readonly number[] = [];
 
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-    setSelected(newSelected);
+    // if (selectedIndex === -1) {
+    //   newSelected = newSelected.concat(selected, id);
+    // } else if (selectedIndex === 0) {
+    //   newSelected = newSelected.concat(selected.slice(1));
+    // } else if (selectedIndex === selected.length - 1) {
+    //   newSelected = newSelected.concat(selected.slice(0, -1));
+    // } else if (selectedIndex > 0) {
+    //   newSelected = newSelected.concat(
+    //     selected.slice(0, selectedIndex),
+    //     selected.slice(selectedIndex + 1),
+    //   );
+    // }
+    // setSelected(newSelected);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -402,7 +405,7 @@ export default function App() {
                 return (
                   <TableRow
                     hover
-                    // onClick={(event) => handleClick(event, row.key)}
+                    onClick={(event) => handleClick(event, (row.key as number))}
                     // role="checkbox"
                     // aria-checked={false}
                     tabIndex={-1}

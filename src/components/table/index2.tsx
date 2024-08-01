@@ -110,7 +110,6 @@ export default function App() {
   }
   const renderCell = React.useCallback(
     (user: User, columnKey: String) => {
-      console.log("____",columnKey)
       
       var cellValue;
       if(columnKey==="name"){

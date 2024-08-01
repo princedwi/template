@@ -12,16 +12,21 @@ import ProjectInfo from "@/components/tabs/project-info";
 import { Project_Info } from "@/types/project.types";
 import Loader from "@/components/Loader";
 import { LoaderProps } from "@/types/loader.types";
+import {getProject} from '@/utilities/axios/project/createProject';
 export interface TabsProps {
   step: number;
 }
-
+import { useSearchParams } from 'next/navigation'
 export default function Form() {
+  const searchParams = useSearchParams()
+
+  const paramsid:unknown = searchParams.get('id')
   const [step, setStep] = useState<number>(1);
-  const [LoaderData, setLoaderData] = useState<LoaderProps>({ data: "", display: false, type:1 });
-  const setloaderdata=()=>{
-    setLoaderData({data:"",display:false, type:1})
+  const [LoaderData, setLoaderData] = useState<LoaderProps>({ data: "", display: false, type: 1 });
+  const setloaderdata = () => {
+    setLoaderData({ data: "", display: false, type: 1 })
   }
+  const [projectId, setProjectId] = useState<number>(0);
   const values = [
     { name: "Project Info", id: 1, },
     { name: "Concept Review", id: 2 },
@@ -48,10 +53,10 @@ export default function Form() {
     Originator: "",
     Lead: "",
     Advisor: "",
-    StudyOther:"",
+    StudyOther: "",
     master_type_study: 0,
   });
-  const [clr,setclr]=React.useState(false);
+  const [clr, setclr] = React.useState(false);
   const check = () => {
     return 1;
     if (
@@ -64,29 +69,30 @@ export default function Form() {
       ProjectContextData["Originator"] === "" ||
       ProjectContextData["Lead"] === "" ||
       ProjectContextData["Advisor"] === "") return 0;
-      setclr(true);
+    setclr(true);
     return 1;
   }
-  const dataLoader:LoaderProps={
-    data:LoaderData.data,
-    display:LoaderData.display,
-    type:LoaderData.type
+  const dataLoader: LoaderProps = {
+    data: LoaderData.data,
+    display: LoaderData.display,
+    type: LoaderData.type
   }
-  React.useEffect((
-  )=>{var g=check();
-
-  },[ProjectContextData, LoaderData])
+  React.useEffect( () => {
+    var g = check();
+    console.log("PROJECTID", projectId);
+    
+  }, [ProjectContextData, LoaderData])
   return (
     <>
-    {/* <Loader data={LoaderData.data} display={LoaderData.display} setloaderdata={setloaderdata} type={LoaderData.type}/> */}
-    <div className="stepForm m-4 min-h-[90vh]">
-      {/* <form action="" method="post" id="registration" className="stepForm m-4"> */}
+      <Loader data={LoaderData.data} display={LoaderData.display} setloaderdata={setloaderdata} type={LoaderData.type} />
+      <div className="stepForm m-4 min-h-[90vh]">
+        {/* <form action="" method="post" id="registration" className="stepForm m-4"> */}
         <nav>
           <div className="nav nav-pills nav-fill gap-2 mx-2" id="nav-tab" role="tablist">
             {values.map((value) => (
-              <a 
-              key={value.id}
-                className={`${clr?'bg-grey':'bg-theme-clr'} nav-link  ${step === value.id ? "active" : ""} `}
+              <a
+                key={value.id}
+                className={`${clr ? 'bg-grey' : 'bg-theme-clr'} nav-link  ${step === value.id ? "active" : ""} `}
                 //style={{ backgroundColor: '#6d7fcc', color: 'White', margin: '0 5px'}}
                 id={`step${value.id}-tab`}
                 data-bs-toggle="tab"
@@ -94,7 +100,7 @@ export default function Form() {
               >
                 <div className="">
                   {value.name}
-                  </div>
+                </div>
               </a>
             ))}
 
@@ -111,7 +117,7 @@ export default function Form() {
           </div>
         </nav>
         <div className="tab-content" style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "1.5rem" }}>
-          <ProjectInfoContext.Provider value={{ ProjectContextData: ProjectContextData, setProjectContextData: setProjectContextData, setLoaderData:setLoaderData }}>
+          <ProjectInfoContext.Provider value={{ ProjectContextData: ProjectContextData, setProjectContextData: setProjectContextData, setLoaderData: setLoaderData, projectId: projectId, setProjectId: setProjectId }}>
             <ProjectInfo step={step} />
             <ConceptReview step={step} />
             <ModelApproach step={step} />
@@ -152,8 +158,8 @@ export default function Form() {
             </button>
           </div>
         </div> */}
-      {/* </form> */}
-    </div>
+        {/* </form> */}
+      </div>
 
     </>
   );

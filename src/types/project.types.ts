@@ -24,19 +24,23 @@ export interface Concept_Review{
     Climate_Change_Approach: string,
     ModellingTaskOther: string,
     Modelling_Task:number,
+    ProjectID:number
 }
 export interface Model_Approach{
+    ProjectID:number,
     ModelType_ID:number,
-    ModelSoftware_ID:number,
-    ModelSystem_ID:number
+    ModelSoftware_ID:number[],
+    ModelSystem_ID:number[]
 }
 export type ProjectInfoInterface = {
     ProjectContextData: Project_Info,
     setProjectContextData: React.Dispatch<React.SetStateAction<Project_Info>>,
     setLoaderData:React.Dispatch<React.SetStateAction<LoaderProps>>,
-    projectId:number
+    projectId:number,
+    setProjectId:React.Dispatch<React.SetStateAction<number>>
 }
 export interface Output_Detail{
+    projectID:number,
     Recipient: string,
     OutputName:number,
     Notes:string
