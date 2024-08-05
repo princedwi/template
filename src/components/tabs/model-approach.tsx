@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import { MasterModelType, MasterModelSoftware, MasterModelSystem } from '@/types/master_data.types';
 import { getModelTypeMasterData, getModelSoftwaresMasterData, getModelSystemsMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { Checkbox, createTheme, FormControl, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, ThemeProvider } from '@mui/material';
-import { modelApproach, modelApproachUpdate } from '@/utilities/axios/project/createProject';
+import { modelApproach, modelApproachUpdate, getmodelApproach } from '@/utilities/axios/project/createProject';
 import { useProjectInfoContext } from '@/context/context';
+import { useSearchParams } from 'next/navigation'
 
 export interface TabsProps {
   step: number;
@@ -37,6 +38,10 @@ const theme = createTheme({
   },
 });
 export default function ModelApproach({ step }: TabsProps) {
+  const searchParams = useSearchParams()
+  const paramsid: unknown = searchParams.get('id')
+  const [isfetchdata, setisfetchdata] = React.useState(false);
+
   const { setLoaderData, projectId } = useProjectInfoContext();
   const [ID, setID] = useState(-1);
 
@@ -49,7 +54,7 @@ export default function ModelApproach({ step }: TabsProps) {
   const [ModelSystems, setModelSystems] = React.useState<MasterModelSystem[]>([]);
   const [formData, setFormData] = useState({
     ProjectID: projectId,
-    ModelType_ID: 0,
+    ModelType_ID: -1,
     ModelSoftware_ID: [] as number[],
     ModelSystem_ID: [] as number[]
   })
@@ -105,10 +110,11 @@ export default function ModelApproach({ step }: TabsProps) {
     // setFormData({ ModelType_ID:1, ModelSoftware_ID: [1,2], ModelSystem_ID: arr2 });
     try {
       if (ID != -1) {
+        // console.log("UPDATIGNC DATA", ID);
         try {
           setLoaderData({ data: "Updating Data...", display: true, type: 1 });
           const res = await modelApproachUpdate({
-            ProjectID: projectId,
+            ProjectID: paramsid?paramsid as number:projectId,
             ModelType_ID: formData.ModelType_ID,
             ModelSoftware_ID: arr1,
             ModelSystem_ID: arr2
@@ -139,8 +145,44 @@ export default function ModelApproach({ step }: TabsProps) {
       setLoaderData({ data: JSON.stringify(error) ? JSON.stringify(error) : "Some Error Occurred, Please Try Again Later", display: true, type: 3 });
     }
   };
+  const [counter, setCounter] = React.useState(0);
+  const fetchdata = async () => {
+    try {
+      
+      const data=await getmodelApproach(Number(paramsid));
+      // console.log(data, "modelaproach");
+      const selectedsoftware=data.data[0].attributes.ModelSoftware_ID.data;
+      const selectedsystem=data.data[0].attributes.ModelSystem_ID.data;
+      var arr1=[];
+      var arr2=[];
+      for(var i=0;i<selectedsoftware.length;i++){
+        arr1.push(String(selectedsoftware[i].attributes.Master_ModelSoftware_ID));
+      }
+
+      for(var i=0;i<selectedsoftware.length;i++){
+        arr2.push(String(selectedsystem[i].attributes.Master_ModelSystem_ID));
+      }
+      // console.log(arr1, "arr1", arr2);
+      setFormData({...formData, ProjectID: paramsid as number, ModelType_ID:data.data[0].attributes.ModelType_ID.data.attributes.Master_ModelType_ID});
+      // setisfetchdata(true);
+      setID(data.data[0].id);
+      if(ModelSoftwares.length>0 && ModelSystems.length>0){
+        selectedsetModelSoftwares(arr1);
+        selectedsetModelSystems(arr2);
+        // console.log("DATA AVBAILABLE");
+      }
+      else{setCounter(counter+1); console.log("DATA NOT AA")}
+      // console.log("data.data[0].attributes.ModelType_ID.data.attributes.Master_ModelType_ID",data.data[0].attributes.ModelType_ID.data.attributes.Master_ModelType_ID, formData)
+      // console.log(selectedsoftware, ModelSystems, ModelSoftwares, selectedModelSoftwares, "selectedsoftware");
+      // console.log(data, "modelaproach"); 
+    } catch (error) {
+      console.log(error, "model approack");
+    }
+  }
+  
+  const [ismasteravailable, setismasteravailable] = React.useState(false);
   React.useEffect(() => {
-    if (ModelTypes.length == 0 && ModelSoftwares.length == 0 && ModelSystems.length == 0) {
+    if (ModelTypes.length == 0 || ModelSoftwares.length == 0 || ModelSystems.length == 0) {
       getModelTypeMasterData().then((response) => {
         setModelTypes(response.data);
       });
@@ -151,7 +193,10 @@ export default function ModelApproach({ step }: TabsProps) {
         setModelSystems(response.data);
       });
     }
-  }, [formData]);
+    if(paramsid && !isfetchdata && ModelTypes.length>0 && ModelSoftwares.length>0 && ModelSystems.length>0){
+      fetchdata();
+    }
+  }, [counter, ModelSoftwares, ModelSystems, ModelTypes]);
   return (
 
     <div
@@ -238,6 +283,7 @@ export default function ModelApproach({ step }: TabsProps) {
           <label htmlFor="Events_To_Be_Modelled" className='w-25'>Type of Model Needed</label>
           <select name="ModelType_ID" className='form-control w-[20rem] h-[2.1rem]'
             onChange={(e) => { handledropdown(e) }}
+            value={formData.ModelType_ID!=-1?formData.ModelType_ID:""}
           >
             <option value="">Select Type of Model </option>
             {ModelTypes.map((modelType) => (
@@ -272,7 +318,7 @@ export default function ModelApproach({ step }: TabsProps) {
                   }
 
                   return <div className='' style={{ fontWeight: "200", fontFamily: "" }}>{selectedModelSoftwares
-                    .map((selectedModelSoftwares) => ModelSoftwares[Number(selectedModelSoftwares)].attributes.Field)
+                    .map((selectedModelSoftwares) => ModelSoftwares.length>0?ModelSoftwares[Number(selectedModelSoftwares)].attributes.Field:"")
                     .join(', ')}</div>
                 }}
                 MenuProps={MenuProps}
@@ -306,7 +352,7 @@ export default function ModelApproach({ step }: TabsProps) {
                     return <><div className='font-normal  '>Select System</div></>;
                   }
                   return <div className='' style={{ fontWeight: "200", fontFamily: "" }}>{selectedModelSystems
-                    .map((selectedModelSystem) => ModelSystems[Number(selectedModelSystem)].attributes.Field)
+                    .map((selectedModelSystem) => ModelSystems.length>0?ModelSystems[Number(selectedModelSystem)].attributes.Field:"")
                     .join(', ')}</div>
                 }}
                 MenuProps={MenuProps}

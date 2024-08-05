@@ -3,10 +3,15 @@ import React, { useState } from 'react'
 import { TabsProps } from './project-info'
 import { MasterOutput } from '@/types/master_data.types';
 import { getMasterOutputMasterData } from '@/utilities/axios/masterData/masterDataApi';
-import { outputDetail, outputDetailUpdate, outputDetailDelete } from '@/utilities/axios/project/createProject';
+import { outputDetail, outputDetailUpdate, outputDetailDelete, getoutputDetail } from '@/utilities/axios/project/createProject';
 import { Output_Detail } from '@/types/project.types';
+import { useSearchParams } from 'next/navigation'
 import { useProjectInfoContext } from '@/context/context';
 export default function OutputsTab({ step }: TabsProps) {
+  const searchParams = useSearchParams()
+  const paramsid: unknown = searchParams.get('id')
+  const [isfetchdata, setisfetchdata] = React.useState(false);
+
   const { setLoaderData, projectId } = useProjectInfoContext();
   const [masterMasterOutput, setmasterMasterOutput] = React.useState<MasterOutput[]>([]);
   const [checks, setcheck] = React.useState<boolean[]>([]);
@@ -15,22 +20,23 @@ export default function OutputsTab({ step }: TabsProps) {
   const [formData, setFormData] = useState<Output_Detail[]>([]);
   const [ID, setID] = useState(-1);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, index: number, field: string) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, index: number, id:number, field: string) => {
     const value = e.target.value;
     var d = formData;
     if (field === "Recipient") {
+      setFormData({...formData, [index]: {...formData[index], Recipient: value, OutputName: id, projectID:paramsid?paramsid as number:projectId}});
       d[index].Recipient = value;
     }
     else {
+      setFormData({...formData, [index]: {...formData[index], Notes: value, OutputName: id, projectID:paramsid?paramsid as number:projectId}});
       d[index].Notes = value;
     }
-    setFormData(d);
+    // setFormData(d);
+    console.log(formData, index);
   };
 
   const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    var c = checks;
-    c[index] = !c[index];
-    setcheck(c);
+    setcheck({...checks, [index]: !checks[index]});
   };
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -46,8 +52,9 @@ export default function OutputsTab({ step }: TabsProps) {
             const datares = await outputDetailUpdate(formData[i], cId[i]);
             continue;
           }
+          // return;
           c[i] = true;
-          formData[i].projectID = projectId;
+          formData[i].projectID = paramsid?paramsid as number:projectId;
           const datares = await outputDetail(formData[i]);
           cId[i] = datares.data.id;
         }
@@ -65,20 +72,36 @@ export default function OutputsTab({ step }: TabsProps) {
       console.error('Error creating project:', error);
     }
   };
+  const getbyparams = async () => {
+    const dataz = await getoutputDetail(paramsid as number);
+    console.log(dataz, "hail Modi");
+    var c=checks;
+    console.log(formData, "doraemon");
+    var d:Output_Detail[]=formData;
+    for(var i=0;i<dataz.data.length;i++){
+      c[dataz.data[i].attributes.OutputName.data.id-1]=true;
+      d[dataz.data[i].attributes.OutputName.data.id-1].Recipient=dataz.data[i].attributes.Recipient;
+      d[dataz.data[i].attributes.OutputName.data.id-1].Notes=dataz.data[i].attributes.Notes;
+      d[dataz.data[i].attributes.OutputName.data.id-1].OutputName=dataz.data[i].attributes.OutputName.data.id;
+      d[dataz.data[i].attributes.OutputName.data.id-1].projectID=dataz.data[i].attributes.projectID.data.id;
+    } 
+    console.log(formData, "DOM");
+    setFormData(d);
+    setcheck(c);
 
+  }
   React.useEffect(() => {
     if (masterMasterOutput.length === 0) {
       getMasterOutputMasterData().then((response) => {
         setmasterMasterOutput(response.data);
       });
     }
-    else {
+    else if(formData.length===0 || checks.length==0) {
       var n = masterMasterOutput.length;
       var c = [];
       for (var i = 0; i < n; i++) {
         c.push(false);
       }
-      // setmetacheck(c);
       setcheck(c);
       var d: Output_Detail[] = [];
       for (var i = 0; i < n; i++) {
@@ -86,7 +109,13 @@ export default function OutputsTab({ step }: TabsProps) {
       }
       setFormData(d);
     }
-  }, [masterMasterOutput])
+    else{
+      if (paramsid) {
+        getbyparams()
+      }
+      console.log(99);
+    }
+  }, [masterMasterOutput, formData.length, checks.length])
   return (
 
     <div
@@ -105,33 +134,38 @@ export default function OutputsTab({ step }: TabsProps) {
         <label htmlFor="Notes" className='w-25 ml-[-12px]'><h5>Notes</h5></label>
       </div>
       <div>
-        {masterMasterOutput.map((item, index) => (
+        {formData && masterMasterOutput.map((item, index) => (
           <div key={item.id} className="mb-3 d-flex flex-row">
             <input
               type="checkbox"
               name={`OutputName`}
               id={`OutputName-${item.id}`}
               className="mx-2 mb-3"
+              checked={checks[index]?true:false}
               value={item.attributes.MasterOutput_ID}
               onChange={(e) => handleCheckbox(e, index)}
             />
             <label htmlFor={`OutputName-${item.id}`} className='w-25'>
               {item.attributes.Field}
             </label>
-            <input
+            {formData[index] && <input
               type="text"
               name={`Recipient`}
               className="form-control w-25 me-2"
-              id={`Recipient-${item.id}`}
-              onChange={(e) => handleInputChange(e, index, 'Recipient')}
-            />
-            <input
+              id={`Recipient-${index}`}
+              value={formData[index].Recipient}
+              onChange={(e) => handleInputChange(e, index, item.id, 'Recipient')}
+              // value={formData[index]?formData[index].Recipient:""}
+            />}
+            {formData[index] && <input
               type="text"
               name={`Notes`}
               className="form-control w-25"
-              id={`Notes-${item.id}`}
-              onChange={(e) => handleInputChange(e, index, 'Notes')}
-            />
+              id={`Notes-${index}`}
+              value={formData[index].Notes}
+              onChange={(e) => handleInputChange(e, index, item.id, 'Notes')}
+              // value={formData[index]?formData[index].Notes:e.target.value}
+            />}
           </div>
         ))}
       </div>

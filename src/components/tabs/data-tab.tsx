@@ -3,14 +3,19 @@ export interface TabsProps {
   step: number;
 }
 import { DataTabInterface } from '@/types/data_tab.types';
-import { sendDataDetails } from '@/utilities/axios/project/createProject';
+import { useSearchParams } from 'next/navigation'
+import { sendDataDetails, getDataDetails } from '@/utilities/axios/project/createProject';
 import { useProjectInfoContext } from '@/context/context';
 export default function DataTab({ step }: TabsProps) {
   const { setLoaderData, projectId } = useProjectInfoContext();
+  const searchParams = useSearchParams()
+  const paramsid: unknown = searchParams.get('id')
+
+  const [isfetchdata, setisfetchdata] = React.useState(false);
   const [data, setData] = React.useState<DataTabInterface[]>([
     {
       key: 1,
-      ProjectID:projectId,
+      ProjectID: projectId,
       Name: "item1",
       Data: "",
       DescriptionUse: "",
@@ -34,7 +39,7 @@ export default function DataTab({ step }: TabsProps) {
   const addItem = (index: number) => {
     const newKey = findMaxKey() + 1;
     const newItem: DataTabInterface = {
-      ProjectID:projectId,
+      ProjectID: projectId,
       key: newKey,
       Name: `item${newKey}`,
       Data: "",
@@ -55,7 +60,7 @@ export default function DataTab({ step }: TabsProps) {
     try {
       for (var i = 0; i < data.length; i++) {
         if (data[i].Data != "") {
-          await sendDataDetails({...data[i], ProjectID:projectId});
+          await sendDataDetails({ ...data[i], ProjectID: paramsid ? paramsid as number : projectId });
         }
       }
       setLoaderData({ data: "Data Saved", display: true, type: 2 });
@@ -67,6 +72,43 @@ export default function DataTab({ step }: TabsProps) {
       setLoaderData({ data: JSON.stringify(error) ? JSON.stringify(error) : "Some Error Occurred, Please Try Again Later", display: true, type: 3 });
     }
   }
+  const getparamsdata = async () => {
+    try {
+      const dataz = await getDataDetails(paramsid as number);
+      var arr: DataTabInterface[] = [{
+        key: 1,
+        ProjectID: projectId,
+        Name: "item1",
+        Data: "",
+        DescriptionUse: "",
+        Location: "",
+        DataAdded: "",
+        Source: "",
+      }];
+      for (var i = 0; i < dataz.data.length; i++) {
+        arr.push({
+          key: i + 2,
+          ProjectID: paramsid ? paramsid as number : projectId,
+          Name: `item${i + 2}`,
+          Data: dataz.data[i].attributes.Data,
+          DescriptionUse: dataz.data[i].attributes.DescriptionUse,
+          Location: dataz.data[i].attributes.Location,
+          DataAdded: dataz.data[i].attributes.DataAdded,
+          Source: dataz.data[i].attributes.Source,
+        });
+      }
+      setData(arr);
+
+      setisfetchdata(true);
+    } catch (error) {
+      console.log(error, "error in output tabs")
+    }
+  }
+  React.useEffect(() => {
+    if (paramsid && !isfetchdata) {
+      getparamsdata()
+    }
+  }, [data]);
   return (
 
     <div
@@ -91,7 +133,11 @@ export default function DataTab({ step }: TabsProps) {
       <div className='d-flex'>
         <div className='data w-25' >
           {data.map((item, index) => (
-            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="Data" id="Data" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div key={item.key} ><input
+              value={
+                item.Data
+              }
+              onChange={(e) => { handleChange(e, item.key) }} type="text" name="Data" id="Data" className='me-2 mb-3 border form-control w-[80%]' /></div>
           ))}
           {/* <div><input onChange={(e) => { handleChange(e, item.key) }}  type="text" name="field3" id="field3" className='me-2 mb-3 border rounded-sm' /></div>
           <div><input onChange={(e) => { handleChange(e, item.key) }}  type="text" name="field3" id="field3" className='me-2 mb-3 border rounded-sm' /></div> */}
@@ -99,21 +145,29 @@ export default function DataTab({ step }: TabsProps) {
 
         <div className='description w-25'>
           {data.map((item, index) => (
-            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="DescriptionUse" id="DescriptionUse" className='me-2 mb-3 border form-control w-[80%] ' /></div>
+            <div key={item.key} ><input
+              value={
+                item.DescriptionUse
+              }
+              onChange={(e) => { handleChange(e, item.key) }} type="text" name="DescriptionUse" id="DescriptionUse" className='me-2 mb-3 border form-control w-[80%] ' /></div>
           ))}
         </div>
 
         <div className='location w-25'>
 
           {data.map((item, index) => (
-            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="Location" id="Location" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div key={item.key} ><input
+              value={item.Location}
+              onChange={(e) => { handleChange(e, item.key) }} type="text" name="Location" id="Location" className='me-2 mb-3 border form-control w-[80%]' /></div>
           ))}
         </div>
 
         <div className='dataAdded w-25'>
 
           {data.map((item, index) => (
-            <div key={item.key} ><input onChange={(e) => { handleChange(e, item.key) }} type="text" name="DataAdded" id="DataAdded" className='me-2 mb-3 border form-control w-[80%]' /></div>
+            <div key={item.key} ><input
+              value={item.DataAdded}
+              onChange={(e) => { handleChange(e, item.key) }} type="text" name="DataAdded" id="DataAdded" className='me-2 mb-3 border form-control w-[80%]' /></div>
           ))}
         </div>
 
@@ -121,7 +175,9 @@ export default function DataTab({ step }: TabsProps) {
 
           {data.map((item, index) => (
             <div key={item.key} className='flex' style={{ display: "flex", gap: "3px", justifyItems: "center" }}>
-              <input onChange={(e) => { handleChange(e, item.key) }} key={item.key} type="text" name="Source" id="field3" className='me-2 mb-3 border form-control w-[80%]' />
+              <input
+                value={item.Source}
+                onChange={(e) => { handleChange(e, item.key) }} key={item.key} type="text" name="Source" id="field3" className='me-2 mb-3 border form-control w-[80%]' />
               <div className=''>
                 <button className='btn btn-primary' style={{ height: "2.2rem", marginTop: "-5px" }} onClick={
                   () => {

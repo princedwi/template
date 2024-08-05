@@ -36,28 +36,38 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         setFormData({ ...formData, [str === "" ? name : str]: value });
     };
     const handleSubmit = async () => {
-        
+        // console.log(TableData)
+        console.log(fieldlabel);
         try {
             if (categories) {
+                var indi:number=-1;
                 for (var i = 0; i < categories.length; i++) {
+                    indi++;
+                    // console.log(categories[i],"CK#RKVKRE");
                     setlower(i + 1);
                     setnumb(i + 1);
                     for (var j = 0; j < subcategories.length; j++) {
-                        if (!TableData?.get(`${subcategories[j]}$${categories[i]}`)) {
+                        if (!TableData?.get(`${subcategories[j]}$${categories[indi]}`)) {
+                            // console.log(`${subcategories[j]}$${categories[indi]}`)
                             continue;
                         }
-                        const g = `${subcategories[j]}$${categories[i]}`;
+                        const g = `${subcategories[j]}$${categories[indi]}`;
                         const gt = TableData?.get(g);
+                        // console.log(gt);
                         if (gt) {
                             for (let k = 0; k < gt.length; k++) {
                                 const field = (tablestate[g] as JsonObject)?.[k];
                                 if (!field || field === "") {
-                                    console.log("asd",field)
+                                    // console.log("asd",field)
                                 }else{
-                                    for(var i=0;i<fieldlabel.length;i++){
-                                        if(fieldlabel[i].name===(gt[i] as string)){
-                                            await detailSpecQuery({MasterSpecQueryID:fieldlabel[i].idz, Response:field as string})
-                                            console.log("RGVB",field,fieldlabel)
+                                    for(var ik=0;ik<fieldlabel.length;ik++){
+                                        if(fieldlabel[ik].name===(gt[k] as string)){
+                                            // console.log("LLLL",fieldlabel[ik].idz,"::::",field as string, fieldlabel[ik].name)
+                                            // await detailSpecQuery({MasterSpecQueryID:fieldlabel[ik].idz, Response:field as string})
+                                            // console.log("RGVB",fieldlabel[i].name)
+                                        }
+                                        else{
+                                            // console.log(fieldlabel[i].name, "do not match", gt[i])
                                         }
                                     }
                                 }
@@ -269,7 +279,6 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                     arr.map(function (value1, index) {
                         return (<tr className='' key={index}>
                             {categories?.map(function (cat, index2) {
-
                                 var gt: string[] | undefined = TableData?.get(`${val}$${cat}`)
                                 const categoryKey = `${val}$${cat}`;
                                 const inputValue = (tablestate[categoryKey] as JsonObject)?.[index] || "";
