@@ -31,13 +31,8 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         Response: ''
     });
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, str: string = "") => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [str === "" ? name : str]: value });
-    };
     const handleSubmit = async () => {
         // console.log(TableData)
-        console.log(fieldlabel);
         try {
             if (categories) {
                 var indi:number=-1;
@@ -48,7 +43,6 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                     setnumb(i + 1);
                     for (var j = 0; j < subcategories.length; j++) {
                         if (!TableData?.get(`${subcategories[j]}$${categories[indi]}`)) {
-                            // console.log(`${subcategories[j]}$${categories[indi]}`)
                             continue;
                         }
                         const g = `${subcategories[j]}$${categories[indi]}`;
@@ -60,14 +54,14 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                                 if (!field || field === "") {
                                     // console.log("asd",field)
                                 }else{
+                                    console.log(fieldlabel)
                                     for(var ik=0;ik<fieldlabel.length;ik++){
                                         if(fieldlabel[ik].name===(gt[k] as string)){
-                                            // console.log("LLLL",fieldlabel[ik].idz,"::::",field as string, fieldlabel[ik].name)
-                                            // await detailSpecQuery({MasterSpecQueryID:fieldlabel[ik].idz, Response:field as string})
-                                            // console.log("RGVB",fieldlabel[i].name)
+                                            await detailSpecQuery({MasterSpecQueryID:fieldlabel[ik].idz, Response:field as string})
+                                            break;
                                         }
                                         else{
-                                            // console.log(fieldlabel[i].name, "do not match", gt[i])
+                                             console.log(fieldlabel[i].name, "do not match", gt[i])
                                         }
                                     }
                                 }
@@ -75,14 +69,11 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                         }
                     }
                 }
-                
             }
-        
-          
         } catch (error) {
           console.error('Error creating project:', error);
         }
-      };
+    };
 
 
     const [selectedFile, setSelectedFile] = useState<Array<File | null>>([null, null, null, null, null, null, null]);
@@ -101,19 +92,6 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
     const [tablestate, setTableState] = React.useState<JsonObject>({});  // contain form data --main issue
 
     const handleChange = (categoryKey: string, index: number, value: string) => {
-        // trying to set state in form of 
-        /*
-            {
-                heading1$subheading1:[
-                    index1: value1,
-                    index2: value2,
-                    ....
-                ]
-                ....
-            }
-        */
-
-
         setTableState({
             ...tablestate,
             [categoryKey]: {
@@ -197,6 +175,8 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
     // Below checkfill function will keep checking whether the current column is filled or not on typing each character, if filled it will enable the next tab and vice versa
     // no issue with time complexity as it will break when it meet with an unfilled index/value
     // so total time complexity(worst case) is number of input fields which will occur when we have filled all the inputs with atleast one character.
+
+
     const checkfill = () => {
         if (categories) {
             for (var i = 0; i < categories.length; i++) {
@@ -297,7 +277,6 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                                                 value={String(inputValue)}
                                                 onChange={(e) => {
                                                     handleChange(categoryKey, index, e.target.value);
-                                                   // handleInputChange;
                                                 }}
                                             />
                                             : <></>}
@@ -311,6 +290,8 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
             </>
         )
     }
+
+
     return (
         <>
             <div className='flex flex-row w-full' style={{ width: "100%", flexDirection: "row", display: "flex", fontSize: "0.94rem" }}>
@@ -333,3 +314,4 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         </>
     )
 };
+
