@@ -1,11 +1,12 @@
 "use client";
 
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
-import { login } from "../../types/user.types";
+import { useEffect, useState } from "react";
+import { loginAPI } from "../../types/user.types";
 import { cron } from "@/utilities/axios";
 import { useRouter } from "next/navigation";
 import { updateUser } from "@/redux/features/userSlice";
+import { login } from "@/utilities/axios/login";
 type User = {
   name: string;
 };
@@ -16,10 +17,21 @@ export default function Login() {
   const router = useRouter();
 
   const { user } = state;
-  const [formData, setFormData] = useState<login>({
-    email: "",
+  const [formData, setFormData] = useState<loginAPI>({
+    identifier: "",
     password: "",
   });
+
+  useEffect(()=>{
+    var LoginUser = localStorage.getItem("user");
+    if(LoginUser != undefined){
+      console.log(JSON.parse(LoginUser));
+      let u = { name: user.username, isAdmin: false, islogin: true };
+      dispatch(updateUser({ ...u }));
+      router.push("/dashboard");
+    }
+   
+  },[])
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,10 +40,19 @@ export default function Login() {
 
   const handleLogin = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    let u = { name: "prince", isAdmin: false, islogin: true };
+    
+    login(formData).then((result:any) =>{
+      console.log(result);
+      localStorage.setItem('user', JSON.stringify(result.user));
+      localStorage.setItem('token', result.jwt);
+      let u = { name: result.user.username, isAdmin: false, islogin: true };
+      dispatch(updateUser({ ...u }));
+      router.push("/dashboard");
+    }
 
-    dispatch(updateUser({ ...u }));
-    router.push("/dashboard");
+    ).catch(error => alert(error.message))
+    
+    
   };
 
   return (
@@ -56,8 +77,8 @@ export default function Login() {
               <input
                 type="text"
                 className={" form-control text-lowercase login-input"}
-                name="email"
-                value={formData.email}
+                name="identifier"
+                value={formData.identifier}
                 onChange={handleInput}
                 placeholder="Username / Email"
               />
