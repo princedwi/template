@@ -22,6 +22,8 @@ export const getoutputDetail = (id:number) => api.get(`http://localhost:1337/api
 export const outputDetailUpdate = (formData: Output_Detail, id:number) => api.put(`http://localhost:1337/api/output-details-tables/${id}`, {data:formData});
 export const outputDetailDelete = (formData: Output_Detail, id:number) => api.delete(`http://localhost:1337/api/output-details-tables/${id}`, {data:formData});
 export const sendDataDetails = (formData: DataTabInterface) => api.post("http://localhost:1337/api/data-tables", {data:formData});
+export const updateDataDetails = (formData: DataTabInterface) => api.put("http://localhost:1337/api/data-tables", {data:formData});
+export const deleteDataDetails = (id: number) => api.delete(`http://localhost:1337/api/data-tables/${id}`);
 export const getDataDetails = (id:number) =>api.get(`http://localhost:1337/api/data-tables?filters[ProjectID][id][$eq]=${id}&populate=*`);
 export const detailSpecQuery = (formData: DetailedSpec_Query) => api.post("http://localhost:1337/api/project-spec-query-responses",{data:formData});
 export const getConceptReview = (projectId: number) => api.get(`http://localhost:1337/api/concept-reviews?ProjectID.data.id=${projectId}`);

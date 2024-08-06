@@ -4,7 +4,7 @@ export interface TabsProps {
 }
 import { DataTabInterface } from '@/types/data_tab.types';
 import { useSearchParams } from 'next/navigation'
-import { sendDataDetails, getDataDetails } from '@/utilities/axios/project/createProject';
+import { sendDataDetails, getDataDetails, deleteDataDetails } from '@/utilities/axios/project/createProject';
 import { useProjectInfoContext } from '@/context/context';
 export default function DataTab({ step }: TabsProps) {
   const { setLoaderData, projectId } = useProjectInfoContext();
@@ -12,6 +12,7 @@ export default function DataTab({ step }: TabsProps) {
   const paramsid: unknown = searchParams.get('id')
 
   const [isfetchdata, setisfetchdata] = React.useState(false);
+  const [ids, setids] = React.useState<number[]>([]);
   const [data, setData] = React.useState<DataTabInterface[]>([
     {
       key: 1,
@@ -58,11 +59,18 @@ export default function DataTab({ step }: TabsProps) {
   const handleSubmit = async () => {
     setLoaderData({ data: "Saving Data...", display: true, type: 1 });
     try {
+      for (var i = 0; i < ids.length; i++) {
+        await deleteDataDetails(ids[i]);
+      }
+      setids([]);
+      var idsarr = [];
       for (var i = 0; i < data.length; i++) {
-        if (data[i].Data != "") {
-          await sendDataDetails({ ...data[i], ProjectID: paramsid ? paramsid as number : projectId });
+        if (data[i].Data != "" && data[i].DescriptionUse != "" && data[i].Location != "" && data[i].DataAdded != "" && data[i].Source != "") {
+          const datas=await sendDataDetails({ ...data[i], ProjectID: paramsid ? paramsid as number : projectId });
+          idsarr.push(datas.data.id);
         }
       }
+      setids(idsarr);
       setLoaderData({ data: "Data Saved", display: true, type: 2 });
       setTimeout(() => {
         setLoaderData({ data: "", display: false, type: 1 });
@@ -74,6 +82,7 @@ export default function DataTab({ step }: TabsProps) {
   }
   const getparamsdata = async () => {
     try {
+      var idsarr = [];
       const dataz = await getDataDetails(paramsid as number);
       var arr: DataTabInterface[] = [{
         key: 1,
@@ -86,6 +95,7 @@ export default function DataTab({ step }: TabsProps) {
         Source: "",
       }];
       for (var i = 0; i < dataz.data.length; i++) {
+        idsarr.push(dataz.data[i].id);
         arr.push({
           key: i + 2,
           ProjectID: paramsid ? paramsid as number : projectId,
@@ -98,7 +108,7 @@ export default function DataTab({ step }: TabsProps) {
         });
       }
       setData(arr);
-
+      setids(idsarr);
       setisfetchdata(true);
     } catch (error) {
       console.log(error, "error in output tabs")
@@ -110,7 +120,6 @@ export default function DataTab({ step }: TabsProps) {
     }
   }, [data]);
   return (
-
     <div
       className={`tab-pane relative fade ${step == 5 ? "show active" : ""}`}
       style={{ backgroundColor: 'white', padding: '3rem' }}

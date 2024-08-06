@@ -31,8 +31,6 @@ export default function OutputsTab({ step }: TabsProps) {
       setFormData({...formData, [index]: {...formData[index], Notes: value, OutputName: id, projectID:paramsid?paramsid as number:projectId}});
       d[index].Notes = value;
     }
-    // setFormData(d);
-    console.log(formData, index);
   };
 
   const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -60,7 +58,6 @@ export default function OutputsTab({ step }: TabsProps) {
         }
         else if (metachecks[i] && metachecks[i] === true && cId[i] !== undefined) {
           const datares = await outputDetailDelete(formData[i], cId[i]);
-          console.log("deleted");
           c[i] = false;
           cId[i] = -1;
         }
@@ -74,9 +71,7 @@ export default function OutputsTab({ step }: TabsProps) {
   };
   const getbyparams = async () => {
     const dataz = await getoutputDetail(paramsid as number);
-    console.log(dataz, "hail Modi");
     var c=checks;
-    console.log(formData, "doraemon");
     var d:Output_Detail[]=formData;
     for(var i=0;i<dataz.data.length;i++){
       c[dataz.data[i].attributes.OutputName.data.id-1]=true;
@@ -84,8 +79,7 @@ export default function OutputsTab({ step }: TabsProps) {
       d[dataz.data[i].attributes.OutputName.data.id-1].Notes=dataz.data[i].attributes.Notes;
       d[dataz.data[i].attributes.OutputName.data.id-1].OutputName=dataz.data[i].attributes.OutputName.data.id;
       d[dataz.data[i].attributes.OutputName.data.id-1].projectID=dataz.data[i].attributes.projectID.data.id;
-    } 
-    console.log(formData, "DOM");
+    }
     setFormData(d);
     setcheck(c);
 
@@ -113,7 +107,6 @@ export default function OutputsTab({ step }: TabsProps) {
       if (paramsid) {
         getbyparams()
       }
-      console.log(99);
     }
   }, [masterMasterOutput, formData.length, checks.length])
   return (

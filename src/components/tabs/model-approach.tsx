@@ -86,8 +86,23 @@ export default function ModelApproach({ step }: TabsProps) {
       );
     }
   };
-  
+
   const check = (index: number, type: string) => {
+    if (paramsid) {
+      if (type === "ModelSoftware_ID") {
+        console.log("ModelSoftware_ID", selectedModelSoftwares, index);
+        for (var i = 0; i < selectedModelSoftwares.length; i++) {
+          if (selectedModelSoftwares[i] == String(index + 1)) return true;
+        }
+        return false;
+      }
+      else if (type === "ModelSystem_ID") {
+        for (var i = 0; i < selectedModelSystems.length; i++) {
+          if (selectedModelSystems[i] == String(index + 1)) return true;
+        }
+        return false
+      }
+    }
     if (type === "ModelSoftware_ID") {
       for (var i = 0; i < selectedModelSoftwares.length; i++) {
         if (selectedModelSoftwares[i] == String(index)) return true;
@@ -114,12 +129,12 @@ export default function ModelApproach({ step }: TabsProps) {
         try {
           setLoaderData({ data: "Updating Data...", display: true, type: 1 });
           const res = await modelApproachUpdate({
-            ProjectID: paramsid?paramsid as number:projectId,
+            ProjectID: paramsid ? paramsid as number : projectId,
             ModelType_ID: formData.ModelType_ID,
             ModelSoftware_ID: arr1,
             ModelSystem_ID: arr2
           }, ID);
-        setLoaderData({ data: "Data Updated", display: true, type: 2 });
+          setLoaderData({ data: "Data Updated", display: true, type: 2 });
           console.log("Successfully Updated Model-Approach", res);
         } catch (error) {
           console.error('Error updating model-approach:', error);
@@ -148,38 +163,42 @@ export default function ModelApproach({ step }: TabsProps) {
   const [counter, setCounter] = React.useState(0);
   const fetchdata = async () => {
     try {
-      
-      const data=await getmodelApproach(Number(paramsid));
+
+      const data = await getmodelApproach(Number(paramsid));
       // console.log(data, "modelaproach");
-      const selectedsoftware=data.data[0].attributes.ModelSoftware_ID.data;
-      const selectedsystem=data.data[0].attributes.ModelSystem_ID.data;
-      var arr1=[];
-      var arr2=[];
-      for(var i=0;i<selectedsoftware.length;i++){
+      const selectedsoftware = data.data[0].attributes.ModelSoftware_ID.data;
+      const selectedsystem = data.data[0].attributes.ModelSystem_ID.data;
+      var arr1 = [];
+      var arr2 = [];
+      for (var i = 0; i < selectedsoftware.length; i++) {
         arr1.push(String(selectedsoftware[i].attributes.Master_ModelSoftware_ID));
       }
 
-      for(var i=0;i<selectedsoftware.length;i++){
+      for (var i = 0; i < selectedsystem.length; i++) {
         arr2.push(String(selectedsystem[i].attributes.Master_ModelSystem_ID));
       }
       // console.log(arr1, "arr1", arr2);
-      setFormData({...formData, ProjectID: paramsid as number, ModelType_ID:data.data[0].attributes.ModelType_ID.data.attributes.Master_ModelType_ID});
+      setFormData({ ...formData, ProjectID: paramsid as number, ModelType_ID: data.data[0].attributes.ModelType_ID.data.attributes.Master_ModelType_ID });
       // setisfetchdata(true);
       setID(data.data[0].id);
-      if(ModelSoftwares.length>0 && ModelSystems.length>0){
+      var arrr: number[] = [];
+      if (ModelSoftwares.length > 0 && ModelSystems.length > 0) {
         selectedsetModelSoftwares(arr1);
         selectedsetModelSystems(arr2);
+        arrr = selectedModelSoftwares.map((index) => Number(index) - 1);
         // console.log("DATA AVBAILABLE");
       }
-      else{setCounter(counter+1); console.log("DATA NOT AA")}
+      else { setCounter(counter + 1); console.log("DATA NOT AA") }
       // console.log("data.data[0].attributes.ModelType_ID.data.attributes.Master_ModelType_ID",data.data[0].attributes.ModelType_ID.data.attributes.Master_ModelType_ID, formData)
       // console.log(selectedsoftware, ModelSystems, ModelSoftwares, selectedModelSoftwares, "selectedsoftware");
       // console.log(data, "modelaproach"); 
+      console.log("DATA FETCHED");
+      console.log(selectedModelSoftwares, selectedModelSystems, ID, formData, ModelSoftwares, ModelSystems, "ARR", arrr)
     } catch (error) {
       console.log(error, "model approack");
     }
   }
-  
+
   const [ismasteravailable, setismasteravailable] = React.useState(false);
   React.useEffect(() => {
     if (ModelTypes.length == 0 || ModelSoftwares.length == 0 || ModelSystems.length == 0) {
@@ -193,7 +212,7 @@ export default function ModelApproach({ step }: TabsProps) {
         setModelSystems(response.data);
       });
     }
-    if(paramsid && !isfetchdata && ModelTypes.length>0 && ModelSoftwares.length>0 && ModelSystems.length>0){
+    if (paramsid && !isfetchdata && ModelTypes.length > 0 && ModelSoftwares.length > 0 && ModelSystems.length > 0) {
       fetchdata();
     }
   }, [counter, ModelSoftwares, ModelSystems, ModelTypes]);
@@ -210,80 +229,12 @@ export default function ModelApproach({ step }: TabsProps) {
       </div>
       <link href='tabs/style.css'></link>
 
-
-
-      {/* <div className="mb-3 d-flex flex-row">
-          <label htmlFor="Data_Management_Strategy" className='w-25'>Type of Model Needed</label>
-          <input type="text" name="Data_Management_Strategy" className="form-control w-25" id="Data_Management_Strategy" onChange={(e => { handleInputChange(e); })} />
-        </div> */}
-      {/* <div className='d-flex'>
-      <div className="mb-3 d-flex flex-row">
-        <label htmlFor="ModelType" className='w-25'><h5>Type of Model Needed</h5></label>
-        <label htmlFor="ModelSoftware" className='w-25'><h5>Software To Be Used</h5></label>
-        <label htmlFor="ModelSystem" className='w-25'><h5>System To Be Modelled</h5></label>
-      </div>
-      
-      <div className='d-flex'>
-        <div className='typeofModel w-25' >
-          {ModelTypes.map((modelType) => (
-            <div key={modelType.id}>
-              <input
-                type="radio"
-                name="ModelType_ID"
-                id={`ModelType_ID-${modelType.id}`}
-                className="me-2"
-                value={modelType.attributes.Master_ModelType_ID}
-                onClick={(e) => {
-                  console.log(modelType.attributes.Master_ModelType_ID)
-                  if(modelType.attributes.Field==="Other")
-                    setshowOther(true);
-                  else
-                  setshowOther(false);
-                  handleradiobutton(e.target as HTMLTextAreaElement);
-                }}
-              />
-              <label htmlFor={`ModelType_ID-${modelType.id}`}>{modelType.attributes.Field}</label>
-            </div>
-          ))}
-        </div>
-
-        <div className='softwareUsed w-25'>
-          {ModelSoftwares.map((software) => (
-            <div key={software.id}>
-              <input type="checkbox" name="ModelSoftware_ID" id={`ModelSoftware_ID_${software.id}`} className='me-2' 
-              value={software.attributes.Master_ModelSoftware_ID}
-              onChange={(e) => handleCheckbox(e, 'ModelSoftware_ID')}/>
-              <label htmlFor={`ModelSoftware_ID_${software.id}`} >{software.attributes.Field}</label>
-            </div>
-          ))}
-        </div>
-
-        <div className='systemModelled'>
-          {ModelSystems.map((system) => (
-            <div key={system.id}>
-              <input
-                type="checkbox"
-                name="ModelSystem_ID"
-                id={`ModelSystem_ID-${system.id}`}  // Ensure unique id
-                className='me-2'
-                value={system.attributes.Master_ModelSystem_ID}
-                onChange={(e) => handleCheckbox(e, 'ModelSystem_ID')}
-              />
-              <label htmlFor={`ModelSystem_ID-${system.id}`} >
-                {system.attributes.Field}
-              </label>
-            </div>
-          ))}
-        </div>
-
-
-      </div> */}
       <div className=''>
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="Events_To_Be_Modelled" className='w-25'>Type of Model Needed</label>
           <select name="ModelType_ID" className='form-control w-[20rem] h-[2.1rem]'
             onChange={(e) => { handledropdown(e) }}
-            value={formData.ModelType_ID!=-1?formData.ModelType_ID:""}
+            value={formData.ModelType_ID != -1 ? formData.ModelType_ID : ""}
           >
             <option value="">Select Type of Model </option>
             {ModelTypes.map((modelType) => (
@@ -318,7 +269,7 @@ export default function ModelApproach({ step }: TabsProps) {
                   }
 
                   return <div className='' style={{ fontWeight: "200", fontFamily: "" }}>{selectedModelSoftwares
-                    .map((selectedModelSoftwares) => ModelSoftwares.length>0?ModelSoftwares[Number(selectedModelSoftwares)].attributes.Field:"")
+                    .map((selectedModelSoftwares) => (ModelSoftwares.length > 0 && ModelSoftwares[Number(selectedModelSoftwares) - 1]) ? ModelSoftwares[Number(selectedModelSoftwares) - 1].attributes.Field : "")
                     .join(', ')}</div>
                 }}
                 MenuProps={MenuProps}
@@ -352,7 +303,7 @@ export default function ModelApproach({ step }: TabsProps) {
                     return <><div className='font-normal  '>Select System</div></>;
                   }
                   return <div className='' style={{ fontWeight: "200", fontFamily: "" }}>{selectedModelSystems
-                    .map((selectedModelSystem) => ModelSystems.length>0?ModelSystems[Number(selectedModelSystem)].attributes.Field:"")
+                    .map((selectedModelSystem) => (ModelSystems.length > 0 && ModelSystems[Number(selectedModelSystem) - 1]) ? ModelSystems[Number(selectedModelSystem) - 1].attributes.Field : "")
                     .join(', ')}</div>
                 }}
                 MenuProps={MenuProps}
