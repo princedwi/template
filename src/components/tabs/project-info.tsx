@@ -54,17 +54,17 @@ export default function ProjectInfo({ step }: TabsProps) {
     const ds = await getProject((paramsid as number));
     setData({
       ...data,
-      ProjectName: ds.data.attributes.ProjectName,
-      ProjectCode: ds.data.attributes.ProjectCode,
-      ProjectManager: ds.data.attributes.ProjectManager,
-      ProjectVerifier: ds.data.attributes.ProjectVerifier,
-      ClientScope: ds.data.attributes.ClientScope,
-      Budget: ds.data.attributes.Budget,
-      Originator: ds.data.attributes.Originator,
-      Lead: ds.data.attributes.Lead,
-      Advisor: ds.data.attributes.Advisor,
-      StudyOther: ds.data.attributes.StudyOther,
-      master_type_study: ds.data.attributes.master_type_study.data.id,
+      ProjectName: ds.data.attributes.ProjectName?ds.data.attributes.ProjectName:"",
+      ProjectCode: ds.data.attributes.ProjectCode?ds.data.attributes.ProjectCode:"",
+      ProjectManager: ds.data.attributes.ProjectManager?ds.data.attributes.ProjectManager:"",
+      ProjectVerifier: ds.data.attributes.ProjectVerifier?ds.data.attributes.ProjectVerifier:"",
+      ClientScope: ds.data.attributes.ClientScope?ds.data.attributes.ClientScope:"",
+      Budget: ds.data.attributes.Budget?ds.data.attributes.Budget:"",
+      Originator: ds.data.attributes.Originator?ds.data.attributes.Originator:"",
+      Lead: ds.data.attributes.Lead?ds.data.attributes.Lead:"",
+      Advisor: ds.data.attributes.Advisor?ds.data.attributes.Advisor:"",
+      StudyOther: ds.data.attributes.StudyOther?ds.data.attributes.StudyOther:"",
+      master_type_study: ds.data.attributes.master_type_study.data.id?ds.data.attributes.master_type_study.data.id:0,
     });
     setisfetchdata(true);
     setProjectContextData(data);

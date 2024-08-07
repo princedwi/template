@@ -80,3 +80,8 @@ export interface MasterOutput {
     id: number;
     attributes: OutputAttributes;
 }
+
+export interface MasterModelSpec{
+    id:number;
+    ModelSpec:string;
+}

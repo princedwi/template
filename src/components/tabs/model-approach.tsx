@@ -1,57 +1,46 @@
 import React, { useState } from 'react'
 import { MasterModelType, MasterModelSoftware, MasterModelSystem } from '@/types/master_data.types';
 import { getModelTypeMasterData, getModelSoftwaresMasterData, getModelSystemsMasterData } from '@/utilities/axios/masterData/masterDataApi';
-import { Checkbox, createTheme, FormControl, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, ThemeProvider } from '@mui/material';
+import { Checkbox, createTheme, FormControl, ListItemText, MenuItem, OutlinedInput, SelectChangeEvent, ThemeProvider } from '@mui/material';
 import { modelApproach, modelApproachUpdate, getmodelApproach } from '@/utilities/axios/project/createProject';
 import { useProjectInfoContext } from '@/context/context';
 import { useSearchParams } from 'next/navigation'
-
+import Select from "react-select";
 export interface TabsProps {
   step: number;
 }
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-const theme = createTheme({
-  typography: {
-    fontFamily: 'Raleway, Arial',
-  },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: `
-        @font-face {
-          font-family: 'Raleway';
-          font-style: normal;
-          font-display: swap;
-          font-weight: 400;
-          unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
-        }
-      `,
-    },
-  },
-});
+interface ModelSystemInterface {
+  value: string;
+  label: string;
+  Master_ModelSystem_ID: number;
+}
+interface ModelSoftwareInterface {
+  value: string;
+  label: string;
+  Master_ModelSoftware_ID: number;
+}
 export default function ModelApproach({ step }: TabsProps) {
+  const [selectedOptions, setSelectedOptions] = useState<ModelSystemInterface[]>([]);
+  const [selectedOptions2, setSelectedOptions2] = useState<ModelSoftwareInterface[]>([]);
+
+  // Array of all options
+  const [ModelSystemOptions, setModelSystemOptions] = useState<ModelSystemInterface[]>([
+  ]);
+  const [ModelSoftware_IDOptions, setModelSoftware_IDOptions] = useState<ModelSoftwareInterface[]>([
+  ]);
+  function handleSelect(datas: any) {
+    setSelectedOptions(datas);
+  }
+  function handleSelect2(datas: any) {
+    setSelectedOptions2(datas);
+  }
   const searchParams = useSearchParams()
   const paramsid: unknown = searchParams.get('id')
   const [isfetchdata, setisfetchdata] = React.useState(false);
 
-  const { setLoaderData, projectId } = useProjectInfoContext();
+  const { setLoaderData, projectId, setdataspectype } = useProjectInfoContext();
   const [ID, setID] = useState(-1);
-
-  const [selectedModelSystems, selectedsetModelSystems] = React.useState<string[]>([]);
-  const [selectedModelSoftwares, selectedsetModelSoftwares] = React.useState<string[]>([]);
-
-  const [showOther, setshowOther] = React.useState(false)
   const [ModelTypes, setModelTypes] = React.useState<MasterModelType[]>([]);
-  const [ModelSoftwares, setModelSoftwares] = React.useState<MasterModelSoftware[]>([]);
-  const [ModelSystems, setModelSystems] = React.useState<MasterModelSystem[]>([]);
   const [formData, setFormData] = useState({
     ProjectID: projectId,
     ModelType_ID: -1,
@@ -60,72 +49,30 @@ export default function ModelApproach({ step }: TabsProps) {
   })
 
   const handledropdown = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if(e.target.value==="1"){
+      console.log(111);
+      setdataspectype(0);
+    }
+    else if(e.target.value==="2"){
+      console.log(e.target.value);
+      setdataspectype(1);
+    }
+    else if(e.target.value==="3"){
+      setdataspectype(2);
+    }
     setFormData({ ...formData, ProjectID: projectId, [e.target.name]: Number(e.target.value) })
   }
 
 
-  const handleChange = (event: SelectChangeEvent<typeof selectedModelSoftwares>, index: number) => {
-    if (index === 2) {
-      const {
-        target: { value },
-      } = event;
-      selectedsetModelSystems(
-        typeof value === 'string' ? value.split(',') : value,
-      );
 
-      selectedsetModelSystems(
-        typeof value === 'string' ? value.split(',') : value,
-      );
-    }
-    else if (index === 1) {
-      const {
-        target: { value },
-      } = event;
-      selectedsetModelSoftwares(
-        typeof value === 'string' ? value.split(',') : value,
-      );
-    }
-  };
 
-  const check = (index: number, type: string) => {
-    if (paramsid) {
-      if (type === "ModelSoftware_ID") {
-        console.log("ModelSoftware_ID", selectedModelSoftwares, index);
-        for (var i = 0; i < selectedModelSoftwares.length; i++) {
-          if (selectedModelSoftwares[i] == String(index + 1)) return true;
-        }
-        return false;
-      }
-      else if (type === "ModelSystem_ID") {
-        for (var i = 0; i < selectedModelSystems.length; i++) {
-          if (selectedModelSystems[i] == String(index + 1)) return true;
-        }
-        return false
-      }
-    }
-    if (type === "ModelSoftware_ID") {
-      for (var i = 0; i < selectedModelSoftwares.length; i++) {
-        if (selectedModelSoftwares[i] == String(index)) return true;
-      }
-      return false;
-    }
-    else if (type === "ModelSystem_ID") {
-      for (var i = 0; i < selectedModelSystems.length; i++) {
-        if (selectedModelSystems[i] == String(index)) return true;
-      }
-      return false
-    }
-  }
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    var arr1: number[] = selectedModelSoftwares.map((index) => ModelSoftwares[Number(index)].attributes.Master_ModelSoftware_ID);
-    var arr2: number[] = selectedModelSystems.map((index) => ModelSystems[Number(index)].attributes.Master_ModelSystem_ID);
-
     // setFormData({ ModelType_ID:1, ModelSoftware_ID: [1,2], ModelSystem_ID: arr2 });
     try {
+      const arr1 = selectedOptions2 ? selectedOptions2.map((index) => index.Master_ModelSoftware_ID) : [];
+      const arr2 = selectedOptions ? selectedOptions.map((index) => index.Master_ModelSystem_ID) : [];
       if (ID != -1) {
-        // console.log("UPDATIGNC DATA", ID);
         try {
           setLoaderData({ data: "Updating Data...", display: true, type: 1 });
           const res = await modelApproachUpdate({
@@ -163,59 +110,67 @@ export default function ModelApproach({ step }: TabsProps) {
   const [counter, setCounter] = React.useState(0);
   const fetchdata = async () => {
     try {
-
       const data = await getmodelApproach(Number(paramsid));
-      // console.log(data, "modelaproach");
       const selectedsoftware = data.data[0].attributes.ModelSoftware_ID.data;
       const selectedsystem = data.data[0].attributes.ModelSystem_ID.data;
-      var arr1 = [];
-      var arr2 = [];
+      var arr2: ModelSystemInterface[] = [];
+      var arr1: ModelSoftwareInterface[] = [];
       for (var i = 0; i < selectedsoftware.length; i++) {
-        arr1.push(String(selectedsoftware[i].attributes.Master_ModelSoftware_ID));
+        arr1.push({ value: selectedsoftware[i].attributes.Field, label: selectedsoftware[i].attributes.Field, Master_ModelSoftware_ID: selectedsoftware[i].id });
       }
-
       for (var i = 0; i < selectedsystem.length; i++) {
-        arr2.push(String(selectedsystem[i].attributes.Master_ModelSystem_ID));
+        arr2.push({ value: selectedsystem[i].attributes.Field, label: selectedsystem[i].attributes.Field, Master_ModelSystem_ID: selectedsystem[i].id });
       }
-      // console.log(arr1, "arr1", arr2);
-      setFormData({ ...formData, ProjectID: paramsid as number, ModelType_ID: data.data[0].attributes.ModelType_ID.data.attributes.Master_ModelType_ID });
-      // setisfetchdata(true);
+      setFormData({ ...formData, ProjectID: paramsid as number, ModelType_ID: data.data[0].attributes.ModelType_ID.data.id });
       setID(data.data[0].id);
-      var arrr: number[] = [];
-      if (ModelSoftwares.length > 0 && ModelSystems.length > 0) {
-        selectedsetModelSoftwares(arr1);
-        selectedsetModelSystems(arr2);
-        arrr = selectedModelSoftwares.map((index) => Number(index) - 1);
-        // console.log("DATA AVBAILABLE");
+      if (arr1.length > 0 && arr2.length > 0 && selectedOptions.length == 0) {
+        setSelectedOptions(arr2);
+        setSelectedOptions2(arr1);
+        setCounter(counter + 1);
+        return;
       }
-      else { setCounter(counter + 1); console.log("DATA NOT AA") }
-      // console.log("data.data[0].attributes.ModelType_ID.data.attributes.Master_ModelType_ID",data.data[0].attributes.ModelType_ID.data.attributes.Master_ModelType_ID, formData)
-      // console.log(selectedsoftware, ModelSystems, ModelSoftwares, selectedModelSoftwares, "selectedsoftware");
-      // console.log(data, "modelaproach"); 
-      console.log("DATA FETCHED");
-      console.log(selectedModelSoftwares, selectedModelSystems, ID, formData, ModelSoftwares, ModelSystems, "ARR", arrr)
+      else { setCounter(counter + 1); console.log("DATA NOT Available") }
+      setisfetchdata(true);
     } catch (error) {
-      console.log(error, "model approack");
+      console.log(error, "in model approach");
     }
   }
-
-  const [ismasteravailable, setismasteravailable] = React.useState(false);
-  React.useEffect(() => {
-    if (ModelTypes.length == 0 || ModelSoftwares.length == 0 || ModelSystems.length == 0) {
+  const getmasterData = async () => {
+    try {
+      console.log("ERE");
       getModelTypeMasterData().then((response) => {
         setModelTypes(response.data);
       });
       getModelSoftwaresMasterData().then((response) => {
-        setModelSoftwares(response.data);
+        const newOptions = response.data.map((item: any) => ({
+          value: item.attributes.Field,
+          label: item.attributes.Field,
+          Master_ModelSoftware_ID: item.id,
+        }));
+        setModelSoftware_IDOptions(newOptions)
       });
       getModelSystemsMasterData().then((response) => {
-        setModelSystems(response.data);
+        const newOptions = response.data.map((item: any) => ({
+          value: item.attributes.Field,
+          label: item.attributes.Field,
+          Master_ModelSystem_ID: item.id,
+        }));
+        setModelSystemOptions(newOptions);
       });
+    } catch (error) {
+      console.log(error, "error in fetching m,aster data in approach")
     }
-    if (paramsid && !isfetchdata && ModelTypes.length > 0 && ModelSoftwares.length > 0 && ModelSystems.length > 0) {
+  }
+  const [ismasteravailable, setismasteravailable] = React.useState(false);
+  React.useEffect(() => {
+    if (ModelTypes.length == 0 && ModelSoftware_IDOptions.length == 0 && ModelSystemOptions.length == 0) {
+      getmasterData();
+    }
+    if (paramsid && !isfetchdata && ModelTypes.length > 0 && ModelSystemOptions.length > 0 && ModelSoftware_IDOptions.length > 0) {
+      console.log("DATA FETCHED");
       fetchdata();
     }
-  }, [counter, ModelSoftwares, ModelSystems, ModelTypes]);
+  }, [counter, ModelSystemOptions, ModelSoftware_IDOptions, ModelTypes]);
   return (
 
     <div
@@ -223,7 +178,6 @@ export default function ModelApproach({ step }: TabsProps) {
       style={{ backgroundColor: 'white', padding: '3rem' }}
       id="step3"
     >
-
       <div className=' text-center flex  items-end justify-end absolute top-[1rem] right-[1rem] float-right '>
         <button type="submit" style={{ 'backgroundColor': '#263c9c', 'padding': '0.5rem', 'color': 'white', 'borderRadius': '10px', 'float': 'right' }} className='border w-[fit-content] p-1 px-3 mb-4 rounded-xl bg-[#263c9c]  text-white text-[18px] cursor-pointer' onClick={handleSubmit}>Submit</button>
       </div>
@@ -249,77 +203,35 @@ export default function ModelApproach({ step }: TabsProps) {
             ))}
           </select>
         </div>
-        <ThemeProvider theme={theme}>
-          <div className="mb-3 d-flex flex-row">
-            <label htmlFor="Events_To_Be_Modelled" className='w-25'>Software To Be Used</label>
-            <FormControl sx={{ fontSize: "10px" }}>
-              <Select
-                displayEmpty
-                multiple
-                className='form-controlf w-[20rem] h-[2.1rem] font-[300] '
-                labelId="System To Be Modelled"
-                id="System To Be Used"
-                value={selectedModelSoftwares}
-                onChange={(e) => handleChange(e, 1)}
-                name="ModelSoftware_ID"
-                input={<OutlinedInput />}
-                renderValue={(selected) => {
-                  if (selected.length === 0) {
-                    return <><div className='font-normal '>Select Software</div></>;
-                  }
 
-                  return <div className='' style={{ fontWeight: "200", fontFamily: "" }}>{selectedModelSoftwares
-                    .map((selectedModelSoftwares) => (ModelSoftwares.length > 0 && ModelSoftwares[Number(selectedModelSoftwares) - 1]) ? ModelSoftwares[Number(selectedModelSoftwares) - 1].attributes.Field : "")
-                    .join(', ')}</div>
-                }}
-                MenuProps={MenuProps}
-              >
-                <MenuItem value="" className='me-2' disabled><em>Select System To Be Used</em></MenuItem>
-                {ModelSoftwares.map((modelType, index) => (
-                  <MenuItem value={index} className="me-2 h-[fit-content] font-[300]" key={modelType.id}>
-                    <Checkbox checked={check(index, "ModelSoftware_ID")} />
-                    <ListItemText className="font-[300]" style={{ fontWeight: "300" }} primary={modelType.attributes.Field} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-
-          </div>
-          <div className="mb-3 d-flex flex-row">
-            <label htmlFor="Events_To_Be_Modelled" className='w-25'>System To Be Modelled</label>
-            <FormControl sx={{ fontSize: "10px" }}>
-              <Select
-                displayEmpty
-                multiple
-                className='form-controlf w-[20rem] h-[2.1rem] font-[300] '
-                labelId="System To Be Modelled"
-                id="System To Be Modelled"
-                value={selectedModelSystems}
-                onChange={(e) => handleChange(e, 2)}
-                input={<OutlinedInput />}
-                renderValue={(selected) => {
-                  if (selected.length === 0) {
-                    return <><div className='font-normal  '>Select System</div></>;
-                  }
-                  return <div className='' style={{ fontWeight: "200", fontFamily: "" }}>{selectedModelSystems
-                    .map((selectedModelSystem) => (ModelSystems.length > 0 && ModelSystems[Number(selectedModelSystem) - 1]) ? ModelSystems[Number(selectedModelSystem) - 1].attributes.Field : "")
-                    .join(', ')}</div>
-                }}
-                MenuProps={MenuProps}
-              >
-                <MenuItem value="" className='me-2' disabled><em>Select System To Be Modelled</em></MenuItem>
-                {ModelSystems.map((modelType, index) => (
-                  <MenuItem className="me-2 h-[fit-content] font-[300]" key={modelType.id} value={index}>
-                    <Checkbox checked={check(index, "ModelSystem_ID")} />
-                    <ListItemText className="font-[300] " style={{ fontWeight: "300" }} primary={modelType.attributes.Field} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-          </div>
-        </ThemeProvider>
+        <div className="mb-3 d-flex items-center flex-row">
+          <label htmlFor="Events_To_Be_Modelled" className='w-25'>System To Be Modelled</label>
+          <Select
+            options={ModelSystemOptions}
+            placeholder="Select color"
+            value={selectedOptions}
+            onChange={handleSelect}
+            isSearchable={true}
+            isMulti
+            className='w-[20rem] h-[2.1rem] block '
+          />
+        </div>
+        <div className={`mb-3 d-flex items-center flex-row mkt-[3remk] mt-[${(selectedOptions && selectedOptions.length > 0) ? (selectedOptions.length + 20) : "8"} rem]`}
+          style={{
+            marginTop: (selectedOptions && selectedOptions.length > 0) ? `${selectedOptions.length}rem` : "0rem"
+          }}
+        >
+          <label htmlFor="Events_To_Be_Modelled" className='w-25'>Software To Be Modelled</label>
+          <Select
+            options={ModelSoftware_IDOptions}
+            placeholder="Select color"
+            value={selectedOptions2}
+            onChange={handleSelect2}
+            isSearchable={true}
+            isMulti
+            className=' w-[20rem] h-[2.1rem]'
+          />
+        </div>
       </div>
     </div>
   )

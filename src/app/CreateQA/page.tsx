@@ -22,6 +22,7 @@ export default function Form() {
 
   const paramsid:unknown = searchParams.get('id')
   const [step, setStep] = useState<number>(1);
+  const [dataspectype,setdataspectype]=React.useState<number>(0)
   const [LoaderData, setLoaderData] = useState<LoaderProps>({ data: "", display: false, type: 1 });
   const setloaderdata = () => {
     setLoaderData({ data: "", display: false, type: 1 })
@@ -117,7 +118,7 @@ export default function Form() {
           </div>
         </nav>
         <div className="tab-content" style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "1.5rem" }}>
-          <ProjectInfoContext.Provider value={{ ProjectContextData: ProjectContextData, setProjectContextData: setProjectContextData, setLoaderData: setLoaderData, projectId: projectId, setProjectId: setProjectId }}>
+          <ProjectInfoContext.Provider value={{ ProjectContextData: ProjectContextData, setProjectContextData: setProjectContextData, setLoaderData: setLoaderData, projectId: projectId, setProjectId: setProjectId, dataspectype:dataspectype,setdataspectype:setdataspectype }}>
             <ProjectInfo step={step} />
             <ConceptReview step={step} />
             <ModelApproach step={step} />
