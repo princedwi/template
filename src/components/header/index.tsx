@@ -24,6 +24,7 @@ export default function Header({ changeNav, posNav }: { changeNav: any, posNav:a
 
   const handleLogout = () => {
     // Handle logout logic here
+    localStorage.clear();
     router.push("/login");
   };
   return (

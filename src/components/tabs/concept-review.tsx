@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { TabsProps } from './project-info'
-import { conceptReview, conceptReviewUpdate, getconceptReview } from '@/utilities/axios/project/createProject';
+import { conceptReview, conceptReviewUpdate, createActivityLog, getconceptReview } from '@/utilities/axios/project/createProject';
 import { getConceptReviewMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { MasterModellingTask } from '@/types/master_data.types';
 import { useProjectInfoContext } from '@/context/context';
@@ -13,7 +13,7 @@ export default function ConceptReview({ step }: TabsProps) {
   const [showOther, setshowOther] = React.useState(false)
   const [masterModellingTasks, setmasterModellingTasks] = useState<MasterModellingTask[]>([]);
   const [otherID, setotherID] = useState(0);
-  const { setLoaderData, projectId} = useProjectInfoContext();
+  const { setLoaderData, projectId, userId } = useProjectInfoContext();
   const [ID, setID] = useState(-1);
 
   const [formData, setFormData] = useState({
@@ -26,7 +26,7 @@ export default function ConceptReview({ step }: TabsProps) {
     Climate_Change_Approach: '',
     ModellingTaskOther: '',
     Modelling_Task: 0,
-    ProjectID: paramsid?paramsid as number:projectId
+    ProjectID: paramsid ? paramsid as number : projectId
   });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, str: string = "") => {
     const { name, value } = e.target;
@@ -42,15 +42,37 @@ export default function ConceptReview({ step }: TabsProps) {
     try {
       if (ID !== -1) {
         setLoaderData({ data: "Updating Data", display: true, type: 1 });
-        const res = await conceptReviewUpdate({ ...formData, ProjectID: paramsid?paramsid as number:projectId }, ID);
+        const res = await conceptReviewUpdate({ ...formData, ProjectID: paramsid ? paramsid as number : projectId }, ID);
         setFormData(formData);
         setLoaderData({ data: "Data Updated", display: true, type: 2 });
         console.log('successfully updated CONCEPT-REVIEW')
+        createActivityLog({
+          ProjectID: paramsid ? paramsid as number : projectId,
+          ModifiedDate: new Date(),
+          Section: "Concept Review",
+          Entity: "Concept Review",
+          UpdatedByUserName:userId,
+        }).then(e => {
+          console.log("activity created")
+        }).catch(err => {
+          console.log("activity not created", err)
+        })
         return;
       }
       setFormData({ ...formData, ProjectID: projectId })
       setLoaderData({ data: "Saving Data", display: true, type: 1 });
-      const res = await conceptReview({ ...formData, ProjectID: paramsid?paramsid as number:projectId });
+      const res = await conceptReview({ ...formData, ProjectID: paramsid ? paramsid as number : projectId });
+      createActivityLog({
+        ProjectID: paramsid ? paramsid as number : projectId,
+        ModifiedDate: new Date(),
+        Section: "Concept Review",
+        Entity: "Concept Review",
+        UpdatedByUserName:userId,
+      }).then(e => {
+        console.log("activity created")
+      }).catch(err => {
+        console.log("activity not created", err)
+      })
       setLoaderData({ data: "Data Saved", display: true, type: 2 });
       setID(res.data.id);
       setFormData(formData);
@@ -152,10 +174,10 @@ export default function ConceptReview({ step }: TabsProps) {
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="Main_Assumption_Risk" className='w-25'>Main Assumptions/Risks/Concerns</label>
           <input type="text" name="Main_Assumption_Risk"
-          value={
-            formData.Main_Assumption_Risk
-          }
-           className="form-control w-25" id="Main_Assumption_Risk" onChange={(e => { handleInputChange(e); })} />
+            value={
+              formData.Main_Assumption_Risk
+            }
+            className="form-control w-25" id="Main_Assumption_Risk" onChange={(e => { handleInputChange(e); })} />
         </div>
         <div className="mb-3 d-flex flex-row">
           <label htmlFor="Data_Management_Strategy" className='w-25'>Data Management Strategy</label>
@@ -197,10 +219,10 @@ export default function ConceptReview({ step }: TabsProps) {
           <div className='mb-3 d-flex flex-row'>
             <label className='w-25'></label>
             {showOther && <input type="text" name="ModellingTaskOther"
-            value={
-              formData.ModellingTaskOther
-            }
-            className="form-control w-25" onChange={(e) => { handleInputChange(e); }} id="ModellingTaskOther" />}
+              value={
+                formData.ModellingTaskOther
+              }
+              className="form-control w-25" onChange={(e) => { handleInputChange(e); }} id="ModellingTaskOther" />}
           </div>
           {/* <div className='mb-4 d-flex flex-row' style={{}}>
             <input type='radio' name="Modelling_Task" id="ModellingTaskOther" value={6} onClick={(e) => { setshowOther(true); handleradiobutton(e.target as HTMLTextAreaElement); }}></input>

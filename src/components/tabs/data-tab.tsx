@@ -4,10 +4,10 @@ export interface TabsProps {
 }
 import { DataTabInterface } from '@/types/data_tab.types';
 import { useSearchParams } from 'next/navigation'
-import { sendDataDetails, getDataDetails, deleteDataDetails } from '@/utilities/axios/project/createProject';
+import { sendDataDetails, getDataDetails, deleteDataDetails, createActivityLog } from '@/utilities/axios/project/createProject';
 import { useProjectInfoContext } from '@/context/context';
 export default function DataTab({ step }: TabsProps) {
-  const { setLoaderData, projectId } = useProjectInfoContext();
+  const { setLoaderData, projectId, userId } = useProjectInfoContext();
   const searchParams = useSearchParams()
   const paramsid: unknown = searchParams.get('id')
 
@@ -70,11 +70,24 @@ export default function DataTab({ step }: TabsProps) {
           idsarr.push(datas.data.id);
         }
       }
+
+      createActivityLog({
+        ProjectID: paramsid?paramsid as number:projectId,
+        ModifiedDate: new Date(),
+        Section:"Data Tab",
+        Entity:"Data Tab",
+        UpdatedByUserName:userId
+      }).then(e => {
+        console.log("activity created")
+      }).catch(err => {
+        console.log("activity not created",err)
+      })
       setids(idsarr);
       setLoaderData({ data: "Data Saved", display: true, type: 2 });
       setTimeout(() => {
         setLoaderData({ data: "", display: false, type: 1 });
       }, 2000);
+
     } catch (error) {
       console.log(error);
       setLoaderData({ data: JSON.stringify(error) ? JSON.stringify(error) : "Some Error Occurred, Please Try Again Later", display: true, type: 3 });

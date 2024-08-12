@@ -2,6 +2,10 @@ export interface login {
   email: string;
   password: string;
 }
+export interface loginAPI {
+  identifier: string;
+  password: string;
+}
 
 export interface CommonData {
   user: User;

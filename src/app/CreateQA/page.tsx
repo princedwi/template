@@ -27,6 +27,7 @@ export default function Form() {
   const setloaderdata = () => {
     setLoaderData({ data: "", display: false, type: 1 })
   }
+  const [userId, setUserId] = useState<number>(0);
   const [projectId, setProjectId] = useState<number>(0);
   const values = [
     { name: "Project Info", id: 1, },
@@ -51,11 +52,13 @@ export default function Form() {
     ProjectVerifier: "",
     ClientScope: "",
     Budget: "",
-    Originator: "",
-    Lead: "",
-    Advisor: "",
+    Originator: -1,
+    Lead: -1,
+    Advisor: -1,
     StudyOther: "",
     master_type_study: 0,
+    CreatedByUserName: 1,
+    UpdatedByUserName: 1,
   });
   const [clr, setclr] = React.useState(false);
   const check = () => {
@@ -67,9 +70,9 @@ export default function Form() {
       ProjectContextData["ProjectVerifier"] === "" ||
       ProjectContextData["ClientScope"] === "" ||
       ProjectContextData["Budget"] === "" ||
-      ProjectContextData["Originator"] === "" ||
-      ProjectContextData["Lead"] === "" ||
-      ProjectContextData["Advisor"] === "") return 0;
+      ProjectContextData["Originator"] === -1 ||
+      ProjectContextData["Lead"] === -1 ||
+      ProjectContextData["Advisor"] === -1) return 0;
     setclr(true);
     return 1;
   }
@@ -81,10 +84,12 @@ export default function Form() {
   React.useEffect( () => {
     var g = check();
     console.log("PROJECTID", projectId);
-    
+    const currentUserdata = localStorage.getItem("user");
+    const id=currentUserdata ? JSON.parse(currentUserdata).id : -1;
+    setUserId(id);
   }, [ProjectContextData, LoaderData])
   return (
-    <>
+    <> 
       <Loader data={LoaderData.data} display={LoaderData.display} setloaderdata={setloaderdata} type={LoaderData.type} />
       <div className="stepForm m-4 min-h-[90vh]">
         {/* <form action="" method="post" id="registration" className="stepForm m-4"> */}
@@ -118,7 +123,7 @@ export default function Form() {
           </div>
         </nav>
         <div className="tab-content" style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem", paddingTop: "1.5rem" }}>
-          <ProjectInfoContext.Provider value={{ ProjectContextData: ProjectContextData, setProjectContextData: setProjectContextData, setLoaderData: setLoaderData, projectId: projectId, setProjectId: setProjectId, dataspectype:dataspectype,setdataspectype:setdataspectype }}>
+          <ProjectInfoContext.Provider value={{ ProjectContextData: ProjectContextData, setProjectContextData: setProjectContextData, setLoaderData: setLoaderData, projectId: projectId, setProjectId: setProjectId, dataspectype:dataspectype,setdataspectype:setdataspectype, userId:userId }}>
             <ProjectInfo step={step} />
             <ConceptReview step={step} />
             <ModelApproach step={step} />

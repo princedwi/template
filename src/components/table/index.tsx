@@ -24,30 +24,34 @@ import { columns } from "./data";
 import { useRouter } from 'next/navigation'
 import { getDashboardData } from '@/utilities/axios/project/createProject';
 import { getMasterOutputMasterData } from "@/utilities/axios/masterData/masterDataApi";
+
 interface Data {
   key: Number;
   name: string;
   createddate: string;
-  updateddate: string;
-  updatedby: string;
+  // updateddate: string;
+  // updatedby: string;
   bycreated: string;
+  history: string
 }
 
 function createData(
   key: number,
   name: string,
   createddate: string,
-  updateddate: string,
-  updatedby: string,
+  // updateddate: string,
+  // updatedby: string,
   bycreated: string,
+  history: string,
 ): Data {
   return {
     key,
     name,
     createddate,
-    updateddate,
-    updatedby,
+    // updateddate,
+    // updatedby,
     bycreated,
+    history,
   };
 }
 // const rows = [
@@ -133,6 +137,13 @@ const headCells: readonly HeadCell[] = [
     disablePadding: true,
     label: '  Name',
   },
+
+  {
+    id: 'bycreated',
+    numeric: false,
+    disablePadding: false,
+    label: 'Created By',
+  },
   {
     id: 'createddate',
     numeric: false,
@@ -140,23 +151,23 @@ const headCells: readonly HeadCell[] = [
     label: 'Created Date',
   },
   {
-    id: 'updateddate',
+    id: 'history',
     numeric: false,
     disablePadding: false,
-    label: 'Updated Date',
+    label: 'History',
   },
-  {
-    id: 'updatedby',
-    numeric: false,
-    disablePadding: false,
-    label: 'Updated By',
-  },
-  {
-    id: 'bycreated',
-    numeric: false,
-    disablePadding: false,
-    label: 'Created By',
-  },
+  // {
+  //   id: 'updateddate',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: 'Updated Date',
+  // },
+  // {
+  //   id: 'updatedby',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: 'Updated By',
+  // },
 ];
 
 interface EnhancedTableProps {
@@ -289,24 +300,43 @@ export default function App() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setrows] = React.useState<Data[]>([]);
-  
+
   const setrowsdata = () => {
     const datae: Data[] = [];
     for (var i = 0; i < rowss.length; i++) {
-      datae.push(createData(Number(rowss[i].key), rowss[i].name, rowss[i].createddate, rowss[i].bycreated, rowss[i].updatedby, rowss[i].updateddate));
+      datae.push(createData(
+        Number(rowss[i].key),
+        rowss[i].name,
+        rowss[i].createddate,
+        rowss[i].bycreated,
+        "Show History"
+        // rowss[i].updatedby,
+        //  rowss[i].updateddate
+      ));
     }
     // setrows(datae);
   }
   if (rows.length === 0) setrowsdata();
   const fetchtable = async () => {
-    const data = await getDashboardData();
+    const currentUserdata = localStorage.getItem("user");
+    const id = currentUserdata ? JSON.parse(currentUserdata).id : -1;
+    const data = await getDashboardData(id);
+    console.log(data);
     const datae: Data[] = [];
     for (var i = 0; i < data.data.length; i++) {
-      datae.push(createData(Number(data.data[i].id), data.data[i].attributes.ProjectName, data.data[i].attributes.createdAt, "Created By", "Updated By", data.data[i].attributes.updatedAt));
+      datae.push(createData(
+        Number(data.data[i].id),
+        data.data[i].attributes.ProjectName,
+        data.data[i].attributes.CreatedByUserName.data.attributes.username ? data.data[i].attributes.CreatedByUserName.data.attributes.username : "NA",
+        data.data[i].attributes.createdAt,
+        "Show History",
+        // data.data[i].attributes.UpdatedByUserName.data.attributes.username ? data.data[i].attributes.UpdatedByUserName.data.attributes.username : "NA",
+        // data.data[i].attributes.updatedAt
+      ));
     }
     setrows(datae);
   }
-  
+
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof Data,
@@ -374,11 +404,12 @@ export default function App() {
     [order, orderBy, page, rowsPerPage],
   );
   React.useEffect(() => {
-    if(rows.length===0)fetchtable();
-    else {setPage(0);}
+    if (rows.length === 0) fetchtable();
+    else { setPage(0); }
   }, [rows.length]);
 
   return (
+    <>
     <Box sx={{ width: '100%' }} >
       <Paper sx={{ width: '100%', mb: 0, mt: 2 }} >
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -405,7 +436,7 @@ export default function App() {
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, (row.key as number))}
+
                     // role="checkbox"
                     // aria-checked={false}
                     tabIndex={-1}
@@ -428,13 +459,15 @@ export default function App() {
                       scope="row"
                       padding="normal"
                       style={{ fontWeight: "400", fontFamily: "sans-serif" }}
+                      onClick={(event) => handleClick(event, (row.key as number))}
                     >
                       {row.name}
                     </TableCell>
-                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }}>{row.createddate}</TableCell>
-                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }}>{row.bycreated}</TableCell>
-                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }}>{row.updatedby}</TableCell>
-                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }}>{row.updateddate}</TableCell>
+                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }} onClick={(event) => handleClick(event, (row.key as number))}>{row.createddate}</TableCell>
+                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }} onClick={(event) => handleClick(event, (row.key as number))}>{row.bycreated}</TableCell>
+                    <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }} onClick={() => console.log("HUNGER")}>{row.history}</TableCell>
+                    {/* <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }}>{row.updatedby}</TableCell> */}
+                    {/* <TableCell align="left" style={{ fontWeight: "400", fontFamily: "sans-serif" }}>{row.updateddate}</TableCell> */}
                   </TableRow>
                 );
               })}
@@ -465,5 +498,6 @@ export default function App() {
         label="Dense padding"
       /> */}
     </Box>
+    </>
   );
 }

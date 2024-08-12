@@ -5,9 +5,9 @@ export interface TabsProps {
 import { MasterTypeStudy } from '@/types/master_data.types';
 import axios from 'axios';
 import { useProjectInfoContext } from '@/context/context';
-import { createProject, getProject, updateProject } from '@/utilities/axios/project/createProject';
+import { createProject, getProject, createActivityLog, updateProject, getUsers } from '@/utilities/axios/project/createProject';
 import { getProjectInfoMasterData } from '@/utilities/axios/masterData/masterDataApi';
-import { Project_Info } from '@/types/project.types';
+import { Project_Info, ProjectinfoUsers } from '@/types/project.types';
 import Loader from '../Loader';
 import { useSearchParams } from 'next/navigation'
 
@@ -16,13 +16,14 @@ export default function ProjectInfo({ step }: TabsProps) {
 
   const searchParams = useSearchParams()
   const paramsid: unknown = searchParams.get('id')
+  const [users, setusers] = React.useState<ProjectinfoUsers[]>([])
   const [createdproject, setcreatedproject] = React.useState(0);
   const [prevcreated, setprevcreated] = React.useState(false);
   const [isfetchdata, setisfetchdata] = React.useState(false);
-  const { ProjectContextData, setProjectContextData, setLoaderData, setProjectId } = useProjectInfoContext();
+  const { ProjectContextData, setProjectContextData, setLoaderData, setProjectId, userId } = useProjectInfoContext();
   const [showOther, setshowOther] = React.useState(false)
   const [otherID, setotherID] = useState(0);
-
+  const [counter, setcounter] = React.useState(0);
   const [data, setData] = useState<Project_Info>({
     ProjectName: "",
     ProjectCode: "",
@@ -30,12 +31,15 @@ export default function ProjectInfo({ step }: TabsProps) {
     ProjectVerifier: "",
     ClientScope: "",
     Budget: "",
-    Originator: "",
-    Lead: "",
-    Advisor: "",
+    Originator: 0,
+    Lead: 0,
+    Advisor: 0,
     StudyOther: "",
-    master_type_study: 0, // Set an initial value
+    master_type_study: 0,
+    UpdatedByUserName: -1,
+    CreatedByUserName: -1,
   });
+
   const [masterTypeStudy, setMasterTypeStudy] = useState<MasterTypeStudy[]>([]);
   const [LoaderData, setLoaderDatastate] = useState({ data: "", display: false });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, tname: string = "") => {
@@ -44,49 +48,72 @@ export default function ProjectInfo({ step }: TabsProps) {
       setData({ ...data, "master_type_study": Number(value) })
       return;
     }
-    setData({ ...data, [tname === "" ? name : tname]: value })
+    setData({ ...data, [tname === "" ? name : tname]: (name && name==="ModellingTeam")?Number(value):value })
+    console.log(tname, value, typeof value, name)
   };
 
   const handleradiobutton = (e: HTMLTextAreaElement) => {
     setData({ ...data, [e.name]: Number(e.value) })
   }
   const fetchproject = async () => {
-    const ds = await getProject((paramsid as number));
-    setData({
-      ...data,
-      ProjectName: ds.data.attributes.ProjectName?ds.data.attributes.ProjectName:"",
-      ProjectCode: ds.data.attributes.ProjectCode?ds.data.attributes.ProjectCode:"",
-      ProjectManager: ds.data.attributes.ProjectManager?ds.data.attributes.ProjectManager:"",
-      ProjectVerifier: ds.data.attributes.ProjectVerifier?ds.data.attributes.ProjectVerifier:"",
-      ClientScope: ds.data.attributes.ClientScope?ds.data.attributes.ClientScope:"",
-      Budget: ds.data.attributes.Budget?ds.data.attributes.Budget:"",
-      Originator: ds.data.attributes.Originator?ds.data.attributes.Originator:"",
-      Lead: ds.data.attributes.Lead?ds.data.attributes.Lead:"",
-      Advisor: ds.data.attributes.Advisor?ds.data.attributes.Advisor:"",
-      StudyOther: ds.data.attributes.StudyOther?ds.data.attributes.StudyOther:"",
-      master_type_study: ds.data.attributes.master_type_study.data.id?ds.data.attributes.master_type_study.data.id:0,
-    });
-    setisfetchdata(true);
-    setProjectContextData(data);
+    try {
+
+      const ds = await getProject((paramsid as number));
+      const currentUserdata = localStorage.getItem("user");
+      console.log(ds);
+      setData({ ...data, UpdatedByUserName: currentUserdata ? JSON.parse(currentUserdata).id : 1 });
+      setData({
+        ...data,
+        ProjectName: ds.data.attributes.ProjectName ? ds.data.attributes.ProjectName : "",
+        ProjectCode: ds.data.attributes.ProjectCode ? ds.data.attributes.ProjectCode : "",
+        ProjectManager: ds.data.attributes.ProjectManager ? ds.data.attributes.ProjectManager : "",
+        ProjectVerifier: ds.data.attributes.ProjectVerifier ? ds.data.attributes.ProjectVerifier : "",
+        ClientScope: ds.data.attributes.ClientScope ? ds.data.attributes.ClientScope : "",
+        Budget: ds.data.attributes.Budget ? ds.data.attributes.Budget : "",
+        Originator: ds.data.attributes.Originator.data.id ? ds.data.attributes.Originator.data.id : -1,
+        Lead: ds.data.attributes.Lead.data.id ? ds.data.attributes.Lead.data.id : -1,
+        Advisor: ds.data.attributes.Advisor.data.id ? ds.data.attributes.Advisor.data.id : -1,
+        StudyOther: ds.data.attributes.StudyOther ? ds.data.attributes.StudyOther : "",
+        master_type_study: ds.data.attributes.master_type_study.data.id ? ds.data.attributes.master_type_study.data.id : 0,
+        CreatedByUserName: ds.data.attributes.CreatedByUserName ? ds.data.attributes.CreatedByUserName : 1,
+      });
+      setisfetchdata(true);
+      setProjectContextData(data);
+
+    } catch (error) {
+      console.log(error);
+    }
   }
   const fill = () => {
     setLoaderData({ data: "Saving Data...", display: true, type: 1 });
     setProjectContextData(data); // set context
-    if(isfetchdata || prevcreated){
-      updateProject(data, paramsid?(paramsid as number):createdproject).then(e=>{
+    if (isfetchdata || prevcreated) {
+      updateProject(data, paramsid ? (paramsid as number) : createdproject).then(e => {
         console.log("successfully updated Project-Info")
         setData(data);
         setLoaderData({ data: "Data Updated", display: true, type: 2 });
         setTimeout(() => {
           setLoaderData({ data: "", display: false, type: 1 });
         }, 2000);
+        createActivityLog({
+          ProjectID: paramsid ? (paramsid as number) : createdproject,
+          ModifiedDate: new Date(),
+          Section: "Project Info",
+          Entity: "Project Info",
+          UpdatedByUserName: userId
+        }).then(e => {
+          console.log("activity created")
+        }).catch(err => {
+          console.log("activity not created", err)
+        })
       })
-      .catch(err=>{
-        setLoaderData({ data: err.message, display: true, type: 3 });
-        console.log(err.message)
-      })
+        .catch(err => {
+          setLoaderData({ data: err, display: true, type: 3 });
+          console.log(err)
+        })
       return;
     }
+    console.log(data)
     createProject(data)
       .then(e => {
         console.log("successfully created Project-Info")
@@ -98,22 +125,57 @@ export default function ProjectInfo({ step }: TabsProps) {
           setLoaderData({ data: "", display: false, type: 1 });
         }, 2000);
         setprevcreated(true);
+        createActivityLog({
+          ProjectID: e.data.id,
+          ModifiedDate: new Date(),
+          Section: "Project Info",
+          Entity: "Project Info",
+          UpdatedByUserName: userId
+        }).then(e => {
+          console.log("activity created")
+        }).catch(err => {
+          console.log("activity not created", err)
+        })
       })
       .catch(err => {
-        setLoaderData({ data: err.message, display: true, type: 3 });
-        console.log(err.message)
+        setLoaderData({ data: err, display: true, type: 3 });
+        console.log("err in error")
       })
   }
   const fetchdata = async () => {
+    try {
+      const userdata: any = await getUsers();
+      var arr: ProjectinfoUsers[] = [];
+      for (var i = 0; i < userdata.length; i++) {
+        arr.push({
+          name: userdata[i].username,
+          id: userdata[i].id,
+        })
+      }
+      setusers(arr);
+    } catch (error) {
+      console.log(error, "errror");
+    }
     const response = await getProjectInfoMasterData();
     setMasterTypeStudy(response.data);
     const otherTask = response.data.find((task: MasterTypeStudy) => task.attributes.Field === "Other");
     setotherID(otherTask.attributes.MasterTypeStudy_Id);
   }
   React.useEffect(() => {
-    if (masterTypeStudy.length == 0) fetchdata();
-    if (paramsid && !isfetchdata) {
+    if (masterTypeStudy.length == 0 && counter == 0) {
+      const currentUserdata = localStorage.getItem("user");
+      if (!paramsid) {
+        setData({ ...data, CreatedByUserName: currentUserdata ? JSON.parse(currentUserdata).id : 1, UpdatedByUserName: currentUserdata ? JSON.parse(currentUserdata).id : 1 });
+      }
+      else {
+        setData({ ...data, UpdatedByUserName: currentUserdata ? JSON.parse(currentUserdata).id : 1 });
+      }
+      fetchdata();
+      setcounter(counter + 1);
+    }
+    if (paramsid && !isfetchdata && counter <= 10) {
       fetchproject();
+      setcounter(1);
     }
   }, [data]);
   return (
@@ -150,8 +212,9 @@ export default function ProjectInfo({ step }: TabsProps) {
             handleInputChange(e);
           })}>
             <option value="" className='' >Select Project Manager</option>
-            <option value={2}>2</option>
-            <option value={3}>3</option>
+            {users.map((item, index) => (
+              <option key={index} value={item.name}>{item.name}</option>
+            ))}
           </select>
         </div>
         <div className="mb-3 d-flex flex-row w-[65%]">
@@ -161,8 +224,9 @@ export default function ProjectInfo({ step }: TabsProps) {
               handleInputChange(e);
             })}>
             <option value="" className=''>Select Project Verifier</option>
-            <option value={2}>2</option>
-            <option value={3}>3</option>
+            {users.map((item, index) => (
+              <option key={index} value={item.name}>{item.name}</option>
+            ))}
           </select>
         </div>
         <div className="mb-3 d-flex flex-row w-[65%]">
@@ -185,35 +249,38 @@ export default function ProjectInfo({ step }: TabsProps) {
         <br />
         <div className="mb-3 d-flex flex-row w-[65%]">
           <label htmlFor="ModellingTeam" className='w-25'>Originator</label>
-          <select className='form-control w-[20rem]' value={data.Originator}
+          <select className='form-control w-[20rem]' value={Number(data.Originator)} name={"ModellingTeam"}
             onChange={(e => {
               handleInputChange(e, "Originator");
             })}>
             <option value="" className=''>Select Originator</option>
-            <option value={2}>2</option>
-            <option value={3}>3</option>
+            {users.map((item, index) => (
+              <option key={index} value={Number(item.id)} id={`${item.id}`}>{item.name}</option>
+            ))}
           </select>
         </div>
         <div className="mb-3 d-flex flex-row w-[65%]">
           <label htmlFor="ModellingTeam" className='w-25'>Lead</label>
-          <select className='form-control w-[20rem]' value={data.Lead}
+          <select className='form-control w-[20rem]'  name={"ModellingTeam"} value={data.Lead}
             onChange={(e => {
               handleInputChange(e, "Lead");
             })}>
             <option value="" className=''>Select Lead</option>
-            <option value={2}>2</option>
-            <option value={3}>3</option>
+            {users.map((item, index) => (
+              <option key={index} value={item.id}>{item.name}</option>
+            ))}
           </select>
         </div>
         <div className="mb-3 d-flex flex-row w-[65%]">
           <label htmlFor="ModellingTeam" className='w-25'>Advisor</label>
-          <select className='form-control w-[20rem]' value={data.Advisor}
+          <select className='form-control w-[20rem]'  name={"ModellingTeam"} value={data.Advisor}
             onChange={(e => {
               handleInputChange(e, "Advisor");
             })}>
             <option value="" className=''>Select Advisor</option>
-            <option value={2}>2</option>
-            <option value={3}>3</option>
+            {users.map((item, index) => (
+              <option key={index} value={item.id}>{item.name}</option>
+            ))}
           </select>
         </div>
         {/* <div className="mb-3 grid grid-cols-4 items-right ml-[-9rem]" style={{ gap: "0rem" }}>

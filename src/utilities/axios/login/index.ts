@@ -1,3 +1,3 @@
 import api from "../api";
-import { login as Login } from "@/types/user.types";
-export const login = (formData: Login) => api.post("auth/local", formData);
+import { loginAPI } from "@/types/user.types";
+export const login = (formData: loginAPI) => api.post("auth/local", formData);

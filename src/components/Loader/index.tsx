@@ -26,24 +26,24 @@ const Loader = ({ data, display, setloaderdata, type }: LoaderProps) => {
     const handleClose = () => {
         setState({ ...state, open: false });
     };
-    React.useEffect(()=>{
-        if(type===2){
+    React.useEffect(() => {
+        if (type === 2) {
             handleClick({ vertical: 'top', horizontal: 'center' })();
         }
-    },[type])
+    }, [type])
     return (
         <>
-                <Snackbar open={open} anchorOrigin={{ vertical, horizontal }} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert
-                        onClose={handleClose}
-                        severity="success"
-                        variant="filled"
-                        sx={{ width: '100%' }}
-                    >
-                        {data}
-                    </Alert>
-                </Snackbar>
-            <div className={`loader-box-main ${(display && type!=2) ? "" : "hidden"} `}>
+            <Snackbar open={open} anchorOrigin={{ vertical, horizontal }} autoHideDuration={6000} onClose={handleClose}>
+                <Alert
+                    onClose={handleClose}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {data}
+                </Alert>
+            </Snackbar>
+            <div className={`loader-box-main ${(display && type != 2) ? "" : "hidden"} `}>
 
                 <div className='loader-box'
                     style={{ height: "300px", width: "500px", position: "absolute", zIndex: "99", marginTop: "12%", marginLeft: "30%" }}

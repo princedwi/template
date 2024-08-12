@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { TabsProps } from './project-info'
 import { MasterOutput } from '@/types/master_data.types';
 import { getMasterOutputMasterData } from '@/utilities/axios/masterData/masterDataApi';
-import { outputDetail, outputDetailUpdate, outputDetailDelete, getoutputDetail } from '@/utilities/axios/project/createProject';
+import { outputDetail, outputDetailUpdate, outputDetailDelete, getoutputDetail, createActivityLog } from '@/utilities/axios/project/createProject';
 import { Output_Detail } from '@/types/project.types';
 import { useSearchParams } from 'next/navigation'
 import { useProjectInfoContext } from '@/context/context';
@@ -12,7 +12,7 @@ export default function OutputsTab({ step }: TabsProps) {
   const paramsid: unknown = searchParams.get('id')
   const [isfetchdata, setisfetchdata] = React.useState(false);
 
-  const { setLoaderData, projectId } = useProjectInfoContext();
+  const { setLoaderData, projectId, userId } = useProjectInfoContext();
   const [masterMasterOutput, setmasterMasterOutput] = React.useState<MasterOutput[]>([]);
   const [checks, setcheck] = React.useState<boolean[]>([]);
   const [metachecks, setmetacheck] = React.useState<boolean[]>([]);
@@ -62,6 +62,18 @@ export default function OutputsTab({ step }: TabsProps) {
           cId[i] = -1;
         }
       }
+
+      createActivityLog({
+        ProjectID: paramsid?paramsid as number:projectId,
+        ModifiedDate: new Date(),
+        Section:"Outputs Tab",
+        Entity:"Outputs Tab",
+        UpdatedByUserName:userId
+      }).then(e => {
+        console.log("activity created")
+      }).catch(err => {
+        console.log("activity not created",err)
+      })
       setLoaderData({ data: "Data Saved", display: true, type: 2 });
       console.log('successfully created Output-Table')
     } catch (error) {

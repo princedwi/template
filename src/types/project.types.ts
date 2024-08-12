@@ -1,21 +1,23 @@
 import { LoaderProps } from "./loader.types";
 
-export interface Project_Info{
-    ProjectName:string;
-    ProjectCode:string;
-    ProjectManager:string;
-    ProjectVerifier:string
-    ClientScope:string;
-    Budget:string;
-    Originator: string,
-    Lead: string,
-    Advisor: string,
-    StudyOther:string;
+export interface Project_Info {
+    ProjectName: string;
+    ProjectCode: string;
+    ProjectManager: string;
+    ProjectVerifier: string
+    ClientScope: string;
+    Budget: string;
+    Originator: number,
+    Lead: number,
+    Advisor: number,
+    StudyOther: string;
     master_type_study: number;
+    CreatedByUserName: number;
+    UpdatedByUserName: number;
 }
 
-export interface Concept_Review{
-    Modelling_Objective:string ,
+export interface Concept_Review {
+    Modelling_Objective: string,
     Link_to_Hydrology: string,
     Main_Data_Gaps: string,
     Main_Assumption_Risk: string,
@@ -23,33 +25,45 @@ export interface Concept_Review{
     Events_To_Be_Modelled: string,
     Climate_Change_Approach: string,
     ModellingTaskOther: string,
-    Modelling_Task:number,
-    ProjectID:number
+    Modelling_Task: number,
+    ProjectID: number
 }
-export interface Model_Approach{
-    ProjectID:number,
-    ModelType_ID:number,
-    ModelSoftware_ID:number[],
-    ModelSystem_ID:number[]
+export interface Model_Approach {
+    ProjectID: number,
+    ModelType_ID: number,
+    ModelSoftware_ID: number[],
+    ModelSystem_ID: number[]
 }
 export type ProjectInfoInterface = {
     ProjectContextData: Project_Info,
     setProjectContextData: React.Dispatch<React.SetStateAction<Project_Info>>,
-    setLoaderData:React.Dispatch<React.SetStateAction<LoaderProps>>,
-    projectId:number,
-    setProjectId:React.Dispatch<React.SetStateAction<number>>,
-    dataspectype:number,
-    setdataspectype:React.Dispatch<React.SetStateAction<number>>
+    setLoaderData: React.Dispatch<React.SetStateAction<LoaderProps>>,
+    projectId: number,
+    setProjectId: React.Dispatch<React.SetStateAction<number>>,
+    dataspectype: number,
+    setdataspectype: React.Dispatch<React.SetStateAction<number>>,
+    userId: number
 }
-export interface Output_Detail{
-    projectID:number,
+export interface Output_Detail {
+    projectID: number,
     Recipient: string,
-    OutputName:number,
-    Notes:string
+    OutputName: number,
+    Notes: string
 }
 export type MasterSpecQueryID = number;
-export interface DetailedSpec_Query{
+export interface DetailedSpec_Query {
     // ProjectSpecQueryResID:string,
-    MasterSpecQueryID:MasterSpecQueryID | null,
-    Response:string
+    MasterSpecQueryID: MasterSpecQueryID | null,
+    Response: string
+}
+export interface ProjectinfoUsers {
+    id: number,
+    name: string,
+}
+export interface ActivityLog {
+    ProjectID: number,
+    ModifiedDate: Date,
+    Section: string,
+    Entity: string,
+    UpdatedByUserName: number,
 }

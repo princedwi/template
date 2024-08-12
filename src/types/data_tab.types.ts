@@ -1,12 +1,11 @@
 export interface DataTabInterface {
-    key:number,
-    Name:string,
-    Data: string;
-    DescriptionUse: string;
-    Location: string;
-    DataAdded: string;
-    Source: string;
-    ProjectID:number;
-  }
-  
-  
+  key: number,
+  Name: string,
+  Data: string;
+  DescriptionUse: string;
+  Location: string;
+  DataAdded: string;
+  Source: string;
+  ProjectID: number;
+}
+

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { MasterModelType, MasterModelSoftware, MasterModelSystem } from '@/types/master_data.types';
 import { getModelTypeMasterData, getModelSoftwaresMasterData, getModelSystemsMasterData } from '@/utilities/axios/masterData/masterDataApi';
 import { Checkbox, createTheme, FormControl, ListItemText, MenuItem, OutlinedInput, SelectChangeEvent, ThemeProvider } from '@mui/material';
-import { modelApproach, modelApproachUpdate, getmodelApproach } from '@/utilities/axios/project/createProject';
+import { modelApproach, modelApproachUpdate, getmodelApproach, createActivityLog } from '@/utilities/axios/project/createProject';
 import { useProjectInfoContext } from '@/context/context';
 import { useSearchParams } from 'next/navigation'
 import Select from "react-select";
@@ -38,7 +38,7 @@ export default function ModelApproach({ step }: TabsProps) {
   const paramsid: unknown = searchParams.get('id')
   const [isfetchdata, setisfetchdata] = React.useState(false);
 
-  const { setLoaderData, projectId, setdataspectype } = useProjectInfoContext();
+  const { setLoaderData, projectId, setdataspectype, userId } = useProjectInfoContext();
   const [ID, setID] = useState(-1);
   const [ModelTypes, setModelTypes] = React.useState<MasterModelType[]>([]);
   const [formData, setFormData] = useState({
@@ -81,6 +81,17 @@ export default function ModelApproach({ step }: TabsProps) {
             ModelSoftware_ID: arr1,
             ModelSystem_ID: arr2
           }, ID);
+          createActivityLog({
+            ProjectID: paramsid?paramsid as number:projectId,
+            ModifiedDate: new Date(),
+            Section:"Model Approach",
+            Entity:"Model Approach",
+            UpdatedByUserName:userId
+          }).then(e => {
+            console.log("activity created")
+          }).catch(err => {
+            console.log("activity not created",err)
+          })
           setLoaderData({ data: "Data Updated", display: true, type: 2 });
           console.log("Successfully Updated Model-Approach", res);
         } catch (error) {
@@ -96,6 +107,18 @@ export default function ModelApproach({ step }: TabsProps) {
         ModelSoftware_ID: arr1,
         ModelSystem_ID: arr2
       });
+
+      createActivityLog({
+        ProjectID: projectId,
+        ModifiedDate: new Date(),
+        Section:"Model Approach",
+        Entity:"Model Approach",
+        UpdatedByUserName:userId
+      }).then(e => {
+        console.log("activity created")
+      }).catch(err => {
+        console.log("activity not created",err)
+      })
       setID(red.data.id);
       setLoaderData({ data: "Data Saved", display: true, type: 2 });
       setTimeout(() => {
