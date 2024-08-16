@@ -160,7 +160,6 @@ export default function ModelApproach({ step }: TabsProps) {
   }
   const getmasterData = async () => {
     try {
-      console.log("ERE");
       getModelTypeMasterData().then((response) => {
         setModelTypes(response.data);
       });
@@ -190,7 +189,6 @@ export default function ModelApproach({ step }: TabsProps) {
       getmasterData();
     }
     if (paramsid && !isfetchdata && ModelTypes.length > 0 && ModelSystemOptions.length > 0 && ModelSoftware_IDOptions.length > 0) {
-      console.log("DATA FETCHED");
       fetchdata();
     }
   }, [counter, ModelSystemOptions, ModelSoftware_IDOptions, ModelTypes]);

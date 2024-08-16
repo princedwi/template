@@ -85,3 +85,8 @@ export interface MasterModelSpec{
     id:number;
     ModelSpec:string;
 }
+
+export interface MasterModelLog{
+    id:number;
+    ModelLog:string;
+}
