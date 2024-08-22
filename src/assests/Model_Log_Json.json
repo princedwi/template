@@ -1,0 +1,173 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "attributes": {
+                "MasterModelLogsQueryID": "1",
+                "Query": "Reach/ Watercourse",
+                "isActive": true,
+                "createdAt": "2024-08-20T07:58:09.341Z",
+                "updatedAt": "2024-08-20T07:58:09.341Z",
+                "publishedAt": "2024-08-20T09:45:08.591Z",
+                "MasterModelLogID": {
+                    "data": {
+                        "id": 1,
+                        "attributes": {
+                            "MasterModelLogID": "1",
+                            "MasterLog": "1D River Roughness Log",
+                            "createdAt": "2024-08-14T10:28:21.754Z",
+                            "updatedAt": "2024-08-14T10:28:21.754Z",
+                            "publishedAt": "2024-08-20T07:54:53.290Z"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 2,
+            "attributes": {
+                "MasterModelLogsQueryID": "2",
+                "Query": "Cross Section",
+                "isActive": true,
+                "createdAt": "2024-08-20T09:43:10.554Z",
+                "updatedAt": "2024-08-20T09:43:10.554Z",
+                "publishedAt": "2024-08-20T09:45:08.591Z",
+                "MasterModelLogID": {
+                    "data": {
+                        "id": 1,
+                        "attributes": {
+                            "MasterModelLogID": "1",
+                            "MasterLog": "1D River Roughness Log",
+                            "createdAt": "2024-08-14T10:28:21.754Z",
+                            "updatedAt": "2024-08-14T10:28:21.754Z",
+                            "publishedAt": "2024-08-20T07:54:53.290Z"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 3,
+            "attributes": {
+                "MasterModelLogsQueryID": "3",
+                "Query": "Manning's 'n' roughness coefficient - Bed",
+                "isActive": true,
+                "createdAt": "2024-08-20T09:43:32.630Z",
+                "updatedAt": "2024-08-20T09:43:32.630Z",
+                "publishedAt": "2024-08-20T09:45:08.591Z",
+                "MasterModelLogID": {
+                    "data": {
+                        "id": 1,
+                        "attributes": {
+                            "MasterModelLogID": "1",
+                            "MasterLog": "1D River Roughness Log",
+                            "createdAt": "2024-08-14T10:28:21.754Z",
+                            "updatedAt": "2024-08-14T10:28:21.754Z",
+                            "publishedAt": "2024-08-20T07:54:53.290Z"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 4,
+            "attributes": {
+                "MasterModelLogsQueryID": "4",
+                "Query": "Manning's 'n' roughness coefficient - Left Bank",
+                "isActive": null,
+                "createdAt": "2024-08-20T09:43:49.081Z",
+                "updatedAt": "2024-08-20T09:43:49.081Z",
+                "publishedAt": "2024-08-20T09:45:08.591Z",
+                "MasterModelLogID": {
+                    "data": {
+                        "id": 1,
+                        "attributes": {
+                            "MasterModelLogID": "1",
+                            "MasterLog": "1D River Roughness Log",
+                            "createdAt": "2024-08-14T10:28:21.754Z",
+                            "updatedAt": "2024-08-14T10:28:21.754Z",
+                            "publishedAt": "2024-08-20T07:54:53.290Z"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 5,
+            "attributes": {
+                "MasterModelLogsQueryID": "5",
+                "Query": "Manning's 'n' roughness coefficient - Right Bank",
+                "isActive": true,
+                "createdAt": "2024-08-20T09:44:16.553Z",
+                "updatedAt": "2024-08-20T09:44:16.553Z",
+                "publishedAt": "2024-08-20T09:45:08.591Z",
+                "MasterModelLogID": {
+                    "data": {
+                        "id": 1,
+                        "attributes": {
+                            "MasterModelLogID": "1",
+                            "MasterLog": "1D River Roughness Log",
+                            "createdAt": "2024-08-14T10:28:21.754Z",
+                            "updatedAt": "2024-08-14T10:28:21.754Z",
+                            "publishedAt": "2024-08-20T07:54:53.290Z"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 6,
+            "attributes": {
+                "MasterModelLogsQueryID": "6",
+                "Query": "Justification for selection of initial value (e.g., survey photograph, site visit)",
+                "isActive": true,
+                "createdAt": "2024-08-20T09:44:35.962Z",
+                "updatedAt": "2024-08-20T09:44:35.962Z",
+                "publishedAt": "2024-08-20T09:45:08.591Z",
+                "MasterModelLogID": {
+                    "data": {
+                        "id": 1,
+                        "attributes": {
+                            "MasterModelLogID": "1",
+                            "MasterLog": "1D River Roughness Log",
+                            "createdAt": "2024-08-14T10:28:21.754Z",
+                            "updatedAt": "2024-08-14T10:28:21.754Z",
+                            "publishedAt": "2024-08-20T07:54:53.290Z"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 7,
+            "attributes": {
+                "MasterModelLogsQueryID": "7",
+                "Query": "Refinement during calibration / verification",
+                "isActive": true,
+                "createdAt": "2024-08-20T09:44:56.130Z",
+                "updatedAt": "2024-08-20T09:44:56.130Z",
+                "publishedAt": "2024-08-20T09:45:08.591Z",
+                "MasterModelLogID": {
+                    "data": {
+                        "id": 1,
+                        "attributes": {
+                            "MasterModelLogID": "1",
+                            "MasterLog": "1D River Roughness Log",
+                            "createdAt": "2024-08-14T10:28:21.754Z",
+                            "updatedAt": "2024-08-14T10:28:21.754Z",
+                            "publishedAt": "2024-08-20T07:54:53.290Z"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "meta": {
+        "pagination": {
+            "page": 1,
+            "pageSize": 25,
+            "pageCount": 1,
+            "total": 7
+        }
+    }
+}

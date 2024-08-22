@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 export interface TabsProps2 {
     step: number;
     setnumb: React.Dispatch<React.SetStateAction<number>>;
@@ -8,17 +8,6 @@ export interface TabsProps2 {
 }
 export interface lowerinterface {
     lower: React.Dispatch<React.SetStateAction<number>>;
-}
-import { useProjectInfoContext } from '@/context/context';
-import JSONData from "../../assests/Detailed_Specification_Json.json"
-import { detailSpecQuery } from '@/utilities/axios/project/createProject';
-import { DetailedSpec_Query } from '@/types/project.types'
-// import { Table } from '@nextui-org/table';
-
-type JsonValue = string | number | boolean | null;
-type JsonArray = Array<JsonValue | JsonObject>;
-interface JsonObject {
-    [key: string]: JsonValue | JsonObject | JsonArray;
 }
 export interface tablein {
     id: number,
@@ -31,11 +20,25 @@ export interface tablein {
     query: string,
     queryid: number,
 }
-export default function TableModel({ step, setnumb }: TabsProps2) {
-    const { projectId } = useProjectInfoContext();
-    const [fieldlabel, setfieldlabel] = React.useState<datas2[]>([]); // contain the id of the current tab
-    var [newtabledata, setnewtabledata] = React.useState<tablein[]>([]); // contain the id of the current tab
 
+import JSONData from "../../assests/Detailed_Specification_Json.json"
+import { detailSpecQuery, getDetailedSpec, getDetailedSpec2, updateDetailedSpec } from '@/utilities/axios/project/createProject';
+import { DetailedSpec_Query } from '@/types/project.types';
+import { useProjectInfoContext } from '@/context/context';
+import { useSearchParams } from 'next/navigation'
+
+type JsonValue = string | number | boolean | null;
+type JsonArray = Array<JsonValue | JsonObject>;
+interface JsonObject {
+    [key: string]: JsonValue | JsonObject | JsonArray;
+}
+export default function TableModel({ step, setnumb }: TabsProps2) {
+    var [newtabledata, setnewtabledata] = React.useState<tablein[]>([]);
+    const searchParams = useSearchParams()
+    const paramsid: unknown = searchParams.get('id')
+    const { setLoaderData, projectId } = useProjectInfoContext();
+    const [ID, setID] = useState(-1);
+    const [fieldlabel, setfieldlabel] = React.useState<datas2[]>([]); // contain the id of the current tab
     interface datas2 {
         name: string
         idz: number,
@@ -43,17 +46,66 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
 
     const [formData, setFormData] = useState<DetailedSpec_Query>({
         MasterSpecQueryID: null,
-        Response: ''
+        Response: '',
+        projectID: paramsid ? paramsid as number : projectId
+
     });
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log(`Fetching data for projectID: ${formData.projectID}`);
+                const response = await getDetailedSpec(formData.projectID);
+                fetchprevdata();
+                const projectData = response.data;
+                console.log('Fetched project data:', projectData);
+                getDetailedSpec2();
+                for (var i = 0; i < response.data.length; i++) {
+                    var key = `${response.data[i].attributes.MasterSpecQueryID.data.attributes.Category1}` + "$" + `${response.data[i].attributes.MasterSpecQueryID.data.attributes.Category2 ? response.data[i].attributes.MasterSpecQueryID.data.attributes.Category2 : "other"}`
+                }
+            } catch (error) {
+                console.error('Error fetching project data:', error);
+            }
+        };
+        if (formData.projectID) {
+            fetchData();
+        }
+    }, [formData.projectID]);
+
+    const fetchprevdata = async () => {
+        var fetcheddata: tablein[] = [];
+        const response = await getDetailedSpec(formData.projectID);
+        const data= await getDetailedSpec2();
+        for (var i = 0; i < response.data.length; i++) {
+            for (var j = 0; j < newtabledata.length; j++) {
+                if (response.data[i].attributes.MasterSpecQueryID.data.attributes.Query === newtabledata[j].query) {
+                    newtabledata[j].value = response.data[i].attributes.Response;
+                }
+            }
+        }
+        setlower(i + 1);
+        setnumb(i + 1);
+        setnewtabledata(newtabledata);
+    }
+    const updateData = async () => {
+        for (var i = 0; i < newtabledata.length; i++) {
+            // await detailSpecQuery({ MasterSpecQueryID: newtabledata[i].queryid, Response: newtabledata[i].value })
+        }
+    }
 
     const handleSubmit = async () => {
-        // console.log(TableData)
+        setLoaderData({ data: "Saving Data...", display: true, type: 1 });
         try {
+                if (ID !== -1) {
+                  setLoaderData({ data: "Updating Data", display: true, type: 1 });
+                  const res = await updateDetailedSpec({ ...formData, projectID: paramsid ? paramsid as number : projectId }, ID);
+                  setFormData(formData);
+                  setLoaderData({ data: "Data Updated", display: true, type: 2 });
+                  console.log('successfully updated Detailed Spec')
+                }
             if (categories) {
                 var indi: number = -1;
                 for (var i = 0; i < categories.length; i++) {
                     indi++;
-                    // console.log(categories[i],"CK#RKVKRE");
                     setlower(i + 1);
                     setnumb(i + 1);
                     for (var j = 0; j < subcategories.length; j++) {
@@ -62,17 +114,21 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                         }
                         const g = `${subcategories[j]}$${categories[indi]}`;
                         const gt = TableData?.get(g);
-                        // console.log(gt);
                         if (gt) {
                             for (let k = 0; k < gt.length; k++) {
                                 const field = (tablestate[g] as JsonObject)?.[k];
                                 if (!field || field === "") {
-                                    // console.log("asd",field)
                                 } else {
                                     console.log(fieldlabel)
                                     for (var ik = 0; ik < fieldlabel.length; ik++) {
                                         if (fieldlabel[ik].name === (gt[k] as string)) {
-                                            await detailSpecQuery({ MasterSpecQueryID: fieldlabel[ik].idz, Response: field as string })
+                                            setFormData({ ...formData, projectID: projectId })
+                                            setLoaderData({ data: "Saving Data", display: true, type: 1 });
+                                            const res = await detailSpecQuery({ MasterSpecQueryID: fieldlabel[ik].idz, Response: field as string, projectID: paramsid ? paramsid as number : projectId }, ID)
+                                            setLoaderData({ data: "Data Saved", display: true, type: 2 });
+                                            setID(res.data.id);
+                                            setFormData(formData);
+                                            console.log('successfully created Detailed Spec')
                                             break;
                                         }
                                         else {
@@ -116,6 +172,7 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         });
     };
     const filldata = () => {
+        var newarray: tablein[] = [];
         var arr: string[] = []; // will contain unique heading
         var arr2: string[] = []; // will contain sub headings
         let st: Map<string, number> = new Map([]); // store Watercourse Schematisation 1D Floodplain Schematisation etc.
@@ -128,7 +185,7 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         // for example: for heading Approach and subheading Water Scheme, it will form key Approach$WaterScheme and will contain string array of label as value
         // from this map, we will also fill categories, subcategories, length of each subcategory under particular category
         // --------
-        var newarray: tablein[] = [];
+
         var dataz: datas2[] = fieldlabel;
         JSONData.data.forEach((item) => {
             const category2: string = item.attributes.Category2 ?? "other";
@@ -156,9 +213,9 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                 subcategoryid: -1,
             })
         });
-        setnewtabledata({...newtabledata,...newarray});
-        newtabledata=newarray;
-        console.log(newtabledata, "newarray", newarray);
+        setnewtabledata({ ...newtabledata, ...newarray });
+        newtabledata = newarray;
+        setfieldlabel(dataz);
         setfieldlabel(dataz);
 
         st.forEach((value: number, key: string) => {
@@ -241,115 +298,17 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         //     }
         // }
     }
-    const changeval = (value: string, query: string) => {
-        // console.log(newtabledata)
-        // console.log(categories,"newtabledata");
-        for (var i in newtabledata) {
-            if (newtabledata[i].query == query) {
-                newtabledata[i].value=value;
-                return;
-            }
-        }
-    }
-    const findvalue = (queryi: string) => {
-        for (var i in newtabledata) {
-            if (newtabledata[i].query == queryi) {
-                return newtabledata[i].value;
-            }
-        }
-        return "";
-    }
-    // {
-    //     "data": [
-    //         {
-    //             "id": 182,
-    //             "attributes": {
-    //                 "ProjectSpecQueryResID": null,
-    //                 "Response": "IS",
-    //                 "createdAt": "2024-08-07T10:33:48.654Z",
-    //                 "updatedAt": "2024-08-07T10:33:48.654Z",
-    //                 "publishedAt": "2024-08-07T10:33:48.633Z",
-    //                 "projectID": {
-    //                     "data": {
-    //                         "id": 72,
-    //                         "attributes": {
-    //                             "ProjectName": "Test",
-    //                             "ProjectCode": "67RDE4536",
-    //                             "ProjectManager": "2",
-    //                             "ProjectVerifier": "3",
-    //                             "ClientScope": "uhj",
-    //                             "Budget": "564",
-    //                             "createdAt": "2024-08-07T10:32:20.332Z",
-    //                             "updatedAt": "2024-08-07T10:32:20.332Z",
-    //                             "publishedAt": "2024-08-07T10:32:20.326Z",
-    //                             "StudyOther": "",
-    //                             "Originator": "3",
-    //                             "Lead": "2",
-    //                             "Advisor": "3"
-    //                         }
-    //                     }
-    //                 },
-    //                 "MasterSpecQueryID": {
-    //                     "data": {
-    //                         "id": 1,
-    //                         "attributes": {
-    //                             "SpecQueryID": "1",
-    //                             "Query": "Flood Modeller version / solver / precision to be used",
-    //                             "isActive": true,
-    //                             "Category1": "Approach Definition",
-    //                             "Category2": null,
-    //                             "createdAt": "2024-08-07T04:25:21.933Z",
-    //                             "updatedAt": "2024-08-07T04:25:21.933Z",
-    //                             "publishedAt": "2024-08-07T04:36:32.260Z"
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         },
-    // }
-    const fetchprevdata = () => {
-        // const data=api
-        // var fetcheddata: tablein[] = [];
-        // for (var i = 0; i < response.data.length; i++) {
-        //     for (var j = 0; j < newtabledata.length; j++) {
-        //         if (response[i].attributes.MasterSpecQueryID.data.attributes.Query === newtabledata[j].query) {
-        //             newtabledata[j].value = response[i].attributes.Response;
-        //         }
-        //     }
-        // }
-    }
-    const updateData = async () => {
-        for (var i = 0; i < newtabledata.length; i++) {
-            // await detailSpecQuery({ MasterSpecQueryID: newtabledata[i].queryid, Response: newtabledata[i].value })
-        }
-    }
-    const [counter,setcounter]=React.useState(0);
+
     React.useEffect(() => {
-        if (!categories || categories.length === 0 || newtabledata.length === 0){
+        if (!categories || categories.length === 0)
             filldata();
-            console.log("")
-        }
-        if(newtabledata.length==0 && counter<=10){
-            console.log("CIRWNCVIKRWNC");
-            setnewtabledata(newtabledata);
-        }
         checkfill();
-        setcounter(counter+1);
         // filltablestate();
-        console.log(lower, "lower");
-    }, [step, categories, lower, tablestate, newtabledata])
+    }, [step, categories, lower, tablestate])
 
     // handleFileChange to handle images of sign(which now is removed for 4th column)
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, num: Number) => {
         const file = e.target.files?.[0] || null;
-        // const nextCounters = selectedFile.map((c, i) => {
-        //     if (i === num) {
-        //         return file;
-        //     } else {
-        //         return c;
-        //     }
-        // });
-        // setSelectedFile(nextCounters);
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -361,7 +320,6 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                     }
                 });
                 setImagePreview(nextCounters);
-                // setImagePreview(reader.result as string);
             };
             reader.readAsDataURL(file);
         } else {
@@ -369,6 +327,22 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         }
     };
 
+    const changeval = (value: string, query: string) => {
+        for (var i in newtabledata) {
+            if (newtabledata[i].query == query) {
+                newtabledata[i].value = value;
+                return;
+            }
+        }
+    }
+    const findvalue = (query: string) => {
+        for (var i in newtabledata) {
+            if (newtabledata[i].query == query) {
+                return newtabledata[i].value;
+            }
+        }
+        return "";
+    }
     const [steptwo, setStep] = useState<number>(1);
     const handleStep = (stepNumber: number) => {
         setStep(stepNumber);
@@ -392,11 +366,9 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
                                 const inputValue = (tablestate[categoryKey] as JsonObject)?.[index] || "";
                                 return (<td key={index2} className="ml-3" style={{ borderWidth: "0px", borderStyle: "solid", borderColor: "grey", width: "25%", fontSize: "0.94rem" }}>
                                     <div className="mb-3 ml-3 d-flex" style={{ display: "flex", flexDirection: "column" }}>
-
                                         <label style={{ textAlign: "left", fontSize: "0.94rem" }} htmlFor="field1" className=''>
                                             {index2 < lower && gt && gt[index]}
                                         </label>
-
                                         {index2 < lower && gt && gt[index] && gt[index] != "" ?
                                             <input
                                                 title={String(inputValue)}

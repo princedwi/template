@@ -1,72 +1,107 @@
 import React, { useState } from 'react'
 import { TabsProps } from './project-info'
-import {getMasterModelLogs} from '@/utilities/axios/masterData/masterDataApi';
-import BuildModel from '../BuildModel/Model-logs';
-import {MasterModelLogs} from '@/types/master_data.types';
+import BuildModel from '../BuildModel/model-logs';
+import { getMasterModelLog } from '@/utilities/axios/masterData/masterDataApi';
+import { MasterModelLog } from '@/types/master_data.types';
+import { useProjectInfoContext } from '@/context/context';
 export default function ModelLogs({ step }: TabsProps) {
-    const [steptwo, setStep] = useState<number>(1);
-    // const values = [
-    //     { name: "1D River Roughness Log", id: 1, },
-    //     { name: "1D Urban Roughness Log", id: 2 },
-    //     { name: "2d Roughness Log", id: 3 },
-    //     { name: "1D River Structures Log", id: 4 },
-    //     { name: "1D Urban Structures Log", id: 5 },
-    //     { name: "2D Structures Log", id: 6 },
-    //     { name: "Naming Convention Log", id: 7 },
-    //     { name: "Simulation Log", id: 8 },
-    // ];
-    const [values,setvalues]=React.useState<MasterModelLogs[]>([]);
-    const handleStep = (stepNumber: number) => {
-        setStep(stepNumber);
-    };
-    const fetchData = async () => {
-        const masterdata=await getMasterModelLogs();
-        var val:MasterModelLogs[]=[];
-        for(var i=0;i<masterdata.data.length;i++){
-            val.push({
-                MasterLog:masterdata.data[i].attributes.MasterLog,
-                id:masterdata.data[i].id
-            });
-        }
-        setvalues(val);
+  const [steptwo, setStep] = useState<number>(1);
+  const [values, setValues] = useState<MasterModelLog[]>([]);
+  const { dataspectype } = useProjectInfoContext();
+
+  const handleStep = (stepNumber: number) => {
+    setStep(stepNumber);
+  };
+  // const getdata = async () => {
+  //     const response = await getMasterModelLog();
+  //     console.log(response,"responseGET")
+  //     var arr:MasterModelLog[]=[]
+  //     for (var i = 0; i < response.data.length; i++) {
+  //       arr.push({ ModelLog: response.data[i].attributes.ModelSpec, id: response.data[i].id })
+  //     }
+  //     setValues(arr);
+  //   }
+
+  const getdata = async () => {
+    const response = await getMasterModelLog();
+    console.log(response, "responseGET");
+    if (Array.isArray(response.data)) {
+      const arr = response.data.map(item => ({
+        ModelLog: item.attributes.MasterLog,
+        id: item.id
+      }));
+      setValues(arr);
+    } else {
+      console.error("Unexpected response format:", response);
     }
-    React.useState(() => {
-        fetchData();
-    })
-    return (
-        <>
-            <div
-                className={`tab-pane fade ${step == 8 ? "show active" : ""}`}
+  };
 
-            >
-                <form action="" method="post" id="registration" className="stepForm ">
-                    <div className='d-flex'>
-                        <div className="nav-pills w-25 p-4 m-2 nav-fill " id="nav-tab" role="tablist" style={{ backgroundColor: 'white', borderRadius: "10px" }}>
-                            {values.map((value, i) => (
+
+  React.useEffect(() => {
+    getdata();
+  }, [])
+  React.useEffect(() => {
+    console.log(values, "values after set");
+  }, [values]);
+  return (
+    <>
+      <div
+        className={`tab-pane relative fade ${step == 8 ? "show active" : ""}`}
+
+      >
+        <div>
+          <div className='d-flex'>
+            <div className="nav-pills w-25 p-4 m-2 nav-fill " id="nav-tab" role="tablist" style={{ backgroundColor: 'white', borderRadius: "10px" }}>
+              {/* {values.map((value, i) => (
                                 <a
-                                    className={`nav-link py-2 my-2  ${steptwo === value.id ? "active" : ""}`}
-                                    //style={{backgroundColor:'#6d7fcc',color:'white'}}
-                                    id={`steptwo${value.id}-tab`}
-                                    key={i}
-                                    data-bs-toggle="tab"
-                                    onClick={() => handleStep(value.id)}
-                                >
-                                    {value.MasterLog}
-                                </a>
-                            ))}
+                                className={`${
+                                  ((dataspectype===0 && value.ModelLog[0]==="1" && value.ModelLog[2]!=="/") || (dataspectype===1 && value.ModelLog[0]==="2") || (dataspectype===2 && value.ModelLog[0]=="1" && value.ModelLog[2]==="/"))
+                                  ?'bg-grey':'bg-theme-clr'} nav-link  ${dataspectype === -1 ? "active" : ""} py-2 my-2  ${steptwo === value.id ? "active" : ""}`}
+                                id={`steptwo${value.id}-tab`}
+                                key={i}
+                                data-bs-toggle="tab"
+                                onClick={() => {if(((dataspectype===0 && value.ModelLog[0]==="1" && value.ModelLog[2]!=="/") || (dataspectype===1 && value.ModelLog[0]==="2") || (dataspectype===2 && value.ModelLog[0]=="1" && value.ModelLog[2]==="/")))handleStep(value.id)}}
+                                style={{ fontSize: "smaller" }}
+                              >
+                                {value.ModelLog}
+                              </a>
+                            ))} */}
+
+              {values.map((value, i) => (
+                <a
+                  className={`${((dataspectype === 0 && value.ModelLog && value.ModelLog[0] === "1" && value.ModelLog[2] !== "/") ||
+                      (dataspectype === 1 && value.ModelLog && value.ModelLog[0] === "2") ||
+                      (dataspectype === 2 && value.ModelLog && value.ModelLog[0] === "1" && value.ModelLog[2] === "/"))
+                      ? 'bg-grey' : 'bg-theme-clr'} nav-link ${dataspectype === -1 ? "active" : ""} py-2 my-2 ${steptwo === value.id ? "active" : ""}`}
+                  id={`steptwo${value.id}-tab`}
+                  key={i}
+                  data-bs-toggle="tab"
+                  onClick={() => {
+                    if ((dataspectype === 0 && value.ModelLog && value.ModelLog[0] === "1" && value.ModelLog[2] !== "/") ||
+                      (dataspectype === 1 && value.ModelLog && value.ModelLog[0] === "2") ||
+                      (dataspectype === 2 && value.ModelLog && value.ModelLog[0] === "1" && value.ModelLog[2] === "/")) {
+                      handleStep(value.id);
+                    }
+                  }}
+                  style={{ fontSize: "smaller" }}
+                >
+                  {value.ModelLog}
+                </a>
+              ))}
 
 
 
-                        </div>
-                        <div className="tab-content  p-4 m-2" style={{ backgroundColor: 'white', borderRadius: "10px", width: "100%" }}>
-                            <BuildModel step={steptwo} />
-                        </div>
-                    </div>
-                </form>
+
             </div>
+            <div className="tab-content  p-4 m-2" style={{ backgroundColor: 'white', borderRadius: "10px", width: "100%" }}>
+              <BuildModel step={steptwo} />
+            </div>
+          </div>
+        </div>
+      </div>
 
 
-        </> 
+    </>
 
-    )
+  )
 }

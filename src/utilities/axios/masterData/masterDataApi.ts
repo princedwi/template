@@ -10,3 +10,4 @@ export const getMasterOutputMasterData = () => api.get("http://localhost:1337/ap
 export const getMasterModelSpec = () => api.get("http://localhost:1337/api/master-model-specs");
 export const getMasterModelLogs = () => api.get("http://localhost:1337/api/master-model-logs");
 export const postMasterModelSpec = (data:MasterModelSpec) => api.post("http://localhost:1337/api/master-model-specs", {data:data});
+export const getMasterModelLog=()=> api.get("http://localhost:1337/api/master-model-logs");

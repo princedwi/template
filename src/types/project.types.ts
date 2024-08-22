@@ -54,7 +54,15 @@ export type MasterSpecQueryID = number;
 export interface DetailedSpec_Query {
     // ProjectSpecQueryResID:string,
     MasterSpecQueryID: MasterSpecQueryID | null,
-    Response: string
+    Response: string,
+    projectID: number,
+}
+export interface ModelLog_Query{
+    Response:string,
+    projectID:number,
+    Query: {
+        id: number;
+    };
 }
 export interface ProjectinfoUsers {
     id: number,

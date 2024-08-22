@@ -33,3 +33,28 @@ export interface DetailSpecification {
     name: string;
     id: number; 
   }
+
+
+  export interface DataItem {
+    id: number;
+    attributes: {
+        MasterModelLogsQueryID: string;
+        Query: string;
+        isActive: boolean | null;
+        createdAt: string;
+        updatedAt: string;
+        publishedAt: string;
+        MasterModelLogID: {
+            data: {
+                id: number;
+                attributes: {
+                    MasterModelLogID: string;
+                    MasterLog: string;
+                    createdAt: string;
+                    updatedAt: string;
+                    publishedAt: string;
+                };
+            };
+        };
+    };
+}

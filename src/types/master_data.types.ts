@@ -86,7 +86,7 @@ export interface MasterModelSpec{
     ModelSpec:string;
 }
 
-export interface MasterModelLogs{
+export interface MasterModelLog{
     id:number;
     MasterLog:string;
 }
