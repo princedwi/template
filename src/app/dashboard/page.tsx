@@ -15,14 +15,30 @@ const inter = Inter({ subsets: ["latin"] });
 interface ID {
   id: number
 }
+interface ActivityLogInter {
+  id: number,
+  show: boolean
+}
+interface setidz {
+  setidnumber: React.Dispatch<React.SetStateAction<ID>>
+}
 
 export default function Dashboard() {
   const [idnumber, setidnumber] = React.useState<ID>({
-    id:0
+    id: -1,
   })
+  const [setshow, setsetshow] = React.useState<boolean>(false)
+
+  const [dataz, setdataz] = React.useState<ActivityLogInter>(
+    {
+      id: idnumber.id,
+      show: setshow,
+    }
+  )
+  console.log("____", setshow, idnumber);
   return (
     <>
-      {/* <ActivityLog id={idnumber.id} /> */}
+      <ActivityLog id={idnumber.id} show={setshow} setsetshow={setsetshow} />
       {/* <ActivityLog/> */}
       <Head>
         <title>Create Next App</title>
@@ -50,9 +66,13 @@ export default function Dashboard() {
         </div>
         <div className="" style={{
           borderRadius: "2%",
-          backgroundColor: "transparent", width: "92%", height: "25.5rem", marginLeft: "35px", marginRight: "9", marginTop: "8%", padding: "0rem"
+          backgroundColor: "white", width: "92%", height: "fit-content", marginLeft: "35px", marginRight: "9", marginTop: "7%", paddingTop: "0.5rem", paddingLeft:"0.4rem", paddingBottom:"0.1rem"
+          // for only nextui
+          // for mui
+          // height: "25.5rem", marginLeft: "35px", marginRight: "9", marginTop: "8%", padding: "0rem"
         }}>
-          <Table />
+          {/* changed background color from transparent to white here for nextui*/}
+          <Table setidnumber={setidnumber} setshow={setsetshow} />
         </div>
       </div>
     </>

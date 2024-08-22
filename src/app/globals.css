@@ -651,3 +651,8 @@ select {
     padding-top:2px;
     font-weight: 700;
   }
+
+  .activity-log-table>tbody>tr:nth-child(even){
+    background-color: rgb(242, 242, 242);
+
+  }

@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import {
   Table,
@@ -19,17 +21,58 @@ import {
 } from "@nextui-org/react";
 import { VerticalDotsIcon } from "./VerticalDotsIcon";
 import { ChevronDownIcon } from "./ChevronDownIcon";
-import { columns, rows } from "./data";
+import { columns } from "./data";
 
+import { useRouter } from 'next/navigation'
+import { getDashboardData } from '@/utilities/axios/project/createProject';
 import { capitalize } from "./utils";
+interface Data {
+  key: Number;
+  name: string;
+  // updateddate: string;
+  // updatedby: string;
+  bycreated: string;
+  createddate: string;
+  history: string
+}
 
-export default function App() {
+function createData(
+  key: number,
+  name: string,
+  bycreated: string,
+  createddate: string,
+  // updateddate: string,
+  // updatedby: string,
+  history: string,
+): Data {
+  return {
+    key,
+    name,
+    // updateddate,
+    // updatedby,
+    bycreated,
+    createddate,
+    history,
+  };
+}
+interface ID {
+  id: number
+}
+interface setidz {
+  setidnumber: React.Dispatch<React.SetStateAction<ID>>
+  setshow: React.Dispatch<React.SetStateAction<boolean>>
+}
+export default function App({ setidnumber, setshow }: setidz) {
+  const router = useRouter()
+
+  const [rowss, setrows] = React.useState<Data[]>([]);
   const INITIAL_VISIBLE_COLUMNS = [
     "name",
     "bycreated",
     "createddate",
-    "updatedby",
-    "updateddate",
+    "history"
+    // "updatedby",
+    // "updateddate",
   ];
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
@@ -61,7 +104,7 @@ export default function App() {
   // });
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(rows.length / rowsPerPage);
+  const pages = Math.ceil(rowss.length / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
   const headerColumns = React.useMemo(() => {
@@ -69,7 +112,7 @@ export default function App() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...rows];
+    let filteredUsers = [...rowss];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
@@ -78,7 +121,7 @@ export default function App() {
     }
 
     return filteredUsers;
-  }, [rows, filterValue, statusFilter]);
+  }, [rowss, filterValue, statusFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -102,48 +145,73 @@ export default function App() {
     key: string;
     name: string;
     createddate: string;
-    updateddate: string;
-    updatedby: string;
+    // updateddate: string;
+    // updatedby: string;
     bycreated: string;
+    history: string;
     // actions: string;
     // status: string;
   }
+  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    console.log(id);
+    router.push('/CreateQA?id=' + id);
+    // const selectedIndex = selected.indexOf(id);
+    // let newSelected: readonly number[] = [];
+
+    // if (selectedIndex === -1) {
+    //   newSelected = newSelected.concat(selected, id);
+    // } else if (selectedIndex === 0) {
+    //   newSelected = newSelected.concat(selected.slice(1));
+    // } else if (selectedIndex === selected.length - 1) {
+    //   newSelected = newSelected.concat(selected.slice(0, -1));
+    // } else if (selectedIndex > 0) {
+    //   newSelected = newSelected.concat(
+    //     selected.slice(0, selectedIndex),
+    //     selected.slice(selectedIndex + 1),
+    //   );
+    // }
+    // setSelected(newSelected);
+  };
   const renderCell = React.useCallback(
-    (user: User, columnKey: String) => {
-      
+    (user: Data, columnKey: String) => {
+
       var cellValue;
-      if(columnKey==="name"){
-        cellValue=user["name"];
+      if (columnKey === "name") {
+        cellValue = user["name"];
       }
 
-      if(columnKey==="createddate"){
-        cellValue=user["createddate"];
+      if (columnKey === "createddate") {
+        cellValue = user["createddate"];
       }
 
-      if(columnKey==="updateddate"){
-        cellValue=user["updateddate"];
-      }
+      // if (columnKey === "updateddate") {
+      //   cellValue = user["updateddate"];
+      // }
 
-      if(columnKey==="updatedby"){
-        cellValue=user["updatedby"];
-      }
+      // if (columnKey === "updatedby") {
+      //   cellValue = user["updatedby"];
+      // }
 
-      if(columnKey==="bycreated"){
-        cellValue=user["bycreated"];
+      if (columnKey === "bycreated") {
+        cellValue = user["bycreated"];
       }
 
       switch (columnKey) {
         case "name":
           return (
-            <User
-              // avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
-              classNames={{
-                description: "text-default-500",
-              }}
-              name={cellValue}
-            >
-              {user.name}
-            </User>
+            <div className="flex flex-col" onClick={(event) => handleClick(event, (user['key'] as number))}>
+              <p className="text-bold text-small capitalize">{cellValue}</p>
+              {/* <p className="text-bold text-tiny capitalize text-default-500">{user.createddate}</p> */}
+            </div>
+            // <User
+            // avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
+            //   classNames={{
+            //     description: "text-default-500",
+            //   }}
+            //   name={cellValue}
+            // >
+            //   {user.name}
+            // </User>
           );
         case "createddate":
           return (
@@ -156,6 +224,17 @@ export default function App() {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-small capitalize">{cellValue}</p>
+              {/* <p className="text-bold text-tiny capitalize text-default-500">{user.team}</p> */}
+            </div>
+          );
+        case "history":
+          return (
+            <div className="flex flex-col text-black" onClick={() => {
+              setidnumber({ id: user['key'] as number });
+              setshow(true);
+              console.log(1);
+            }}>
+              <p className="text-bold text-small capitalize">History</p>
               {/* <p className="text-bold text-tiny capitalize text-default-500">{user.team}</p> */}
             </div>
           );
@@ -217,15 +296,15 @@ export default function App() {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-3 items-end" style={{
-              paddingTop:"1rem"
-            }}>
+          paddingTop: "1rem"
+        }}>
           <Input
             isClearable
             classNames={{
               base: "w-full sm:max-w-[44%]",
               inputWrapper: "border-1",
             }}
-            
+
             placeholder="Search by name..."
             size="sm"
             startContent={<>
@@ -273,7 +352,7 @@ export default function App() {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {rows.length} users</span>
+          <span className="text-default-400 text-small">Total {rowss.length} users</span>
           {/* <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -294,7 +373,7 @@ export default function App() {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    rows.length,
+    rowss.length,
     hasSearchFilter,
   ]);
 
@@ -347,7 +426,7 @@ export default function App() {
   //       </div>
   //     );
   //   }, [selectedKeys, items.length, page, pages, hasSearchFilter, setPage]);
-  
+
   //   return bottomContent;
   // };
   const bottomContent = React.useMemo(() => {
@@ -360,7 +439,7 @@ export default function App() {
             cursor: "bg-foreground text-background",
           }}
           style={{
-            marginLeft:"5rem"
+            marginLeft: "5rem"
           }}
           color="default"
           isDisabled={hasSearchFilter}
@@ -370,7 +449,7 @@ export default function App() {
           onChange={setPage}
         />
         <span className="text-small text-default-400">
-        <label className="flex items-center text-default-400 text-small">
+          <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
               className="bg-transparent outline-none text-default-400 text-small"
@@ -390,7 +469,7 @@ export default function App() {
     );
   }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
-  
+
   const classNames = React.useMemo(
     () => ({
       wrapper: ["max-h-[382px]", "max-w-3xl"],
@@ -409,9 +488,53 @@ export default function App() {
     }),
     [],
   );
+
+  const setrowsdata = () => {
+    const datae: Data[] = [];
+    for (var i = 0; i < rowss.length; i++) {
+      datae.push(createData(
+        Number(rowss[i].key),
+        rowss[i].name,
+        rowss[i].createddate,
+        rowss[i].bycreated,
+        "Show History"
+        // rowss[i].updatedby,
+        //  rowss[i].updateddate
+      ));
+    }
+    // setrows(datae);
+  }
+  if (rowss.length === 0) setrowsdata();
+  const fetchtable = async () => {
+    const currentUserdata = localStorage.getItem("user");
+    const id = currentUserdata ? JSON.parse(currentUserdata).id : -1;
+    const data = await getDashboardData(id);
+    console.log(data);
+    const datae: Data[] = [];
+    for (var i = 0; i < data.data.length; i++) {
+      datae.push(createData(
+        Number(data.data[i].id),
+        data.data[i].attributes.ProjectName,
+        data.data[i].attributes.CreatedByUserName.data.attributes.username ? data.data[i].attributes.CreatedByUserName.data.attributes.username : "NA",
+        data.data[i].attributes.createdAt,
+        "Show History",
+        // data.data[i].attributes.UpdatedByUserName.data.attributes.username ? data.data[i].attributes.UpdatedByUserName.data.attributes.username : "NA",
+        // data.data[i].attributes.updatedAt
+      ));
+      setrows({...rowss, ...datae[i]});
+    }
+    setrows(datae);
+  }
+  const [counter, setcounter] = React.useState(0);
+  React.useEffect(() => {
+    if (rowss.length === 0) {
+      fetchtable();
+      setPage(1);
+    }
+    else { setPage(0); }
+  }, [rowss.length]);
   return (
     <>
-
       <Table
         isCompact
         removeWrapper
@@ -429,31 +552,36 @@ export default function App() {
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
-      // onSelectionChange={setSelectedKeys}
+        // onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
         showSelectionCheckboxes={false}
+
       >
-       <TableHeader columns={headerColumns}>
-        {(column) => {;return(
-          <TableColumn
-            key={column.key}
-            align={column.key === "actions" ? "center" : "start"}
-            allowsSorting={column.key != "actions"}
-          >
-            {column.label}
-          </TableColumn>
-        )}}
-      </TableHeader>
-      <TableBody emptyContent={"No users found"} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.key}>
-            {(columnKey)=>{console.log(columnKey);return <TableCell>
-              {renderCell(item, `${columnKey}`)}
-              </TableCell>}
-}
-          </TableRow>
-        )}
-      </TableBody>
+        <TableHeader columns={headerColumns}>
+          {(column) => {
+            ; return (
+              <TableColumn
+                key={column.key}
+                align={column.key === "actions" ? "center" : "start"}
+                allowsSorting={column.key != "actions"}
+              >
+                {column.label}
+              </TableColumn>
+            )
+          }}
+        </TableHeader>
+        <TableBody emptyContent={"No users found"} items={sortedItems}>
+          {(item) => (
+            <TableRow style={{ color: "black" }} key={item.key ? Number(item.key) : Math.random()}>
+              {(columnKey) => {
+                console.log(columnKey); return <TableCell>
+                  {renderCell(item, `${columnKey}`)}
+                </TableCell>
+              }
+              }
+            </TableRow>
+          )}
+        </TableBody>
       </Table>
     </>
   );

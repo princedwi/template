@@ -8,7 +8,7 @@ import {DataTabInterface} from '@/types/data_tab.types';
 // export { post_project };
 export const createProject = (formData: Project_Info) => api.post("http://localhost:1337/api/project-infos", {data:formData});
 export const updateProject = (formData: Project_Info, id:number) => api.put(`http://localhost:1337/api/project-infos/${id}`, {data:formData});
-export const getProject = (id:number) => api.get(`http://localhost:1337/api/project-infos/${id}/?populate=*`);
+export const getProject = (id:number) => api.get(`http://localhost:1337/api/project-infos/${id}?populate=*`);
 export const conceptReview = (formData: Concept_Review) => api.post("http://localhost:1337/api/concept-reviews", {data:formData});
 export const getconceptReview = (id:number) => api.get(`http://localhost:1337/api/concept-reviews?filters[ProjectID][id][$eq]=${id}&populate=*`);
 export const conceptReviewUpdate = (formData: Concept_Review, id:number) => api.put(`http://localhost:1337/api/concept-reviews/${id}`, {data:formData});
@@ -32,3 +32,11 @@ export const createActivityLog = (formData:ActivityLog) => api.post(`http://loca
 export const getDetailedSpec = (id:number) => api.get(`http://localhost:1337/api/project-spec-query-responses?filters[projectID][id][$eq]=${id}&populate=*`);
 export const getActivityLog=(id:number)=>api.get(`http://localhost:1337/api/activity-logs?filters[ProjectID][id][$eq]=${id}&populate=*`);
 // http://localhost:1337/api/project-infos?pagination[page]=1&pagination[pageSize]=100000&filters[CreatedByUserName][id][$eq]=4|filters[UpdatedByUserName][id][$eq]=4|filters[Advisor][id][$eq]=4|&populate=*
+
+// for exporting as excel sheet
+export const getallprojectinfos=()=>api.get(`http://localhost:1337/api/project-infos?populate=*`);
+export const getallconceptReview = () => api.get("http://localhost:1337/api/concept-reviews?populate=*");
+export const getallmodelApproach = () => api.get(`http://localhost:1337/api/model-approches?populate=*`);
+export const getalloutputDetail = () => api.get("http://localhost:1337/api/output-details-tables?populate=*");
+export const getallDataDetails = () => api.get(`http://localhost:1337/api/data-tables?populate=*`);
+export const getallDetailedSpec = () => api.get(`http://localhost:1337/api/project-spec-query-responses?populate=*`);
