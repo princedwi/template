@@ -57,6 +57,13 @@ export interface DetailedSpec_Query {
     Response: string,
     projectID: number,
 }
+export interface ModelLog_Query{
+    Response:string,
+    projectID:number,
+    Query: {
+        id: number;
+    };
+}
 export interface ProjectinfoUsers {
     id: number,
     name: string,

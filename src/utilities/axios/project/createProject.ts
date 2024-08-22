@@ -1,6 +1,6 @@
 import api from "../api";
 import { ProjectInterface } from "@/types/project-info.types";
-import { Concept_Review, Project_Info, Model_Approach, Output_Detail, DetailedSpec_Query, ActivityLog } from "@/types/project.types";
+import { Concept_Review, Project_Info, Model_Approach, Output_Detail, DetailedSpec_Query, ActivityLog, ModelLog_Query } from "@/types/project.types";
 import {DataTabInterface} from '@/types/data_tab.types';
 
 //import { Project_Info as Project_Info } from "@/types/project.types";
@@ -35,3 +35,6 @@ export const getActivityLog=(id:number)=>api.get(`http://localhost:1337/api/acti
 export const getDetailedSpec = (id:number) => api.get(`http://localhost:1337/api/project-spec-query-responses?filters[projectID][id][$eq]=${id}&pagination[page]=1&pagination[pageSize]=100000&populate=*`);
 export const getDetailedSpec2 = () => api.get("http://localhost:1337/api/project-spec-query-responses?pagination[page]=1&pagination[pageSize]=100000");
 export const updateDetailedSpec=(formData: DetailedSpec_Query, id:number) => api.put('http://localhost:1337/api/project-spec-query-responses/${id}', {data:formData})
+export const modelLogQuery=(formData: ModelLog_Query, ID: number)=> api.post('http://localhost:1337/api/project-model-logs-query-responses',{data:formData});
+export const updateModelLogQuery = (id: number, formData: ModelLog_Query) => api.put(`http://localhost:1337/api/project-model-logs-query-responses/${id}`, { data: formData });
+export const fetchModelLogQueries = (projectID: number) => api.get(`http://localhost:1337/api/project-model-logs-query-responses?filters[projectID][id][$eq]=${projectID}&populate=*`);
