@@ -44,7 +44,6 @@ export default function BuildModelLog({ step, setnumb }: TabsProps2) {
 
                     const initialValues = response.data.reduce((acc: { [key: number]: string }, item: ResponseItem) => {
                         const id = item.attributes.Query.data.id;
-                        console.log(item.attributes.Query,"itemconsole")
                         if (typeof id === 'number') {
                             acc[id] = item.attributes.Response;
                         } else {
@@ -65,9 +64,9 @@ export default function BuildModelLog({ step, setnumb }: TabsProps2) {
     }, [paramsid, projectId]);
 
     useEffect(() => {
-        console.log('Responses State:', responses);
-        console.log('InputValues State:', inputValues);
-        console.log('data',data)
+        //console.log('Responses State:', responses);
+        //console.log('InputValues State:', inputValues);
+        //console.log('data', data);
     }, [responses, inputValues]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
@@ -78,27 +77,31 @@ export default function BuildModelLog({ step, setnumb }: TabsProps2) {
         }));
     };
 
+
     const handleSubmit = async () => {
         try {
             for (const id in inputValues) {
-                const responseItem = responses.find(item => item.attributes.Query.id === parseInt(id));
+                const responseItem = responses.find(item => item.attributes.Query.data.id === parseInt(id));
                 const queryItem = data.find(item => item.id === parseInt(id));
+    
                 if (!queryItem) continue;
-
+    
                 const formData: ModelLog_Query = {
                     Response: inputValues[id],
                     projectID: paramsid ? Number(paramsid) : projectId,
                     Query: { id: queryItem.id }
                 };
-
+    
                 if (responseItem) {
-                    console.log('Updating data:', formData);
+                    // Update the existing response
+                    //console.log('Updating data:', formData);
                     const response = await updateModelLogQuery(responseItem.id, formData);
-                    console.log('API response:', response.data);
+                    console.log('API response for updation:', response.data);
                 } else {
-                    console.log('Submitting data:', formData);
+                    // Create a new response
+                    //console.log('Creating new data:', formData);
                     const response = await modelLogQuery(formData, parseInt(id));
-                    console.log('API response:', response.data);
+                    console.log('API response after creation:', response.data);
                 }
             }
             console.log('Data submitted successfully');
@@ -106,6 +109,8 @@ export default function BuildModelLog({ step, setnumb }: TabsProps2) {
             console.error('Error submitting data:', error);
         }
     };
+    
+    
 
     const addInputRow = () => {
         setExtraInputs(prev => [...prev, prev.length + 1]);

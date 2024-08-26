@@ -146,7 +146,6 @@ export default function TableModel({ step, setnumb }: TabsProps2) {
         }
     };
 
-
     const [selectedFile, setSelectedFile] = useState<Array<File | null>>([null, null, null, null, null, null, null]);
     const [imagePreview, setImagePreview] = useState<Array<string | null>>([null, null, null, null, null, null, null]);
     const [categories, setCategories] = React.useState<string[]>([]); // contain tab headings
